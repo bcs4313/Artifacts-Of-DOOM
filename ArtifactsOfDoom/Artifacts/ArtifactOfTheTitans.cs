@@ -31,8 +31,6 @@ namespace ArtifactGroup
 			CreateLang();
 			CreateArtifact();
 			Hooks();
-
-
 		}
 		public override void Hooks()
 		{
@@ -75,6 +73,7 @@ namespace ArtifactGroup
 							{
 								scalar += 0.4;
 							}
+							//body.modelLocator.transform.localScale = 
 						}
 					}
 

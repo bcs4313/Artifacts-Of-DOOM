@@ -362,6 +362,15 @@ namespace ArtifactGroup
             size.z = body.gameObject.transform.localScale.z * (float)scalar;
             Debug.Log("Size adjust for " + body.name + "... = " + scalar);
             body.gameObject.transform.localScale = size;
+
+            /*
+            // this block adjusts the foot position of the monster, preventing them from being partially in the ground.
+            // to do this, we assign a parent object to force the monster upward
+            GameObject footAdjust = new GameObject();
+            footAdjust.transform.SetPositionAndRotation(body.gameObject.transform.position, body.gameObject.transform.rotation);
+            body.gameObject.transform.parent = footAdjust.transform;
+            footAdjust.transform.localPosition.Set(body.gameObject.transform.position.x, body.gameObject.transform.position.y + 9999, body.gameObject.transform.position.z);
+            */
         }
 
         static async public void distortScreen(uint universalId)

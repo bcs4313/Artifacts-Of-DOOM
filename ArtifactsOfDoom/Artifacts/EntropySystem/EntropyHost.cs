@@ -58,16 +58,19 @@ namespace ArtifactGroup
 					bool triggered = env.runOutcome(hookID);
 					if(triggered == true)
                     {
-						// logically, I think its ideal to queue events with the same hook
-						// together, since its more entertaining and further destabilizes chance.
-						for(int z = 0; z < events.Count; z++)
-                        {
-							Event tie = events[z];
-							if (tie.hooksAttached.Contains(hookID))
-                            {
-								runEvent(tie.eventID, targetID, isSelective);
-                            }
-                        }
+						if (OptionsLink.AOE_SimultaneousOutcomes.Value == true)
+						{
+							// logically, I think its ideal to queue events with the same hook
+							// together, since its more entertaining and further destabilizes chance.
+							for (int z = 0; z < events.Count; z++)
+							{
+								Event tie = events[z];
+								if (tie.hooksAttached.Contains(hookID))
+								{
+									runEvent(tie.eventID, targetID, isSelective);
+								}
+							}
+						}
 						return;
 					}
                 }

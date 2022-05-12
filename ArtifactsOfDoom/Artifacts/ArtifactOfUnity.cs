@@ -13,6 +13,7 @@ using R2API.Networking.Interfaces;
 using R2API.Networking;
 using System;
 using static On.RoR2.Inventory;
+using System.Collections.Generic;
 
 namespace ArtifactGroup
 {
@@ -22,6 +23,7 @@ namespace ArtifactGroup
 		Inventory globalInventory = new Inventory();
 
 		public static ConfigEntry<int> TimesToPrintMessageOnStart;
+
 		public override string ArtifactName => "Artifact of Unity";
 		public override string ArtifactLangTokenName => "ARTIFACT_OF_UNITY";
 		public override string ArtifactDescription => "'We have become one'\n Items are shared amongst players, but enemies scale significantly faster.";
@@ -42,7 +44,7 @@ namespace ArtifactGroup
 			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
-				if (ArtifactEnabled)
+				if (NetworkServer.active && ArtifactEnabled)
 				{
 					if (NetworkServer.active)
 					{
@@ -73,59 +75,62 @@ namespace ArtifactGroup
 					}
 				}
 			};
+
 			On.RoR2.GenericPickupController.AttemptGrant += (orig_AttemptGrant orig, global::RoR2.GenericPickupController self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
 				Debug.Log("(UNITY) grant trigger");
-				if (ArtifactEnabled)
+				if (NetworkServer.active && ArtifactEnabled)
 				{
 					// get item index from item controller
 					ItemIndex give = self.pickupIndex.itemIndex;
 
 					for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
 					{
-						if (NetworkUser.readOnlyInstancesList[x].userName.CompareTo(body.GetUserName()) != 0)
+						if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().netId.Value.CompareTo(body.netId.Value) != 0)
 						{
 							NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);
 						}
 					}
 				}
 			};
-			/*
 			// remove items for other users upon deleting an item from someone else
 			On.RoR2.Inventory.RemoveItem_ItemIndex_int += (orig_RemoveItem_ItemIndex_int orig, global::RoR2.Inventory self, ItemIndex itemIndex, int count) =>
 			{
-				Debug.Log("(UNITY) delete trigger");
-
-				// get characterbody of interest
-				CharacterBody source = null;
-				for (int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
+				if (NetworkServer.active && ArtifactEnabled)
 				{
-					CharacterBody c = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
-					if (c.networkIdentity.netId.Value == self.netId.Value)
+					//Debug.Log("(Artifact of UNITY) delete trigger");
+					CharacterBody source = null;
+					// get characterbody of interest
+					for (int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
 					{
-						source = c;
-					}
-				}
-
-				if (source == null)
-				{
-					Debug.Log("ISSUE WITH DELETE TRIGGER! (changing target to host)");
-					source = NetworkUser.readOnlyInstancesList[0].GetCurrentBody();
-				}
-
-				if (ArtifactEnabled)
-				{
-					for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-					{
-						if (NetworkUser.readOnlyInstancesList[x].userName.CompareTo(source.GetUserName()) != 0)
+						if (NetworkUser.readOnlyInstancesList[i].GetCurrentBody().inventory == self)
 						{
-							NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.RemoveItem(itemIndex, count);
+							source = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
+						}
+					}
+
+					if (source == null)
+					{
+						Debug.Log("ISSUE WITH DELETE TRIGGER! (changing target to host)");
+						source = NetworkUser.readOnlyInstancesList[0].GetCurrentBody();
+					}
+					
+					if (source.teamComponent.teamIndex == TeamIndex.Player)
+					{
+						for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
+						{
+							if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody() != source)
+							{
+								var body = NetworkUser.readOnlyInstancesList[x].GetCurrentBody();
+								orig.Invoke(body.inventory, itemIndex, count);
+							}
 						}
 					}
 				}
+				orig.Invoke(self, itemIndex, count);
 			};
-			*/
+
 			void overrides(Run run)
 			{
 				if (NetworkServer.active && ArtifactEnabled)
@@ -135,5 +140,5 @@ namespace ArtifactGroup
 				}
 			}
 		}
-	}
+    }
 }

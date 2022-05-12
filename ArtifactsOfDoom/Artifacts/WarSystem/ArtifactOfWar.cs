@@ -246,12 +246,6 @@ namespace ArtifactGroup
 					loadingStage = true;
 				}
 
-				if (RoR2.SceneCatalog.currentSceneDef.cachedName.CompareTo("arena") == 0)
-				{
-					RoR2.Run.instance.fixedTime += 5;
-					RoR2.Run.instance.time += 5;
-				}
-
 				// handler for the void fields (hell zone)
 				if (RoR2.SceneCatalog.currentSceneDef.cachedName.CompareTo("arena") == 0 && spiked == false)
 				{

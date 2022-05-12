@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArtifactsOfDoom;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace ArtifactGroup
 
         public List<String> hooksAttached = new List<String>();
         public List<double> hookChances = new List<double>();
-        bool forceEvent = true;
+        bool forceEvent = false;
         int forceValue = 61;
 
         System.Random rnd = ArtifactOfEntropy.rnd;
@@ -34,6 +35,17 @@ namespace ArtifactGroup
             this.eventID = eventID;
 
             double hookChance = (120 / (availableHooks.Length - 5)) / (EntropyHost.eventTotal / 14);
+
+            // apply RiskOfOptions setting 
+            try
+            {
+                hookChance *= float.Parse(OptionsLink.AOE_EventHookMultiplier.Value);
+            }
+            catch
+            {
+                Messenger.MessageHandler.globalMessage("error parsing EventHookMultiplier setting! Check to see if the setting is a decimal value!");
+            }
+
             // run randomly through the list of hooks, on average picking 
             // x hooks, divided by the known event count / 10
             for (int i = 0; i < availableHooks.Length; i++)
@@ -67,8 +79,18 @@ namespace ArtifactGroup
                 double r3 = rnd.NextDouble();
                 double bigMult = rnd.NextDouble() + implicitWeights[selectedHook];
 
-                // include the implicit weight for the chance!
-                hookChances.Add(100.0 * r1 * r2 * r3 * bigMult);
+                try
+                {
+
+                    float optionMult = float.Parse(OptionsLink.AOE_EventHookMultiplier.Value);
+                    float optionAdd = OptionsLink.AOE_EventChanceOffset.Value;
+                    hookChances.Add(100.0 * r1 * r2 * r3 * bigMult * optionMult + optionAdd);
+                }
+                catch
+                {
+                    // include the implicit weight for the chance!
+                    hookChances.Add(100.0 * r1 * r2 * r3 * bigMult);
+                }
             }
             
             
