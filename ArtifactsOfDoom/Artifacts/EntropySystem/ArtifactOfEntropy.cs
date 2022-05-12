@@ -384,7 +384,7 @@ namespace ArtifactGroup
 
 		void MyFunc(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
 		{
-			if (artifact)
+			if (ArtifactEnabled)
 			{
 				orig(self); // Don't forget to call this, or the vanilla / other mods' codes will not execute!
 				hud = self;
