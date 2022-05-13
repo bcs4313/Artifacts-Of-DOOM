@@ -224,7 +224,18 @@ namespace ArtifactGroup
 				float time = RoR2.Run.instance.fixedTime;
 
 				// swarms multiplier for monsters (max 5)
-				float SwarmsCoeffcient = Math.Max(Math.Min((float)(time / 300), 5), Math.Min(RoR2.Run.instance.stageClearCount, 5));
+				float divider = 300;
+                try
+                {
+					divider = Math.Max(float.Parse(OptionsLink.AOW_SwarmTime.Value), 0.001f);
+                }
+				catch
+                {
+					MessageHandler.globalMessage("Cannot Interpret Swarm Time Value in the mod settings! Try changing the syntax!");
+                }
+
+
+                float SwarmsCoeffcient = Math.Max(Math.Min((float)(time / (divider * 60)), 5), Math.Min(RoR2.Run.instance.stageClearCount, 5));
 				//Debug.Log("COEFF = " + SwarmsCoeffcient.ToString());
 				//Debug.Log("COEFFFFFF = " + Math.Min((float)(time / 300), 5).ToString());
 
@@ -236,7 +247,7 @@ namespace ArtifactGroup
 					spiked = false;
 					// we are in a new scene (in most cases)
 					Debug.Log("evolve call");
-					MessageHandler.globalMessage("Stage " + (RoR2.Run.instance.stageClearCount + 1).ToString() + " item droprate: " + (8 * Math.Pow(((Run.instance.stageClearCount) * 1) + 0.6, 1.4)).ToString() + " idioot");
+					MessageHandler.globalMessage("Stage " + (RoR2.Run.instance.stageClearCount + 1).ToString() + " item droprate: " + (OptionsLink.AOW_BaseDropChance.Value * Math.Pow(((Run.instance.stageClearCount) * 1+1), OptionsLink.AOW_DropChanceExpScaling.Value)).ToString());
 					storedStage = RoR2.Run.instance.stageClearCount + 1;
 					this.evolveEnemies();
 					if (loadingStage == false)
@@ -306,17 +317,17 @@ namespace ArtifactGroup
 			{
 				if (damageReport.victim.body.isPlayerControlled) // check if a player died
 				{
-					MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + "Has died! He will still receive items over time, though");
+					MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
 					dead_players.Add(damageReport.victim.body.GetUserName());
 				}
 
 				/// drop chance scales with stages and time
-				double baseDropChance = 8; // 8
+				double baseDropChance = OptionsLink.AOW_BaseDropChance.Value; // 8
 
 				Debug.Log("Base Drop Chance = " + baseDropChance.ToString());
 
 				// evaluate the true drop chance now
-				baseDropChance = baseDropChance * Math.Pow(((Run.instance.stageClearCount) * 1) + 0.6, 1.4);
+				baseDropChance = baseDropChance * Math.Pow(((Run.instance.stageClearCount) * 1)+1, OptionsLink.AOW_DropChanceExpScaling.Value);
 
 				Random rnd = new Random();
 				int gen = rnd.Next(1, 100);
@@ -527,11 +538,11 @@ namespace ArtifactGroup
 				// comparisons built to punish speedrunning exploitation(to an extent)
 				if (RoR2.Run.instance.selectedDifficulty == DifficultyIndex.Normal)
 				{                    // scaling according to time passed * diffCoeff               vs  strict stage based scaling
-					items = Math.Max(Math.Pow(RoR2.Run.instance.difficultyCoefficient + 0.9, 2.4), Math.Pow(RoR2.Run.instance.stageClearCount + 2, 1.8) * 2.7);
+					items = Math.Max(Math.Pow(RoR2.Run.instance.difficultyCoefficient + 0.9, OptionsLink.AOW_EvolutionExpScaling.Value), Math.Pow(RoR2.Run.instance.stageClearCount + 2, OptionsLink.AOW_EvolutionExpScaling.Value - 0.6) * 2.7);
 				} 
 				else
 				{                    // scaling according to time passed * diffCoeff               vs  strict stage based scaling
-					items = Math.Max(Math.Pow(RoR2.Run.instance.difficultyCoefficient + 0.9, 2.4), Math.Pow(RoR2.Run.instance.stageClearCount + 3, 2) * 1.4);
+					items = Math.Max(Math.Pow(RoR2.Run.instance.difficultyCoefficient + 0.9, OptionsLink.AOW_EvolutionExpScaling.Value), Math.Pow(RoR2.Run.instance.stageClearCount + 3, OptionsLink.AOW_EvolutionExpScaling.Value - 0.4) * 1.4);
 				} 
 			}
 			Debug.Log("items to give: " + items.ToString());

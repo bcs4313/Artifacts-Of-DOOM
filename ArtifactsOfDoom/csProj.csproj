@@ -125,6 +125,9 @@
       <HintPath>libs\Rewired_Windows_Lib.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="RiskOfOptions">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\BepInEx\plugins\RiskOfOptions\RiskOfOptions.dll</HintPath>
+    </Reference>
     <Reference Include="RoR2">
       <HintPath>libs\RoR2.dll</HintPath>
       <Aliases></Aliases>

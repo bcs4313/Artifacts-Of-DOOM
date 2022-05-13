@@ -53,11 +53,11 @@ namespace ArtifactGroup
 						{
 							//Vector3 size = new Vector3();
 							scalar = 1;
-							scalar *= (double)Math.Pow((double)cost * (double)(0.00035 * Mathf.Min(10, RoR2.Run.instance.stageClearCount + 1)) + 1, 2.6); // violent growth...																   //size.x = body.gameObject.transform.localScale.x * scalar;
+							scalar *= (double)Math.Pow((double)cost * (double)(0.00035 * Mathf.Min(10, RoR2.Run.instance.stageClearCount + 1)) + 1, OptionsLink.AOT_BossGrowthPerStage.Value); // violent growth...																   //size.x = body.gameObject.transform.localScale.x * scalar;
 																																					   //size.y = body.gameObject.transform.localScale.y * scalar;
 							if (body.isElite)
 							{
-								scalar += (float)0.3;
+								scalar += (float)OptionsLink.AOT_EliteMultiplier.Value;
 							}
 							body.masterObject.transform.localScale *= (float)scalar;
 							//body.gameObject.transform.localScale = size;
@@ -67,11 +67,11 @@ namespace ArtifactGroup
 							Debug.Log("Scaling...");
 							Vector3 size = new Vector3();
 							scalar = 1;
-							scalar *= Mathf.Log(cost * (float)0.15 + 1, (float)1.75);
+							scalar *= Mathf.Log(cost * (float)OptionsLink.AOT_CreditScalingMultiplier.Value + 1, (float)1.75);
 							size = body.masterObject.transform.localScale;
 							if (body.isElite)
 							{
-								scalar += 0.4;
+								scalar += OptionsLink.AOT_EliteMultiplier.Value;
 							}
 							//body.modelLocator.transform.localScale = 
 						}

@@ -81,10 +81,9 @@ namespace ArtifactGroup
 
                 try
                 {
-
                     float optionMult = float.Parse(OptionsLink.AOE_EventHookMultiplier.Value);
                     float optionAdd = OptionsLink.AOE_EventChanceOffset.Value;
-                    hookChances.Add(100.0 * r1 * r2 * r3 * bigMult * optionMult + optionAdd);
+                    hookChances.Add(Math.Min(100.0 * r1 * r2 * r3 * bigMult * optionMult, 100) + optionAdd);
                 }
                 catch
                 {

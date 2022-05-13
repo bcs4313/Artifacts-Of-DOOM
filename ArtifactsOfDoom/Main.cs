@@ -9,6 +9,8 @@ using System.Reflection;
 using UnityEngine;
 using R2API.Networking;
 using static R2API.SoundAPI;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 
 namespace ArtifactsOfDoom
 {
@@ -24,7 +26,7 @@ namespace ArtifactsOfDoom
 
         public const string ModGuid = "com.Dragonov7733.ArtifactsOfDoom";
         public const string ModName = "Artifacts of Doom";
-        public const string ModVer = "1.0.1";
+        public const string ModVer = "1.1.3";
 
         public static AssetBundle MainAssets;
 
@@ -34,11 +36,6 @@ namespace ArtifactsOfDoom
         {
             Debug.Log("WAR: Main is running...");
             MainAssets = AssetBundle.LoadFromFile(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/artifacticons");
-
-            /**
-             * Event List
-             * 3256861171 Funny Fart
-            */
 
             Debug.Log("WAR: Loaded Assets");
 
@@ -83,8 +80,9 @@ namespace ArtifactsOfDoom
                 SoundBanks.Add(bytes);
             }
 
-            // in this step we shall add UI elements
-            new textBox().Start();
+            // bind all settings for Risk of Options
+            OptionsLink.Config = Config;
+            OptionsLink.constructSettings();
         }
         public bool ValidateArtifact(ArtifactBase artifact, List<ArtifactBase> artifactList)
         {

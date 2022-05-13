@@ -71,6 +71,10 @@ namespace ArtifactGroup
 								}
 							}
 						}
+						else
+                        {
+							runEvent(events[i].eventID, targetID, isSelective);
+						}
 						return;
 					}
                 }

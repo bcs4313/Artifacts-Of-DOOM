@@ -51,7 +51,7 @@ namespace ArtifactGroup
 		public override string ArtifactName => "Artifact of Entropy";
 		public override string ArtifactLangTokenName => "ARTIFACT_OF_ENTROPY";
 		public override string ArtifactDescription => "Random effects are assigned to certain actions, with a randomly defined chance to occur. \n" +
-			"Figure out what horrible events occur for ANYthing you do, or else... \n General tip: all effects under a certain action will activate at the same time.";
+			"Figure out what horrible events occur for ANYthing you do, or else...";
 		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/MonkeAngre.jpg");
 		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Monke.jpg");
 
