@@ -41,6 +41,11 @@ on the github discussions/issue pages, or through my email at bcs4313@g.rit.edu.
 
 * Mod Release
 
+**1.0.1**
+* Fixed UI Bug with item/artifact descriptions not appearing sometimes in a run.
+* Artifact icon display order adjusted.
+
+
 Currently Planned Features: 
 * Add customizable settings to the artifacts, notably the Artifact of Entropy and War.
 * Be able to retrieve the rng seed from the entropy artifact, so others can experience your run.
