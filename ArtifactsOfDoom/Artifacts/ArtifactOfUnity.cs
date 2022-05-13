@@ -55,9 +55,9 @@ namespace ArtifactGroup
 								body.baseMaxHealth += body.levelMaxHealth * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.1 * NetworkUser.readOnlyInstancesList.Count)+1, 1.1);
 								body.baseRegen += body.levelRegen * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.08 * NetworkUser.readOnlyInstancesList.Count)+1, 1.1);
 								body.baseDamage += body.levelDamage * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.03 * NetworkUser.readOnlyInstancesList.Count)+1, 1.1);
-								Debug.Log("baseHMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.05 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
-								Debug.Log("baseRMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.07 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
-								Debug.Log("baseDMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.03 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseHMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.05 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseRMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.07 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseDMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.03 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
 							}
 						}
 						else
@@ -67,9 +67,9 @@ namespace ArtifactGroup
 								body.baseMaxHealth += body.levelMaxHealth * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.15 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1);
 								body.baseRegen += body.levelRegen * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.1 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1);
 								body.baseDamage += body.levelDamage * (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.2 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1);
-								Debug.Log("baseHMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.10 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
-								Debug.Log("baseRMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.1 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
-								Debug.Log("baseDMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.4 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseHMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.10 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseRMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.1 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
+								//Debug.Log("baseDMaxMultiplier: " + (float)Math.Pow((RoR2.Run.instance.difficultyCoefficient * 0.4 * NetworkUser.readOnlyInstancesList.Count) + 1, 1.1));
 							}
 						}
 					}
@@ -79,9 +79,9 @@ namespace ArtifactGroup
 			On.RoR2.GenericPickupController.AttemptGrant += (orig_AttemptGrant orig, global::RoR2.GenericPickupController self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
-				Debug.Log("(UNITY) grant trigger");
 				if (NetworkServer.active && ArtifactEnabled)
 				{
+					Debug.Log("(Artifact Of UNITY) grant trigger");
 					// get item index from item controller
 					ItemIndex give = self.pickupIndex.itemIndex;
 

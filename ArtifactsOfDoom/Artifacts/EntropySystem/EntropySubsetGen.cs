@@ -103,7 +103,7 @@ namespace ArtifactGroup
                 ItemIndex dex;
                 if (gen >= legendaryDropChance)
                 {
-                    Debug.Log("Spawning Legendary...");
+                    //Debug.Log("Spawning Legendary...");
                     int len = legendaries.Count;
                     int index = rnd.Next(0, len);
                     dex = legendaries[index];
@@ -111,7 +111,7 @@ namespace ArtifactGroup
                 }
                 else if (gen >= rareDropChance)
                 {
-                    Debug.Log("Spawning Rare...");
+                    //Debug.Log("Spawning Rare...");
                     int len = rares.Count;
                     int index = rnd.Next(0, len);
                     dex = rares[index];
@@ -119,7 +119,7 @@ namespace ArtifactGroup
                 }
                 else
                 {
-                    Debug.Log("Spawning Common...");
+                    //Debug.Log("Spawning Common...");
                     int len = commons.Count;
                     int index = rnd.Next(0, len);
                     dex = commons[index];

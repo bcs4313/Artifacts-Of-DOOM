@@ -7,6 +7,8 @@ using static On.RoR2.CharacterMaster;
 using System;
 using R2API.Networking.Interfaces;
 using R2API.Networking;
+using System.Collections.Generic;
+
 namespace ArtifactGroup
 {
 	class ArtifactOfTitans : ArtifactBase
@@ -14,7 +16,8 @@ namespace ArtifactGroup
 		public static bool enabled = false;
 		Inventory globalInventory = new Inventory();
 
-		int mostRecentCreditCost = 0; // used for scaling
+		int mostRecentCreditCost = 1; // used for scaling
+		public List<monsterIdentity> creditIDS = new List<monsterIdentity>();
 
 		public static ConfigEntry<int> TimesToPrintMessageOnStart;
 		public override string ArtifactName => "Artifact of The Titans";
@@ -44,6 +47,55 @@ namespace ArtifactGroup
 			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
 				int cost = mostRecentCreditCost;
+
+				if(cost > 0)
+                {
+					bool inLog = false;
+					// first we will check if this monster is already logged
+					for(int i = 0; i < creditIDS.Count; i++)
+                    {
+						if(creditIDS[i].baseNameToken == body.baseNameToken && creditIDS[i].isElite == body.isElite)
+                        {
+							inLog = true;
+                        }
+                    }
+
+					// we can store it in a log if the monster isn't inside already
+					if (inLog == false)
+					{
+						var mlog = new monsterIdentity();
+						mlog.creditCost = cost;
+						mlog.baseNameToken = body.baseNameToken;
+						mlog.isElite = body.isElite;
+						Debug.Log("Stored Base Monster for usage: name: " + mlog.baseNameToken + " isElite: " + mlog.isElite + " cost: " + mlog.creditCost);
+						creditIDS.Add(mlog);
+					}
+
+				}
+				else
+                {
+					bool foundReference = false;
+					// now we encounter a special situation where the monster needs to be assigned a cost
+					cost = 3; // assigned an initial base cost
+					// first we will check if this monster is already logged
+					for (int i = 0; i < creditIDS.Count; i++)
+					{
+						if (creditIDS[i].baseNameToken == body.baseNameToken && creditIDS[i].isElite == body.isElite)
+						{
+							Debug.Log("Monster spawned without cost, but was found in the log!: name: " 
+								+ creditIDS[i].baseNameToken + " isElite: " + creditIDS[i].isElite + " cost: " + creditIDS[i].creditCost);
+							cost = creditIDS[i].creditCost;
+							foundReference = true;
+							break;
+						}
+					}
+
+					if(foundReference == false)
+                    {
+						Debug.Log("Monster spawned without cost, and without a log. Scaling to a cost of 3... name: " + body.baseNameToken);
+                    }
+				}
+
 				double scalar = 1;
 				if (ArtifactEnabled && NetworkServer.active)
 				{
@@ -54,17 +106,18 @@ namespace ArtifactGroup
 							//Vector3 size = new Vector3();
 							scalar = 1;
 							scalar *= (double)Math.Pow((double)cost * (double)(0.00035 * Mathf.Min(10, RoR2.Run.instance.stageClearCount + 1)) + 1, OptionsLink.AOT_BossGrowthPerStage.Value); // violent growth...																   //size.x = body.gameObject.transform.localScale.x * scalar;
-																																					   //size.y = body.gameObject.transform.localScale.y * scalar;
+																																		   //size.y = body.gameObject.transform.localScale.y * scalar;
 							if (body.isElite)
 							{
 								scalar += (float)OptionsLink.AOT_EliteMultiplier.Value;
 							}
-							body.masterObject.transform.localScale *= (float)scalar;
+							scalar += OptionsLink.AOT_FixedBossScaling.Value;
+
 							//body.gameObject.transform.localScale = size;
 						}
 						else
 						{
-							Debug.Log("Scaling...");
+							//Debug.Log("Scaling...");
 							Vector3 size = new Vector3();
 							scalar = 1;
 							scalar *= Mathf.Log(cost * (float)OptionsLink.AOT_CreditScalingMultiplier.Value + 1, (float)1.75);
@@ -73,6 +126,7 @@ namespace ArtifactGroup
 							{
 								scalar += OptionsLink.AOT_EliteMultiplier.Value;
 							}
+							scalar += OptionsLink.AOT_FixedMonsterScaling.Value;
 							//body.modelLocator.transform.localScale = 
 						}
 					}
@@ -89,23 +143,17 @@ namespace ArtifactGroup
 				orig.Invoke(self, body);
 			};
 
-			//RoR2.EliteDef
+            //RoR2.EliteDef
+        }
+
+		// using this as a cross reference when monsters spawn with a 0 credit cost
+        public struct monsterIdentity
+        {
+			public int creditCost;
+			public String baseNameToken;
+			public bool isElite;
 		}
 
-		void printBuffs()
-		{
-			foreach (BuffDef b in BuffCatalog.buffDefs)
-			{
-
-				//Debug.Log("BUFF NAME: " + b.name + " BUFF INDEX:" + b.buffIndex);
-			}
-
-			foreach (EliteDef b in EliteCatalog.eliteDefs)
-			{
-
-				//Debug.Log("ELITE NAME: " + b.name + " ELITE INDEX:" + b.eliteIndex);
-			}
-		}
-	}
+    }
 
 }

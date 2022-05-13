@@ -34,7 +34,7 @@ namespace ArtifactGroup
         {
             this.eventID = eventID;
 
-            double hookChance = (120 / (availableHooks.Length - 5)) / (EntropyHost.eventTotal / 14);
+            double hookChance = (120 / (availableHooks.Length)) / (EntropyHost.eventTotal / 10);
 
             // apply RiskOfOptions setting 
             try

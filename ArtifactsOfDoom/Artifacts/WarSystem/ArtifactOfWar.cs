@@ -142,7 +142,7 @@ namespace ArtifactGroup
 						body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
 					}
 
-					Debug.Log("DmgMult: " + ((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 32, Math.Max(RoR2.Run.instance.stageClearCount - 1.6, 0))));
+					//Debug.Log("DmgMult: " + ((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 32, Math.Max(RoR2.Run.instance.stageClearCount - 1.6, 0))));
 				}
 			};
 			On.RoR2.GlobalEventManager.OnCharacterHitGroundServer += (orig_OnCharacterHitGroundServer orig, global::RoR2.GlobalEventManager self, global::RoR2.CharacterBody characterBody, Vector3 impactVelocity) =>
@@ -246,7 +246,7 @@ namespace ArtifactGroup
 					spike = 1;
 					spiked = false;
 					// we are in a new scene (in most cases)
-					Debug.Log("evolve call");
+					//Debug.Log("evolve call");
 					MessageHandler.globalMessage("Stage " + (RoR2.Run.instance.stageClearCount + 1).ToString() + " item droprate: " + (OptionsLink.AOW_BaseDropChance.Value * Math.Pow(((Run.instance.stageClearCount) * 1+1), OptionsLink.AOW_DropChanceExpScaling.Value)).ToString());
 					storedStage = RoR2.Run.instance.stageClearCount + 1;
 					this.evolveEnemies();
@@ -260,7 +260,7 @@ namespace ArtifactGroup
 				// handler for the void fields (hell zone)
 				if (RoR2.SceneCatalog.currentSceneDef.cachedName.CompareTo("arena") == 0 && spiked == false)
 				{
-					Debug.Log("Scene Spiked");
+					//Debug.Log("Scene Spiked");
 					spike = 60;
 					spiked = true;
 					loadingStage = true;
@@ -283,7 +283,7 @@ namespace ArtifactGroup
 								dupelist.Add(spawn.spawnedInstance.name);
 								DirectorSpawnRequest directorSpawnRequest = spawn.spawnRequest;
 								directorSpawnRequest.ignoreTeamMemberLimit = true;
-								Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+								//Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
 								DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
 								//directorSpawnRequest.spawnCard.DoSpawn(superPosition, new Quaternion(), directorSpawnRequest);
 								//DirectorCore.spawnedObjects.Add(directorSpawnRequest.summonerBodyObject);
@@ -292,7 +292,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							Debug.Log("Blocked");
+							//Debug.Log("Blocked");
 						}
 					}
 					else
@@ -302,7 +302,7 @@ namespace ArtifactGroup
 				}
 				catch
 				{
-					Debug.Log("ERROR");
+					Debug.Log("(AOW) ERROR");
 				}
 			}
 		}
@@ -484,7 +484,7 @@ namespace ArtifactGroup
 
 
 			int plyr = rnd.Next(0, PlayerCharacterMasterController.instances.Count);
-			Debug.Log("Amount of players in Master Controller = " + PlayerCharacterMasterController.instances.Count);
+			//Debug.Log("Amount of players in Master Controller = " + PlayerCharacterMasterController.instances.Count);
 			for (int i = 0; i < PlayerCharacterMasterController.instances.Count; i++)
 			{
 				Debug.Log(PlayerCharacterMasterController.instances[i]);
@@ -501,7 +501,7 @@ namespace ArtifactGroup
 				}
 				else
 				{
-					Debug.Log("Unity Give-->");
+					//Debug.Log("Unity Give-->");
 					// get item index from item controller
 					ItemIndex give = dex;
 
@@ -587,11 +587,11 @@ namespace ArtifactGroup
 
 					if (containsStr(enemy_limiters, selectedItem) != -1)
 					{
-						Debug.Log("Kappa?");
+						//Debug.Log("Kappa?");
 						// enemy hard cap
 						if (enemy_counters[containsStr(enemy_limiters, selectedItem)] >= enemy_limits[containsStr(enemy_limiters, selectedItem)])
 						{
-							Debug.Log("Kapped");
+							//Debug.Log("Kapped");
 							// recursive call to get a different item this roll then the capped ones
 							flag = true;
 						}

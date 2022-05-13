@@ -109,7 +109,7 @@ namespace Messenger
                 charColor = captainColor;
             }
 
-            Debug.Log(ch.name + " == " + "?");
+            //Debug.Log(ch.name + " == " + "?");
 
             globalMessage("<color=" + charColor + ">" + ch.GetUserName() + "</color>" +
                 " has received: " + "<color=" + rarityColor + ">" +

@@ -64,14 +64,14 @@ namespace ArtifactsOfDoom
                 }
                 else
                 {
-                    Debug.Log("body found (DeathStorage)");
+                    //Debug.Log("body found (DeathStorage)");
                     foreach (ItemIndex dex in playerChest)
                     {
                         Debug.Log("Giving " + PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken + " to " + NetworkUser.readOnlyInstancesList[index].userName);
                         NetworkUser.readOnlyInstancesList[index].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
                         MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[index].GetCurrentBody(), dex, 0);
                     }
-                    Debug.Log("Loop End");
+                    //Debug.Log("Loop End");
                     // now clear the list of items
                     playerChest.Clear();
                     playerChest.TrimExcess();

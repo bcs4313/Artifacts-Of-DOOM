@@ -65,7 +65,7 @@ namespace ArtifactGroup
                 {
                     if (c.networkIdentity.netId.Value == targetId)
                     {
-                        Debug.Log("Found monster using universalID. hooking...");
+                        //Debug.Log("Found monster using universalID. hooking...");
                         master = c.master;
                         ModelLocator modelLocator = c.GetComponent<ModelLocator>();
                         if (modelLocator)
@@ -251,7 +251,7 @@ namespace ArtifactGroup
                 }
                 else
                 {
-                    Debug.Log("Master ");
+                    //Debug.Log("Master ");
                 }
 
                 CharacterMaster master = null;
@@ -357,19 +357,20 @@ namespace ArtifactGroup
             {
                 scalar += (float)0.4;
             }
-            size.x = body.gameObject.transform.localScale.x * (float)scalar;
-            size.y = body.gameObject.transform.localScale.y * (float)scalar;
-            size.z = body.gameObject.transform.localScale.z * (float)scalar;
+            size.x = body.modelLocator.modelTransform.localScale.x * (float)scalar;
+            size.y = body.modelLocator.modelTransform.localScale.y * (float)scalar;
+            size.z = body.modelLocator.modelTransform.localScale.z * (float)scalar;
             Debug.Log("Size adjust for " + body.name + "... = " + scalar);
-            body.gameObject.transform.localScale = size;
+            body.modelLocator.modelTransform.localScale = size;
+            body.modelLocator.modelTransform.hasChanged = true;
+            body.modelLocator.UpdateModelTransform(0);
 
             /*
-            // this block adjusts the foot position of the monster, preventing them from being partially in the ground.
-            // to do this, we assign a parent object to force the monster upward
-            GameObject footAdjust = new GameObject();
-            footAdjust.transform.SetPositionAndRotation(body.gameObject.transform.position, body.gameObject.transform.rotation);
-            body.gameObject.transform.parent = footAdjust.transform;
-            footAdjust.transform.localPosition.Set(body.gameObject.transform.position.x, body.gameObject.transform.position.y + 9999, body.gameObject.transform.position.z);
+            // adjust the height of the monster so it properly aligns with the ground
+            var bodyHeight = Mathf.Abs(body.corePosition.y-body.footPosition.y) * 2;
+            var offset = (size.x - 1) * (bodyHeight / 2);
+            GameObject heightComponent = new GameObject();
+            body.modelLocator.transform;
             */
         }
 

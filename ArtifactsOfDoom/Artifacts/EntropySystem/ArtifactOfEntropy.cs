@@ -398,7 +398,7 @@ namespace ArtifactGroup
 				Amogus.AddComponent<Image>();
 				Amogus.GetComponent<Image>().sprite = Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Amogus.jpg");
 				Amogus.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
-				Debug.Log("Amogus layer = " + Amogus.layer.ToString());
+				//Debug.Log("Amogus layer = " + Amogus.layer.ToString());
 				Amogus.layer = 0;
 		}
 
