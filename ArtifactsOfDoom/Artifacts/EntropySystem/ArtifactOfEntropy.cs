@@ -52,8 +52,8 @@ namespace ArtifactGroup
 		public override string ArtifactLangTokenName => "ARTIFACT_OF_ENTROPY";
 		public override string ArtifactDescription => "Random effects are assigned to certain actions, with a randomly defined chance to occur. \n" +
 			"Figure out what horrible events occur for ANYthing you do, or else...";
-		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/MonkeAngre.jpg");
-		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Monke.jpg");
+		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfEntropy.png");
+		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfEntropyDisabled.png");
 
 		public override void Init()
 		{
@@ -280,13 +280,16 @@ namespace ArtifactGroup
 				{
 					CharacterBody victim = damageReport.victim.body;
 					CharacterBody attacker = damageReport.attackerBody;
-					if (victim.teamComponent.teamIndex == TeamIndex.Monster && attacker.teamComponent.teamIndex == TeamIndex.Player)
+					if (victim != null && attacker != null)
 					{
-						entropyHost.queueHook("DamageDeal", attacker.networkIdentity.netId.Value, true);
-					}
-					else if (victim.teamComponent.teamIndex == TeamIndex.Player)
-					{
-						entropyHost.queueHook("DamageTake", victim.networkIdentity.netId.Value, true);
+						if (victim.teamComponent.teamIndex == TeamIndex.Monster && attacker.teamComponent.teamIndex == TeamIndex.Player)
+						{
+							entropyHost.queueHook("DamageDeal", attacker.networkIdentity.netId.Value, true);
+						}
+						else if (victim.teamComponent.teamIndex == TeamIndex.Player)
+						{
+							entropyHost.queueHook("DamageTake", victim.networkIdentity.netId.Value, true);
+						}
 					}
 				}
 				orig.Invoke(self, damageReport);

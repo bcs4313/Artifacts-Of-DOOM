@@ -25,8 +25,8 @@ namespace ArtifactGroup
 		public override string ArtifactDescription => "You and everything supporting you is smaller. \n " +
 			"ALL Enemy Sizes Scale according to credit cost. Boss size additionaly scales with stage (max 10). \n" +
 			"Note: Enemies spawned upon entering the stage do not scale!";
-		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/MonkeAngre.jpg");
-		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Monke.jpg");
+		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfTheTitans.png");
+		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfTheTitansDisabled.png");
 
 		public override void Init()
 		{

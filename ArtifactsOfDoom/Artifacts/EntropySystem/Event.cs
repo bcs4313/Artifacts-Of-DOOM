@@ -34,8 +34,10 @@ namespace ArtifactGroup
         {
             this.eventID = eventID;
 
-            double hookChance = (120 / (availableHooks.Length)) / (EntropyHost.eventTotal / 10);
-
+            double hookChance = 2.4;
+            //Debug.Log("base hook chance: " + hookChance);
+            // formuala: hookChance *= 1 / ((availableHooks.Length - 6) / (EntropyHost.eventTotal / 18));
+            //Debug.Log("initial hook chance: " + hookChance);
             // apply RiskOfOptions setting 
             try
             {
@@ -45,6 +47,7 @@ namespace ArtifactGroup
             {
                 Messenger.MessageHandler.globalMessage("error parsing EventHookMultiplier setting! Check to see if the setting is a decimal value!");
             }
+            Debug.Log("Caclulated hook chance with setting: " + hookChance);
 
             // run randomly through the list of hooks, on average picking 
             // x hooks, divided by the known event count / 10

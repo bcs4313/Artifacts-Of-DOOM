@@ -27,8 +27,8 @@ namespace ArtifactGroup
 		public override string ArtifactName => "Artifact of Unity";
 		public override string ArtifactLangTokenName => "ARTIFACT_OF_UNITY";
 		public override string ArtifactDescription => "'We have become one'\n Items are shared amongst players, but enemies scale significantly faster.";
-		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/MonkeAngre.jpg");
-		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Monke.jpg");
+		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfUnity.png");
+		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfUnityDisabled.png");
 
 		public override void Init()
 		{

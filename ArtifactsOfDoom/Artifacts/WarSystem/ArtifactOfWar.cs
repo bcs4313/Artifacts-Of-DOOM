@@ -26,10 +26,14 @@ namespace ArtifactGroup
 		String[] t1Items = {"BleedOnHit", "ChainLightning", "CritGlasses",
 			"FlatHealth", "Hoof", "HealWhileSafe", "NearbyDamageBonus", "SprintBonus",
 			"StickyBomb", "StunChanceOnHit"};
-		String[] t2Items = { "Syringe", "AttackSpeedOnCrit", "ArmorPlate", "Knurl", "HealOnCrit", "Missile", "Seed", "Pearl", "SprintOutOfCombat", "SprintArmor" };
+		String[] t2Items = { "Syringe", "AttackSpeedOnCrit", "ArmorPlate", "Knurl", "HealOnCrit", 
+			"Missile", "Seed", "Pearl", "SprintOutOfCombat", "SprintArmor"};
 		String[] t3Items = {"AlienHead", "ArmorReductionOnHit", "BarrierOnOverHeal", "IncreaseHealing"
-		, "PersonalShield","BleedOnHitAndExplode", "FireballsOnHit", "FireRing"};
-		String[] ultraRares = { "Behemoth", "CaptainDefenseMatrix", "Clover", "SlowOnHit", "BeetleGland", "RoboBallBuddy", "IceRing" };
+		, "PersonalShield","BleedOnHitAndExplode", "FireballsOnHit", "FireRing", 
+			"HealingPotionConsumed", "PrimarySkillShuriken", "StunChanceOnHit", "MoreMissile",
+			"FragileDamageBonus", "CritDamage", "BleedOnHitAndExplode", "FlatHealth", "SiphonOnLowHealth", 
+			"ShinyPearl"};
+		String[] ultraRares = { "Behemoth", "CaptainDefenseMatrix", "Clover", "SlowOnHit", "BeetleGland", "RoboBallBuddy", "IceRing", "Bear", "ShockNearby", "Medkit"};
 		public static String[] lunarItems = { "LunarPrimaryReplacement", "LunarUtilityReplacement", "AutoCastEquipment", "RepeatHeal", 
 			"ShieldOnly", "LunarDagger", "GoldOnHit", "RandomDamageZone", "LunarTrinket"};
 		// items that are evolve capped to a value
@@ -63,7 +67,14 @@ namespace ArtifactGroup
 			,"Teleporter1(Clone)", "CategoryChestHealing(Clone)","Barrel1(Clone)","Chest1(Clone)",
 			"TripleShop(Clone)", "EquipmentBarrel(Clone)","ShrineHealing(Clone)","Drone2Broken(Clone)","Turret1Broken(Clone)"
 		, "ShrineBoss", "LunarTeleporter Variant(Clone)", "LunarTeleporter Variant", "ShrineChance", "ShrineChance(Clone)",
-			"PortalGoldShores(Clone)", "PortalGoldShores"};
+			"PortalGoldShores(Clone)", "PortalGoldShores(Clone)", "iscPortalGoldShores", "iscGoldshoresPortal", "iscVoidCamp", "iscVoidChest", "iscVoidCoinBarrel", 
+			"VoidBarnacleMaster(Clone)", "scVoidCampTallGrassCluster1", "cscVoidBarnacle", "iscVoidChestSacrificeOn",
+			"iscShopPortal", "iscCategoryChestUtility", "iscLunarChest", "iscFreeChest", "iscCategoryChestDamage", "iscDuplicatorLarge", 
+			"DirectorSpawnProbeHelperPrefab(Clone)", "iscTripleShopEquipment", "iscDuplicator", "iscChest2", "iscShrineBlood", "iscShrineCleanse",
+			"iscBrokenDrone1", "iscBrokenEquipmentDrone", "iscBrokenEmergencyDrone", "cscDroneCommander", "iscCategoryChestDamage", "iscScrapper",
+		"iscChest2", "iscVoidChest", "iscCategoryChestUtility", "iscShrineBlood", "iscShrineChanceSnowy",
+			"iscLockbox", "iscTripleShopLarge", "iscShrineCombat", "iscShrineBossSnowy", "iscShrineBoss", "iscShrineBloodSnowy",
+			"iscShrineCombatSnowy", "iscShrineHealingSnowy", "iscDuplicatorWild", "iscShopPortal","iscRadarTower", "iscGoldshoresBeacon"};
 
 		int storedStage = -1; // allows updates of stages upon loading them
 		int spike = 1; // spike in swarms in the void fields
@@ -77,8 +88,8 @@ namespace ArtifactGroup
 			"Stage increase = ++Evolution, +++Item Droprate\n" +
 			"All increases are exponential.\n" +
 			"BEWARE SPEEDRUNNERS! SIDE EFFECTS OF RUSHING ARE DEATH, DEATH, and MORE DEATH!!!\n";
-		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ShronkFried.jpg");
-		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/Shronk.jpg");
+		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfWar.png");
+		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfWarDisabled.png");
 
 		public override void Init()
 		{
@@ -123,7 +134,18 @@ namespace ArtifactGroup
 
 				// Define a TeamDef object (from original)
 				TeamDef def = RoR2.TeamCatalog.GetTeamDef(TeamIndex.Monster);
-				def.softCharacterLimit = 250; // limit adjustment
+
+				float spawnCap = 250;
+				try
+				{
+					spawnCap = Math.Max(float.Parse(OptionsLink.AOW_EntityCap.Value), 0.001f);
+				}
+				catch
+				{
+					MessageHandler.globalMessage("Cannot Interpret Spawn Cap Value in the mod settings! Try changing the syntax!");
+				}
+
+				def.softCharacterLimit = (int)spawnCap; // limit adjustment
 
 				// replace in def
 				RoR2.TeamCatalog.Register(TeamIndex.Monster, def);
@@ -234,8 +256,17 @@ namespace ArtifactGroup
 					MessageHandler.globalMessage("Cannot Interpret Swarm Time Value in the mod settings! Try changing the syntax!");
                 }
 
+				float swarmCap = 5;
+				try
+				{
+					swarmCap = Math.Max(float.Parse(OptionsLink.AOW_MaxSwarm.Value), 0.001f);
+				}
+				catch
+				{
+					MessageHandler.globalMessage("Cannot Interpret Swarm Cap Value in the mod settings! Try changing the syntax!");
+				}
 
-                float SwarmsCoeffcient = Math.Max(Math.Min((float)(time / (divider * 60)), 5), Math.Min(RoR2.Run.instance.stageClearCount, 5));
+				float SwarmsCoeffcient = Math.Min((float)(time / (divider * 60)), swarmCap);
 				//Debug.Log("COEFF = " + SwarmsCoeffcient.ToString());
 				//Debug.Log("COEFFFFFF = " + Math.Min((float)(time / 300), 5).ToString());
 
@@ -276,7 +307,6 @@ namespace ArtifactGroup
 							for (int i = 0; i < Math.Floor(SwarmsCoeffcient); i++)
 							{
 								currentSpawn = spawn.spawnedInstance.name;
-								Debug.Log("Spawned extra Instance of " + currentSpawn + " COEFF: " + SwarmsCoeffcient);
 								dupelist.Clear();
 								DirectorCore.spawnedObjects.Capacity = 99999;
 								RoR2.SceneDirector.cardSelector.Capacity = 99999;
@@ -284,7 +314,11 @@ namespace ArtifactGroup
 								DirectorSpawnRequest directorSpawnRequest = spawn.spawnRequest;
 								directorSpawnRequest.ignoreTeamMemberLimit = true;
 								//Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
-								DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+								if (!blacklist.Contains(directorSpawnRequest.spawnCard.name))
+								{
+									Debug.Log("Spawned extra Instance of " + currentSpawn + " :: " + directorSpawnRequest.spawnCard.name + " COEFF: " + SwarmsCoeffcient);
+									DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+								}
 								//directorSpawnRequest.spawnCard.DoSpawn(superPosition, new Quaternion(), directorSpawnRequest);
 								//DirectorCore.spawnedObjects.Add(directorSpawnRequest.summonerBodyObject);
 							}
@@ -317,7 +351,7 @@ namespace ArtifactGroup
 			{
 				if (damageReport.victim.body.isPlayerControlled) // check if a player died
 				{
-					MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
+					//MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
 					dead_players.Add(damageReport.victim.body.GetUserName());
 				}
 
@@ -531,7 +565,7 @@ namespace ArtifactGroup
 			if (RoR2.Run.instance.selectedDifficulty == DifficultyIndex.Easy)
 			{
 				Debug.Log("in ez mode");
-				items = Math.Pow(RoR2.Run.instance.difficultyCoefficient * 0.4 + 1, 14) + (RoR2.Run.instance.stageClearCount * 2) + 1000;
+				items = Math.Max(Math.Pow(RoR2.Run.instance.difficultyCoefficient + 0.3, OptionsLink.AOW_EvolutionExpScaling.Value), Math.Pow(RoR2.Run.instance.stageClearCount + 2, OptionsLink.AOW_EvolutionExpScaling.Value - 0.7) * 2.5);
 			}
 			else
 			{
