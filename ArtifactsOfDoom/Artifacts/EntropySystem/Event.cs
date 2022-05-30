@@ -15,7 +15,7 @@ namespace ArtifactGroup
         // each hook that could trigger something
         public String[] availableHooks = { "Teleporter", "DamageTake", "DamageDeal", "Land", "Kill", "EquipmentActivate", "PickupSpawn",
                                            "ShrineChance", "ShrineBoss", "ShrineBlood", "ShrineCleanse", "ShrineCombat", "ShrineHealing", "PrimarySkill", "SecondarySkill", "UtilitySkill", "SpecialSkill", "W",
-                                           "A", "S", "D", "Ctrl", "CoinBarrel",   "PressurePlate"};
+                                           "A", "S", "D", "Ctrl", "CoinBarrel"};
 
         // multipliers that help "balance" out each random hook's chances (0.5 = normal chance, 1.5 = double)
         public double[] implicitWeights = { 40,            0.4,          0.2,          0.4,    0.3,    2.3,                 3.2,
@@ -25,7 +25,7 @@ namespace ArtifactGroup
         public List<String> hooksAttached = new List<String>();
         public List<double> hookChances = new List<double>();
         bool forceEvent = false;
-        int forceValue = 61;
+        int forceValue = 78;
 
         System.Random rnd = ArtifactOfEntropy.rnd;
 
@@ -34,7 +34,7 @@ namespace ArtifactGroup
         {
             this.eventID = eventID;
 
-            double hookChance = 2.4;
+            double hookChance = 1.8;
             //Debug.Log("base hook chance: " + hookChance);
             // formuala: hookChance *= 1 / ((availableHooks.Length - 6) / (EntropyHost.eventTotal / 18));
             //Debug.Log("initial hook chance: " + hookChance);
@@ -47,7 +47,7 @@ namespace ArtifactGroup
             {
                 Messenger.MessageHandler.globalMessage("error parsing EventHookMultiplier setting! Check to see if the setting is a decimal value!");
             }
-            Debug.Log("Caclulated hook chance with setting: " + hookChance);
+            //Debug.Log("Caclulated hook chance with setting: " + hookChance);
 
             // run randomly through the list of hooks, on average picking 
             // x hooks, divided by the known event count / 10
@@ -66,7 +66,17 @@ namespace ArtifactGroup
                     double bigMult = rnd.NextDouble() + implicitWeights[i];
 
                     // include the implicit weight for the chance!
-                    hookChances.Add(100.0 * r1 * r2 * r3 * bigMult);
+                    try
+                    {
+                        float optionMult = float.Parse(OptionsLink.AOE_EventChanceMultiplier.Value);
+                        float optionAdd = OptionsLink.AOE_EventChanceOffset.Value;
+                        hookChances.Add(Math.Min(Math.Min(100.0 * r1 * r2 * r3 * bigMult, 100) * optionMult, 100) + optionAdd);
+                    }
+                    catch
+                    {
+                        // include the implicit weight for the chance!
+                        hookChances.Add(100.0 * r1 * r2 * r3 * bigMult);
+                    }
                 }
             }
             
@@ -84,9 +94,9 @@ namespace ArtifactGroup
 
                 try
                 {
-                    float optionMult = float.Parse(OptionsLink.AOE_EventHookMultiplier.Value);
+                    float optionMult = float.Parse(OptionsLink.AOE_EventChanceMultiplier.Value);
                     float optionAdd = OptionsLink.AOE_EventChanceOffset.Value;
-                    hookChances.Add(Math.Min(100.0 * r1 * r2 * r3 * bigMult * optionMult, 100) + optionAdd);
+                    hookChances.Add(Math.Min(Math.Min(100.0 * r1 * r2 * r3 * bigMult, 100) * optionMult, 100) + optionAdd);
                 }
                 catch
                 {

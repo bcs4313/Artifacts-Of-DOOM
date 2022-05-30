@@ -55,9 +55,13 @@ namespace Messenger
             {
                 rarityColor = uncommonColor;
             }
-            else
+            else if (rarity == 3)
             {
                 rarityColor = legendaryColor;
+            }
+            else
+            {
+                rarityColor = voidColor;
             }
 
             if (ch.GetDisplayName().CompareTo("Commando") == 0)

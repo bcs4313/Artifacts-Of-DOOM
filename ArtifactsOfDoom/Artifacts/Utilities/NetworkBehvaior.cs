@@ -200,7 +200,7 @@ namespace ArtifactGroup
             public void OnReceived()
             {
                 //MessageHandler.globalMessage("Pack Received! Identity: " + UID + ", hook type: " + hook);
-                Debug.Log("keyLog from Client: " + hook);
+                //Debug.Log("keyLog from Client: " + hook);
                 // queue received hook into host object, with given identity
                 ArtifactOfEntropy.entropyHost.queueHook(hook, UID, true);
             }
@@ -246,7 +246,7 @@ namespace ArtifactGroup
                 var allMonsterBodiesInStage = TeamComponent.GetTeamMembers(TeamIndex.Monster).Select((x) => x.body);
                 if (allMonsterBodiesInStage == null)
                 {
-                    Debug.Log("Master is null... aborting");
+                    Debug.Log("(Artifact of Titans) Master is null... aborting. Report this if you see this message too much.");
                     return;
                 }
                 else
@@ -255,17 +255,36 @@ namespace ArtifactGroup
                 }
 
                 CharacterMaster master = null;
+                bool monsterFound = false;
                 foreach (CharacterBody c in allMonsterBodiesInStage)
                 {
                     if (c.networkIdentity.netId.Value == universalId)
                     {
-                        Debug.Log("Found monster using universalID. hooking...");
+                        //Debug.Log("Found monster using universalID. hooking...");
                         master = c.master;
-                        master.onBodyStart += (global::RoR2.CharacterBody body) =>
+                        if (!master.hasBody)
                         {
-                            resizeMonster(body, scalar);
-                        };
+                            master.onBodyStart += (global::RoR2.CharacterBody body) =>
+                            {
+                                resizeMonster(body, scalar);
+                            };
+                        }
+                        else
+                        {
+                            resizeMonster(master.GetBody(), scalar);
+                        }
+                        monsterFound = true;
                     }
+                }
+
+                if(monsterFound == false)
+                {
+                    Debug.Log("(Artifact of The Titans): Failed to find monster! UID = " + universalId + " Will attempt to resize later.");
+                    var mon = new ArtifactOfTitans.desyncedMonster();
+                    mon.scalar = this.scalar;
+                    mon.overload = 0;
+                    mon.uid = this.idTarget;
+                    ArtifactOfTitans.desynchronizedMonsters.Add(mon);
                 }
             }
 
@@ -299,18 +318,6 @@ namespace ArtifactGroup
             {
                 uint universalId = idTarget;
 
-                // first we must find the monster body in the instances list for this client. Then we resize em.
-                var allMonsterBodiesInStage = TeamComponent.GetTeamMembers(TeamIndex.Monster).Select((x) => x.body);
-                if (allMonsterBodiesInStage == null)
-                {
-                    Debug.Log("Master is null... aborting");
-                    return;
-                }
-                else
-                {
-                    Debug.Log("Master ");
-                }
-
                 CharacterMaster master = null;
                 foreach (NetworkUser u in NetworkUser.readOnlyInstancesList)
                 {
@@ -330,7 +337,7 @@ namespace ArtifactGroup
             }
         }
 
-        static void resizeMonster(CharacterBody body, double scalar)
+        public static void resizeMonster(CharacterBody body, double scalar)
         {
             Debug.Log("(hooked) Modifying for client...");
 
@@ -352,11 +359,8 @@ namespace ArtifactGroup
             }
 
             Vector3 size = new Vector3();
-            size = body.gameObject.transform.localScale;
-            if (body.isElite)
-            {
-                scalar += (float)0.4;
-            }
+            size = body.modelLocator.modelTransform.localScale;
+
             size.x = body.modelLocator.modelTransform.localScale.x * (float)scalar;
             size.y = body.modelLocator.modelTransform.localScale.y * (float)scalar;
             size.z = body.modelLocator.modelTransform.localScale.z * (float)scalar;
@@ -375,11 +379,11 @@ namespace ArtifactGroup
         }
 
         static async public void distortScreen(uint universalId)
-        {
+        {/*
             CharacterBody c = grabUser(universalId); // get user body to affect using UID
 
             var rnd = new System.Random();
-            var cam = CameraRigController.readOnlyInstancesList[0].uiCam;
+            var cam = c.
             int spinMagnitude = rnd.Next(-720, 720);
             int delay = rnd.Next(1, 5);
             var originalPos = cam.transform.position;
@@ -406,20 +410,26 @@ namespace ArtifactGroup
                 // play sound for all players, localized to id of target
                 new networkBehavior.Playsound(2719873183, universalId).Send(R2API.Networking.NetworkDestination.Clients);
             }
+            */
         }
 
         static public CharacterBody grabUser(uint targetID) // get body to affect using UID info
         {
             for (int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
             {
-                CharacterBody c = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
-                if (c.networkIdentity.netId.Value == targetID)
+                var instance = NetworkUser.readOnlyInstancesList[i];
+                if (instance != null && instance.GetCurrentBody() != null && instance.GetCurrentBody().networkIdentity != null
+                    && instance.GetCurrentBody().networkIdentity.netId != null)
                 {
-                    return c;
+                    CharacterBody c = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
+                    if (c.networkIdentity.netId.Value == targetID)
+                    {
+                        return c;
+                    }
                 }
             }
 
-            //MessageHandler.globalMessage("Error: issue locating target body! (Grabuser)");
+            Debug.Log("MessageHandler: issue locating target body! Grabuser()");
             return NetworkUser.readOnlyInstancesList[0].GetCurrentBody();
         }
     }

@@ -62,7 +62,7 @@ namespace ArtifactGroup
 		/// <summary>
 		/// Prevents Swarm aspect of Artifact from spawning other utilities (Monsters only desired)
 		/// </summary>
-		List<String> blacklist = new List<String>() {"Teleporter1", "CategoryChestHealing","Barrel1","Chest1",
+		List<String> blacklist = new List<String>() {"PodGroundImpact(Clone)", "Teleporter1", "CategoryChestHealing","Barrel1","Chest1",
 			"TripleShop", "EquipmentBarrel","ShrineHealing","Drone2Broken","Turret1Broken"
 			,"Teleporter1(Clone)", "CategoryChestHealing(Clone)","Barrel1(Clone)","Chest1(Clone)",
 			"TripleShop(Clone)", "EquipmentBarrel(Clone)","ShrineHealing(Clone)","Drone2Broken(Clone)","Turret1Broken(Clone)"
@@ -127,6 +127,8 @@ namespace ArtifactGroup
 			On.RoR2.Run.Start += (orig_Start orig, global::RoR2.Run self) =>
 			{
 				orig.Invoke(self);
+				ArtifactOfTitans.desynchronizedMonsters.Clear(); // weird to put it here but C# was really stubborn with this particular hook
+
 				if (ArtifactEnabled && NetworkServer.active)
 				{
 					deathStorage.init();
@@ -397,8 +399,7 @@ namespace ArtifactGroup
 
 			// rarity drop chances
 			double rareDropChance = 70.0;
-			double legendaryDropChance = 94.8;
-			double voidChance = 98.0;
+			double legendaryDropChance = 96.8;
 
 			// determine what rarity will drop
 			Random rnd = new Random();
@@ -406,58 +407,7 @@ namespace ArtifactGroup
 			int colorID = 0;
 
 			ItemIndex dex;
-			if (gen >= voidChance)
-			{
-				Debug.Log("Spawning Void...");
-				int len = 14;
-				int index = rnd.Next(1, len);
-
-				switch(index)
-                {
-					case 1:
-						dex = DLC1Content.Items.VoidMegaCrabItem.itemIndex;
-						break;
-					case 2:
-						dex = DLC1Content.Items.BearVoid.itemIndex;
-						break;
-					case 3:
-						dex = DLC1Content.Items.BleedOnHitVoid.itemIndex;
-						break;
-					case 4:
-						dex = DLC1Content.Items.ChainLightningVoid.itemIndex;
-						break;
-					case 5:
-						dex = DLC1Content.Items.CloverVoid.itemIndex;
-						break;
-					case 6:
-						dex = DLC1Content.Items.TreasureCacheVoid.itemIndex;
-						break;
-					case 7:
-						dex = DLC1Content.Items.SlowOnHitVoid.itemIndex;
-						break;
-					case 8:
-						dex = DLC1Content.Items.CritGlassesVoid.itemIndex;
-						break;
-					case 9:
-						dex = DLC1Content.Items.MissileVoid.itemIndex;
-						break;
-					case 11:
-						dex = DLC1Content.Items.ElementalRingVoid.itemIndex;
-						break;
-					case 12:
-						dex = DLC1Content.Items.EquipmentMagazineVoid.itemIndex;
-						break;
-					case 13:
-						dex = DLC1Content.Items.ExplodeOnDeathVoid.itemIndex;
-						break;
-					case 14:
-						dex = DLC1Content.Items.ExtraLifeVoid.itemIndex;
-						break;
-				}
-
-				dex = legendaries[index];
-				colorID = 4;
-			}
+		
 			if (gen >= legendaryDropChance)
 			{
 				Debug.Log("Spawning Legendary...");

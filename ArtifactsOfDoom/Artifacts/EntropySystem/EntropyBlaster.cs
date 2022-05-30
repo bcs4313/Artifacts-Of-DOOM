@@ -43,10 +43,10 @@ namespace ArtifactGroup
         public static int rotv2;
         public static int rotv3;
         public static int rotv4;
+        public static List<transformedPlayer> transformedPlayers = new List<transformedPlayer>();
 
         static public void WarpEnemies()
         {
-            /*
             MessageHandler.globalMessage("Is this hell?");
             double x = r.NextDouble() * 2 + 0.3;
             double y = r.NextDouble() * 2 + 0.3;
@@ -91,64 +91,66 @@ namespace ArtifactGroup
                     }
                 }
             }
-            */
         }
 
         static public void makeChonky(uint targetID)
         {
             // select a target player
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-
-            // play sound off of player's GameObject
-            AkSoundEngine.PostEvent(3256861171, c.gameObject);
-
-            ModelLocator modelLocator = c.GetComponent<ModelLocator>();
-            if (modelLocator)
+            if (c != null)
             {
-                Vector3 size = new Vector3();
-                size.x = modelLocator._modelTransform.localScale.x + (float)1.8;
-                size.y = modelLocator._modelTransform.localScale.y + (float)0.4;
-                size.z = modelLocator._modelTransform.localScale.z + (float)1.4;
+                // play sound off of player's GameObject
+                AkSoundEngine.PostEvent(3256861171, c.gameObject);
 
-                if (size.x < 0.55)
+                ModelLocator modelLocator = c.GetComponent<ModelLocator>();
+                if (modelLocator)
                 {
-                    return;
-                }
+                    Vector3 size = new Vector3();
+                    size.x = modelLocator._modelTransform.localScale.x + (float)1.8;
+                    size.y = modelLocator._modelTransform.localScale.y + (float)0.4;
+                    size.z = modelLocator._modelTransform.localScale.z + (float)1.4;
 
-                MessageHandler.globalMessage("ooga I shit pant");
-                Transform modelTransform = modelLocator.modelBaseTransform;
-                //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
-                if (modelTransform)
-                {
-                    modelLocator._modelTransform.localScale = size;
+                    if (size.x < 0.55)
+                    {
+                        return;
+                    }
 
-                    MessageHandler.globalMessage(c.GetUserName() + " needs to lay off the food... (fat fuck)");
+                    MessageHandler.globalMessage("ooga I shit pant");
+                    Transform modelTransform = modelLocator.modelBaseTransform;
+                    //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
+                    if (modelTransform)
+                    {
+                        modelLocator._modelTransform.localScale = size;
 
-                    // reduce firerate by 35%, Increase Dmg by 35%, 
-                    // Reduce speed by 25%, increase health by 25%
-                    c.baseAttackSpeed *= (float)0.65;
-                    c.baseDamage *= (float)1.35;
-                    c.baseMoveSpeed *= (float)0.75;
-                    c.baseMaxHealth *= (float)1.25;
+                        MessageHandler.globalMessage(c.GetUserName() + " needs to lay off the food...");
 
-                    // trigger size change for client
-                    // generate a raw client package
-                    uint idTarget = c.networkIdentity.netId.Value;
+                        // reduce firerate by 35%, Increase Dmg by 35%, 
+                        // Reduce speed by 25%, increase health by 25%
+                        c.baseAttackSpeed *= (float)0.75;
+                        c.baseDamage *= (float)1.2;
+                        c.baseMoveSpeed *= (float)0.85;
+                        c.baseMaxHealth *= (float)1.25;
+                        c.baseMaxHealth *= (float)1.25;
 
-                    // make player eat some mcds
-                    new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+                        // trigger size change for client
+                        // generate a raw client package
+                        uint idTarget = c.networkIdentity.netId.Value;
 
-                    // play sound for all clients
-                    new networkBehavior.Playsound(3256861171, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                        // make player eat some mcds
+                        new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+
+                        // play sound for all clients
+                        new networkBehavior.Playsound(3256861171, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                    }
+                    else
+                    {
+                        MessageHandler.globalMessage("??");
+                    }
                 }
                 else
                 {
-                    MessageHandler.globalMessage("??");
+                    MessageHandler.globalMessage("?");
                 }
-            }
-            else
-            {
-                MessageHandler.globalMessage("?");
             }
         }
 
@@ -156,53 +158,55 @@ namespace ArtifactGroup
         {
             // select a target player
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-
-            ModelLocator modelLocator = c.GetComponent<ModelLocator>();
-            if (modelLocator && c.baseMaxHealth > 1)
+            if (c != null)
             {
-                Vector3 size = new Vector3();
-                size.x = modelLocator._modelTransform.localScale.x * (float)0.7;
-                size.y = modelLocator._modelTransform.localScale.y * (float)0.7;
-                size.z = modelLocator._modelTransform.localScale.z * (float)0.7;
-
-                if(size.x > 2)
+                ModelLocator modelLocator = c.GetComponent<ModelLocator>();
+                if (modelLocator && c.baseMaxHealth > 1)
                 {
-                    return;
-                }
-                
-                Transform modelTransform = modelLocator.modelBaseTransform;
-                //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
-                if (modelTransform)
-                {
-                    modelLocator._modelTransform.localScale = size;
+                    Vector3 size = new Vector3();
+                    size.x = modelLocator._modelTransform.localScale.x * (float)0.7;
+                    size.y = modelLocator._modelTransform.localScale.y * (float)0.7;
+                    size.z = modelLocator._modelTransform.localScale.z * (float)0.7;
 
-                    c.baseAttackSpeed *= (float)1.25;
-                    c.baseDamage *= (float)0.8;
-                    c.baseMoveSpeed *= (float)1.25;
-                    c.baseMaxHealth *= (float)0.65;
+                    if (size.x > 2)
+                    {
+                        return;
+                    }
 
-                    MessageHandler.globalMessage(c.GetUserName() + " lost some weight. Anorexia?");
+                    Transform modelTransform = modelLocator.modelBaseTransform;
+                    //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
+                    if (modelTransform)
+                    {
+                        modelLocator._modelTransform.localScale = size;
 
-                    // trigger size change for client
-                    // generate a raw client package
-                    uint idTarget = c.networkIdentity.netId.Value;
+                        c.baseAttackSpeed *= (float)1.25;
+                        c.baseDamage *= (float)0.8;
+                        c.baseMoveSpeed *= (float)1.25;
+                        c.baseMaxHealth *= (float)0.65;
 
-                    // starve the player
-                    new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+                        MessageHandler.globalMessage(c.GetUserName() + " lost some weight. Anorexia?");
 
-                    AkSoundEngine.PostEvent(1149063705, c.gameObject);
+                        // trigger size change for client
+                        // generate a raw client package
+                        uint idTarget = c.networkIdentity.netId.Value;
 
-                    // play sound for all players, localized to id of target
-                    new networkBehavior.Playsound(1149063705, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                        // starve the player
+                        new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+
+                        AkSoundEngine.PostEvent(1149063705, c.gameObject);
+
+                        // play sound for all players, localized to id of target
+                        new networkBehavior.Playsound(1149063705, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                    }
+                    else
+                    {
+                        MessageHandler.globalMessage("??");
+                    }
                 }
                 else
                 {
-                    MessageHandler.globalMessage("??");
+                    MessageHandler.globalMessage("?");
                 }
-            }
-            else
-            {
-                MessageHandler.globalMessage("?");
             }
         }
 
@@ -210,19 +214,22 @@ namespace ArtifactGroup
         {
             // select a target player
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            double x = r.NextDouble() * 40;
-            double y = r.NextDouble() * 40 + 12;
-            double z = r.NextDouble() * 40;
+            if (c != null)
+            {
+                double x = r.NextDouble() * 40;
+                double y = r.NextDouble() * 40 + 12;
+                double z = r.NextDouble() * 40;
 
-            MessageHandler.globalMessage("Oopsies! Poor " + c.GetUserName() + " is stupid and yeeted himself!");
-            Vector3 size = new Vector3();
-            size.x = (float)x * c.characterMotor.mass;
-            size.y = (float)y * c.characterMotor.mass;
-            size.z = (float)z * c.characterMotor.mass;
-            c.characterMotor.ApplyForce(size, true, false);
-            AkSoundEngine.PostEvent(402528823, c.gameObject);
+                MessageHandler.globalMessage("Oopsies! Poor " + c.GetUserName() + " is stupid and yeeted himself!");
+                Vector3 size = new Vector3();
+                size.x = (float)x * c.characterMotor.mass;
+                size.y = (float)y * c.characterMotor.mass;
+                size.z = (float)z * c.characterMotor.mass;
+                c.characterMotor.ApplyForce(size, true, false);
+                AkSoundEngine.PostEvent(402528823, c.gameObject);
 
-            new networkBehavior.Playsound(402528823, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new networkBehavior.Playsound(402528823, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+            }
 
         }
 
@@ -276,32 +283,46 @@ namespace ArtifactGroup
         {
             // select a target player
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage(c.GetUserName() + " is super high bruh...");
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.TonicBuff, 20, 1);
-            AkSoundEngine.PostEvent(3190451810, c.gameObject);
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " is super high bruh...");
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.TonicBuff, 20, 1);
+                AkSoundEngine.PostEvent(3190451810, c.gameObject);
 
-            // play sound for all clients
-            new networkBehavior.Playsound(3190451810, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                // play sound for all clients
+                new networkBehavior.Playsound(3190451810, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+            }
         }
-
-        static public void perfection(uint targetID)
+        /*
+        static public void superSonic(uint targetID)
         {
             // select a target player
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage(c.GetUserName() + " Received the buff of the gods!");
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixBlue, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixRed, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixWhite, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.FullCrit, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.CrocoRegen, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.NoCooldowns, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.WhipBoost, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.CloakSpeed, 22, 1);
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.TeamWarCry, 22, 1);
-            AkSoundEngine.PostEvent(116063087, c.gameObject);
+            MessageHandler.globalMessage(c.GetUserName() + " is going supersonic!");
+            c.AddTimedBuff(RoR2.RoR2Content.Buffs.AttackSpeedOnCrit, 20, 5);
+        }
+        */
+            static public void perfection(uint targetID)
+            {
+            // select a target player
+            CharacterBody c = grabUser(targetID); // get user body to affect using UID
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " Received the buff of the gods!");
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixBlue, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixRed, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixWhite, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.FullCrit, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.CrocoRegen, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.NoCooldowns, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.WhipBoost, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.CloakSpeed, 22, 1);
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.TeamWarCry, 22, 1);
+                AkSoundEngine.PostEvent(116063087, c.gameObject);
 
-            // play sound for all clients
-            new networkBehavior.Playsound(116063087, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                // play sound for all clients
+                new networkBehavior.Playsound(116063087, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+            }
         }
 
 
@@ -309,8 +330,11 @@ namespace ArtifactGroup
         {
             // get player using UID
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage(c.GetUserName() + " just got a freebie!");
-            new ArtifactOfWar().giveItem(Vector3.zero, c);
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " just got a freebie!");
+                new ArtifactOfWar().giveItem(Vector3.zero, c);
+            }
         }
 
         static public void shrineSpawn()
@@ -358,19 +382,23 @@ namespace ArtifactGroup
 
         static public void chaChing()
         {
-            foreach (CharacterMaster c in RoR2.CharacterMaster._readOnlyInstancesList)
+            try
             {
-                CharacterBody body = c.GetBody();
-                if (body.teamComponent.teamIndex == TeamIndex.Player)
+                foreach (CharacterMaster c in RoR2.CharacterMaster._readOnlyInstancesList)
                 {
-                    AkSoundEngine.PostEvent(1288205242, body.gameObject);
+                    CharacterBody body = c.GetBody();
+                    if (body.teamComponent.teamIndex == TeamIndex.Player)
+                    {
+                        AkSoundEngine.PostEvent(1288205242, body.gameObject);
 
-                    // play sound for all clients
-                    new networkBehavior.Playsound(1288205242, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                        // play sound for all clients
+                        new networkBehavior.Playsound(1288205242, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                    }
                 }
+                MessageHandler.globalMessage("Free Money!");
+                TeamManager.instance.GiveTeamMoney(TeamIndex.Player, (uint)(25 * Math.Pow(RoR2.Run.instance.difficultyCoefficient, 1.25)));
             }
-            MessageHandler.globalMessage("Free Money!");
-            TeamManager.instance.GiveTeamMoney(TeamIndex.Player, (uint)(25 * Math.Pow(RoR2.Run.instance.difficultyCoefficient, 1.25)));
+            catch { }
         }
 
         static public void spawnShops()
@@ -410,67 +438,76 @@ namespace ArtifactGroup
         static public void amogus(uint targetID)
         {
             MessageHandler.globalMessage("A M O G U S");
-            CharacterBody body = grabUser(targetID); // get user body to affect using UID
-            if (body.teamComponent.teamIndex == TeamIndex.Player)
+            try
             {
-                AkSoundEngine.PostEvent(515509094, body.gameObject);
 
-                new networkBehavior.Playsound(515509094, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+                CharacterBody body = grabUser(targetID); // get user body to affect using UID
+                if (body.teamComponent.teamIndex == TeamIndex.Player && body != null)
+                {
+                    AkSoundEngine.PostEvent(515509094, body.gameObject);
+
+                    new networkBehavior.Playsound(515509094, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+                }
+                ArtifactOfEntropy.adjustAmogus();
+                new networkBehavior.Amogus().Send(R2API.Networking.NetworkDestination.Clients);
             }
-            ArtifactOfEntropy.adjustAmogus();
-            new networkBehavior.Amogus().Send(R2API.Networking.NetworkDestination.Clients);
+            catch { }
         }
 
         static async public Task thunderBolt(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             
-            MessageHandler.globalMessage(c.GetUserName()+ " has been SMITED!");
-
-            if (c.mainHurtBox)
+            if (c != null)
             {
-                RoR2.Orbs.OrbManager.instance.AddOrb(new LightningStrikeOrb
+                MessageHandler.globalMessage(c.GetUserName() + " has been SMITED!");
+                if (c.mainHurtBox)
                 {
-                    attacker = new GameObject(),
-                    damageColorIndex = DamageColorIndex.Item,
-                    damageValue = c.healthComponent.health / 5,
-                    isCrit = false,
-                    procChainMask = default(ProcChainMask),
-                    procCoefficient = 1f,
-                    target = c.mainHurtBox
-                });
+                    RoR2.Orbs.OrbManager.instance.AddOrb(new LightningStrikeOrb
+                    {
+                        attacker = new GameObject(),
+                        damageColorIndex = DamageColorIndex.Item,
+                        damageValue = c.healthComponent.health / 5,
+                        isCrit = false,
+                        procChainMask = default(ProcChainMask),
+                        procCoefficient = 1f,
+                        target = c.mainHurtBox
+                    });
+                }
+
+                c.AddTimedBuff(RoR2.RoR2Content.Buffs.Entangle, 0.3f, 999);
+                await Task.Delay(500);
+                //c.AddTimedBuff(RoR2.RoR2Content.Buffs.OnFire, 10, 999);
+                //c.AddTimedBuff(RoR2.RoR2Content.Buffs.Overheat, 10, 999);
             }
-            
-            c.AddTimedBuff(RoR2.RoR2Content.Buffs.Entangle, 0.3f, 999);
-            await Task.Delay(500);
-            //c.AddTimedBuff(RoR2.RoR2Content.Buffs.OnFire, 10, 999);
-            //c.AddTimedBuff(RoR2.RoR2Content.Buffs.Overheat, 10, 999);
         }
 
         static async public Task thunderBoltFriendly(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             CharacterBody m = findRandomMonster();
-
-            if (c.mainHurtBox)
+            if (m != null && c != null)
             {
-                RoR2.Orbs.OrbManager.instance.AddOrb(new LightningStrikeOrb
+                if (c.mainHurtBox)
                 {
-                    attacker = c.gameObject,
-                    damageColorIndex = DamageColorIndex.Item,
-                    damageValue = c.damage * 50,
-                    isCrit = false,
-                    procChainMask = default(ProcChainMask),
-                    procCoefficient = 1f,
-                    target = m.mainHurtBox
-                });
-            }
+                    RoR2.Orbs.OrbManager.instance.AddOrb(new LightningStrikeOrb
+                    {
+                        attacker = c.gameObject,
+                        damageColorIndex = DamageColorIndex.Item,
+                        damageValue = c.damage * 50,
+                        isCrit = false,
+                        procChainMask = default(ProcChainMask),
+                        procCoefficient = 1f,
+                        target = m.mainHurtBox
+                    });
+                }
 
-            m.AddTimedBuff(RoR2.RoR2Content.Buffs.Entangle, 0.3f, 999);
-            await Task.Delay(500);
-            MessageHandler.globalMessage("The power of Zeus, in your hands!");
-            //c.AddTimedBuff(RoR2.RoR2Content.Buffs.OnFire, 10, 999);
-            //c.AddTimedBuff(RoR2.RoR2Content.Buffs.Overheat, 10, 999);
+                m.AddTimedBuff(RoR2.RoR2Content.Buffs.Entangle, 0.3f, 999);
+                await Task.Delay(500);
+                MessageHandler.globalMessage("The power of Zeus, in your hands!");
+                //c.AddTimedBuff(RoR2.RoR2Content.Buffs.OnFire, 10, 999);
+                //c.AddTimedBuff(RoR2.RoR2Content.Buffs.Overheat, 10, 999);
+            }
         }
 
         static public void meteorStrike()
@@ -556,157 +593,210 @@ namespace ArtifactGroup
             // item index lists
             List<ItemIndex> lunars = ItemCatalog.lunarItemList;
 
-            MessageHandler.globalMessage("Free stuff!!! I guess?");
-
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            ItemIndex dex;
-            Debug.Log("Spawning Lunar...");
-            int len = lunars.Count;
-            Random rnd = new Random();
-            int index = rnd.Next(0, len);
-            dex = lunars[index];
+            if (c != null)
+            {
+                MessageHandler.globalMessage("Free stuff!!! I guess?");
+                ItemIndex dex;
+                Debug.Log("Spawning Lunar...");
+                int len = lunars.Count;
+                Random rnd = new Random();
+                int index = rnd.Next(0, len);
+                dex = lunars[index];
 
-            String itemName = PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken;
+                String itemName = PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken;
 
-            c.inventory.GiveItem(dex);
-            MessageHandler.globalItemGetMessage(c, dex, 3);
+                c.inventory.GiveItem(dex);
+                MessageHandler.globalItemGetMessage(c, dex, 3);
+            }
 
         }
 
         // Fire a BFG projectile in front of the player, dealing massive DMG
         static public void BFGFriendly(uint targetID)
         {
-            MessageHandler.globalMessage("A Big Fuckin Blast to kill a Big Monster's ASS");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.bfgChargeTimer = 0.01f;
-            c.equipmentSlot.subcooldownTimer = 0.01f;
+            if (c != null)
+            {
+                MessageHandler.globalMessage("A Big Fuckin Blast to kill a Big Monster's ASS");
+                c.equipmentSlot.bfgChargeTimer = 0.01f;
+                c.equipmentSlot.subcooldownTimer = 0.01f;
+            }
         }
 
         // Fire a BFG projectile at the player, with a random monster
         static public void BFGEvil(uint targetID)
         {
-            MessageHandler.globalMessage("Looks like DoomGuy's a little pissed at you...");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
 
             CharacterBody monsterShooter = findRandomMonster();
-            Vector3 position = monsterShooter.transform.position;
-            Ray aimRay = new Ray(monsterShooter.corePosition, new Vector3(c.corePosition.x - position.x, c.corePosition.y - position.y, c.corePosition.z - position.z));
-            Transform transform = monsterShooter.gameObject.transform;
-            if (transform)
+            if (monsterShooter != null && c != null)
             {
-                ChildLocator componentInChildren = transform.GetComponentInChildren<ChildLocator>();
-                if (componentInChildren)
+                Vector3 position = monsterShooter.transform.position;
+                Ray aimRay = new Ray(monsterShooter.corePosition, new Vector3(c.corePosition.x - position.x, c.corePosition.y - position.y, c.corePosition.z - position.z));
+                Transform transform = monsterShooter.gameObject.transform;
+                if (transform)
                 {
-                    Transform transform2 = componentInChildren.FindChild("Muzzle");
-                    if (transform2)
+                    ChildLocator componentInChildren = transform.GetComponentInChildren<ChildLocator>();
+                    if (componentInChildren)
                     {
-                        aimRay.origin = transform2.position;
+                        Transform transform2 = componentInChildren.FindChild("Muzzle");
+                        if (transform2)
+                        {
+                            aimRay.origin = transform2.position;
+                        }
                     }
                 }
+                monsterShooter.healthComponent.TakeDamageForce(aimRay.direction * -1500f, true, false);
+                RoR2.Projectile.ProjectileManager.instance.FireProjectile(Resources.Load<GameObject>("Prefabs/Projectiles/BeamSphere"),
+                    aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), monsterShooter.gameObject,
+                    monsterShooter.damage * 0.1f + (float)(c.healthComponent.fullCombinedHealth * 0.03), 4f, Util.CheckRoll(monsterShooter.crit, monsterShooter.master),
+                    DamageColorIndex.Item, null, -1f);
+                MessageHandler.globalMessage("Looks like DoomGuy's a little pissed at you...");
             }
-            monsterShooter.healthComponent.TakeDamageForce(aimRay.direction * -1500f, true, false);
-            RoR2.Projectile.ProjectileManager.instance.FireProjectile(Resources.Load<GameObject>("Prefabs/Projectiles/BeamSphere"),
-                aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), monsterShooter.gameObject,
-                monsterShooter.damage * 0.1f + (float)(c.healthComponent.fullCombinedHealth * 0.03), 4f, Util.CheckRoll(monsterShooter.crit, monsterShooter.master), 
-                DamageColorIndex.Item, null, -1f);
         }
 
         static public void HelfireFriendly(uint targetID)
         {
-            MessageHandler.globalMessage("IT BUUUURNS! BUT IT BURNS GOOOOOD!");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.AddHelfireDuration(12f);
+            if (c != null)
+            {
+                MessageHandler.globalMessage("IT BUUUURNS! BUT IT BURNS GOOOOOD!");
+                c.AddHelfireDuration(12f);
 
-            AkSoundEngine.PostEvent(333560252, c.gameObject);
+                AkSoundEngine.PostEvent(333560252, c.gameObject);
 
-            new networkBehavior.Playsound(333560252, c.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new networkBehavior.Playsound(333560252, c.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+            }
         }
 
         // Fire a BFG projectile at the player, with a random monster
         static public void HelfireEvil()
         {
-            MessageHandler.globalMessage("YOU DO NOT GRASP THE FLAME! THE FLAME... GRASPS YOU!");
 
             CharacterBody monsterShooter = findRandomMonster();
-            monsterShooter.AddHelfireDuration(12f);
+            if (monsterShooter != null)
+            {
+                MessageHandler.globalMessage("YOU DO NOT GRASP THE FLAME! THE FLAME... GRASPS YOU!");
+                monsterShooter.AddHelfireDuration(12f);
 
-            AkSoundEngine.PostEvent(61879681, monsterShooter.gameObject);
+                AkSoundEngine.PostEvent(61879681, monsterShooter.gameObject);
 
-            new networkBehavior.Playsound(61879681, monsterShooter.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new networkBehavior.Playsound(61879681, monsterShooter.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+            }
         }
         
         // the dumb lunar thing that slows everything and increases the damage it takes (hell yeah)
         static public void crippleWard(uint targetID)
         {
-            MessageHandler.globalMessage("I have CrIpPlInG dEpReSsIoN");
-
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            Vector3 pos = findRandomPosAir();
-            Vector3 pos2 = findRandomPosAir();
-            Vector3 pos3 = findRandomPosAir();
-            Vector3 pos4 = findRandomPosAir();
-            Vector3 pos5 = findRandomPosAir();
-            GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
-            NetworkServer.Spawn(gameObject);
-            GameObject gameObject2 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos2, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
-            NetworkServer.Spawn(gameObject2);
-            GameObject gameObject3 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos3, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
-            NetworkServer.Spawn(gameObject3);
-            GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos4, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
-            NetworkServer.Spawn(gameObject4);
-            GameObject gameObject5 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos5, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
-            NetworkServer.Spawn(gameObject5);
+            if (c != null)
+            {
+                MessageHandler.globalMessage("I have CrIpPlInG dEpReSsIoN");
+                Vector3 pos = findRandomPosAir();
+                Vector3 pos2 = findRandomPosAir();
+                Vector3 pos3 = findRandomPosAir();
+                Vector3 pos4 = findRandomPosAir();
+                Vector3 pos5 = findRandomPosAir();
+                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
+                NetworkServer.Spawn(gameObject);
+                GameObject gameObject2 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos2, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
+                NetworkServer.Spawn(gameObject2);
+                GameObject gameObject3 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos3, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
+                NetworkServer.Spawn(gameObject3);
+                GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos4, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
+                NetworkServer.Spawn(gameObject4);
+                GameObject gameObject5 = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/CrippleWard"), pos5, Util.QuaternionSafeLookRotation(pos, Vector3.forward));
+                NetworkServer.Spawn(gameObject5);
 
-            playAll(3907938878); // play sound for EVERYONE
+                playAll(3907938878); // play sound for EVERYONE
+            }
+        }
+
+        static async public void randomTransformSubset(CharacterBody c)
+        {
+            // become a singular monster from subset
+            String[] options = EntropySubsetGen.transformSubset;
+            String randoMob = options[r.Next(0, options.Length)];
+            for (int i = 0; i < RoR2.NetworkUser.instancesList.Count; i++)
+            {
+                var user = RoR2.NetworkUser.instancesList[i];
+                if (user != null && user.GetCurrentBody() != null)
+                {
+                    if (user.GetCurrentBody().netId == c.netId && !isTransformed(user.netId.Value)) // if the body is our target, with the applied net user
+                    {
+                        var tp = new transformedPlayer();
+                        var transformBack = user.GetCurrentBody().bodyIndex;
+                        tp.originalIndex = transformBack;
+                        tp.userID = user.netId.Value;
+                        transformedPlayers.Add(tp);
+                        Random r = new Random();
+                        var n = r.Next(3, 60);
+                        MessageHandler.globalMessage(c.GetUserName() + " become a gang member for " + n + " seconds!");
+
+                        user.SetBodyPreference(BodyCatalog.FindBodyIndex(randoMob));
+                        c.master.Respawn(c.footPosition, c.transform.rotation);
+                        await Task.Delay(1000 * n);
+                        if (getTransformBack(user.netId.Value) != BodyIndex.None)
+                        {
+                            user.SetBodyPreference(getTransformBack(user.netId.Value));
+                            c.master.Respawn(RoR2.NetworkUser.instancesList[i].GetCurrentBody().footPosition, RoR2.NetworkUser.instancesList[i].transform.rotation);
+                            removeTransformed(user.netId.Value);
+                        }
+                        else
+                        {
+                            Debug.Log("(Artifact of Entropy) Transform Back Failed! Survivor is stuck as a transformed Object!!!");
+                        }
+                    }
+                }
+            }
+
         }
 
         static public void randomMonsterSubset()
         {
-            if(RoR2.Run.instance.GetUniqueId() != pastRUNID)
+            try
             {
-                EntropySubsetGen.generateMonsterSubset();
-                pastRUNID = RoR2.Run.instance.GetUniqueId();
+                // spawn a singular monster from subset
+                String[] options = EntropySubsetGen.enemySubset;
+                String randoMob = options[r.Next(0, options.Length)];
+
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/characterspawncards/" + randoMob);
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.teamIndexOverride = TeamIndex.Monster;
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+                MessageHandler.globalMessage("A gang member has appeared!");
             }
-
-            // spawn a singular monster from subset
-            String[] options = EntropySubsetGen.enemySubset;
-            String randoMob = options[r.Next(0, options.Length)];
-
-            SpawnCard card = Resources.Load<SpawnCard>("spawncards/characterspawncards/" + randoMob);
-            card.directorCreditCost = 0;
-            DirectorCore.spawnedObjects.Capacity = 99999;
-            RoR2.SceneDirector.cardSelector.Capacity = 99999;
-
-            DirectorPlacementRule rule = new DirectorPlacementRule();
-            rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
-
-
-            DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
-            directorSpawnRequest.teamIndexOverride = TeamIndex.Monster;
-            directorSpawnRequest.ignoreTeamMemberLimit = true;
-            Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
-            DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
-            MessageHandler.globalMessage("A gang member has appeared!");
+            catch
+            {
+                Debug.Log("Entropy Spawn Failed. (Unless this message is spammed its fine.");
+            }
         }
 
         static public void randomItemSubset(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-
-            if (RoR2.Run.instance.GetUniqueId() != pastRUNID)
+            if (c != null)
             {
-                EntropySubsetGen.generateItemSubset();
-                pastRUNID = RoR2.Run.instance.GetUniqueId();
+                // give a singular item from subset
+                ItemIndex[] options = EntropySubsetGen.itemSubset;
+                int rand = r.Next(0, options.Length);
+                ItemIndex randoItem = options[rand];
+
+                c.inventory.GiveItem(randoItem);
+
+                MessageHandler.globalMessage("You have received a gang item!");
             }
-
-            // give a singular item from subset
-            ItemIndex[] options = EntropySubsetGen.itemSubset;
-            int rand = r.Next(0, options.Length);
-            ItemIndex randoItem = options[rand];
-
-            c.inventory.GiveItem(randoItem);
-
-            MessageHandler.globalMessage("You have received a gang item!");
         }
 
         static public void quantumTunnel()
@@ -727,31 +817,38 @@ namespace ArtifactGroup
             MessageHandler.globalMessage("The Sentient Pink Goo Follows your calling, for now...");
 
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            Vector3 position = c.equipmentSlot.transform.position;
-            RaycastHit raycastHit;
-            if (Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask))
+            if (c != null)
             {
-                position = raycastHit.point;
-            }
-            GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
-            gameObject.GetComponent<OrbitalLaserController>().ownerBody = c;
-            NetworkServer.Spawn(gameObject);
+                Vector3 position = c.equipmentSlot.transform.position;
+                RaycastHit raycastHit;
+                if (Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask))
+                {
+                    position = raycastHit.point;
+                }
+                GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
+                gameObject.GetComponent<OrbitalLaserController>().ownerBody = c;
+                NetworkServer.Spawn(gameObject);
 
-            playAll(3790696932); // play sound for EVERYONE
+                playAll(3790696932); // play sound for EVERYONE
+            }
         }
 
         static public void nukeEvil()
         {
-            MessageHandler.globalMessage("R U N!!! THE SENTIENT PINK GOO COMES FOR CONSUMPTION!!!");
-            Vector3 position = findRandomPosGround();
-            GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
-            gameObject.GetComponent<OrbitalLaserController>().ownerBody = findRandomMonster();
-            NetworkServer.Spawn(gameObject);
-            GameObject gameObject2 = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
-            gameObject2.GetComponent<OrbitalLaserController>().ownerBody = findRandomMonster();
-            NetworkServer.Spawn(gameObject2);
+            CharacterBody monsterOwner = findRandomMonster();
+            if (monsterOwner != null)
+            {
+                MessageHandler.globalMessage("R U N!!! THE SENTIENT PINK GOO COMES FOR CONSUMPTION!!!");
+                Vector3 position = findRandomPosGround();
+                GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
+                gameObject.GetComponent<OrbitalLaserController>().ownerBody = monsterOwner;
+                NetworkServer.Spawn(gameObject);
+                GameObject gameObject2 = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
+                gameObject2.GetComponent<OrbitalLaserController>().ownerBody = monsterOwner;
+                NetworkServer.Spawn(gameObject2);
 
-            playAll(736019426); // play sound for EVERYONE
+                playAll(736019426); // play sound for EVERYONE
+            }
         }
 
         // add a new random outcome to a random hook in the event pool. heheheheheh
@@ -765,49 +862,62 @@ namespace ArtifactGroup
         // yeet a monster at the player like a madman
         static public void kobe(uint targetID)
         {
-            MessageHandler.globalMessage("KOBE");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-
-            CharacterBody monsterShooter = findRandomMonster();
-            Vector3 position = monsterShooter.transform.position;
-            Ray aimRay = new Ray(monsterShooter.corePosition, new Vector3(c.corePosition.x - position.x, (c.corePosition.y - position.y) + 100, c.corePosition.z - position.z));
-            Transform transform = monsterShooter.gameObject.transform;
-            if (transform)
+            if (findRandomMonster() != null && c != null)
             {
-                ChildLocator componentInChildren = transform.GetComponentInChildren<ChildLocator>();
-                if (componentInChildren)
+                try
                 {
-                    Transform transform2 = componentInChildren.FindChild("Muzzle");
-                    if (transform2)
+                    MessageHandler.globalMessage("KOBE");
+                    for (int i = 0; i < 5; i++)
                     {
-                        aimRay.origin = transform2.position;
+                        CharacterBody monsterShooter = findRandomMonster();
+                        Vector3 position = monsterShooter.transform.position;
+                        Ray aimRay = new Ray(monsterShooter.corePosition, new Vector3(c.corePosition.x - position.x, (c.corePosition.y - position.y) + 100, c.corePosition.z - position.z));
+                        Transform transform = monsterShooter.gameObject.transform;
+                        if (transform)
+                        {
+                            ChildLocator componentInChildren = transform.GetComponentInChildren<ChildLocator>();
+                            if (componentInChildren)
+                            {
+                                Transform transform2 = componentInChildren.FindChild("Muzzle");
+                                if (transform2)
+                                {
+                                    aimRay.origin = transform2.position;
+                                }
+                            }
+                        }
+
+                        // play sound for all clients
+                        playAll(4044108823);
+
+                        monsterShooter.healthComponent.TakeDamageForce(aimRay.direction * (100 * monsterShooter.characterMotor.mass), true, false);
+                        c.gameObject.transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
                     }
                 }
+                catch {
+                    Debug.Log("kobe :: E");
+                }
             }
-            AkSoundEngine.PostEvent(4044108823, monsterShooter.gameObject);
-
-            // play sound for all clients
-            new networkBehavior.Playsound(4044108823, monsterShooter.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
-            
-            monsterShooter.healthComponent.TakeDamageForce(aimRay.direction * (100 * monsterShooter.characterMotor.mass), true, false);
-            c.gameObject.transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
         }
 
         // kill and revive the player (with dios), giving a funny ragdoll motion
         static async public void ragdoll(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage("Mr. " + c.GetUserName() + ", I aint feelin so good...");
-            if (c.healthComponent.health > 0)
+            if (c != null)
             {
-                var oldHealth = c.healthComponent.health;
-                if (c.inventory.GetItemCount(ItemCatalog.FindItemIndex("ExtraLife")) == 0)
+                MessageHandler.globalMessage("Mr. " + c.GetUserName() + ", I aint feelin so good...");
+                if (c.healthComponent.health > 0)
                 {
-                    c.inventory.GiveItemString("ExtraLife");
+                    var oldHealth = c.healthComponent.health;
+                    if (c.inventory.GetItemCount(ItemCatalog.FindItemIndex("ExtraLife")) == 0)
+                    {
+                        c.inventory.GiveItemString("ExtraLife");
+                    }
+                    c.healthComponent.health = -500;
+                    await Task.Delay(2000);
+                    c.healthComponent.health = oldHealth;
                 }
-                c.healthComponent.health = -500;
-                await Task.Delay(2000);
-                c.healthComponent.health = oldHealth;
             }
         }
 
@@ -815,139 +925,181 @@ namespace ArtifactGroup
         static public void gummyFriend(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage("fren");
-            CharacterMaster characterMaster = (c != null) ? c.master : null;
-
-            GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/GummyCloneProjectile");
-            FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
+            if (c != null)
             {
-                projectilePrefab = projectilePrefab,
-                crit = c.RollCrit(),
-                damage = 0f,
-                damageColorIndex = DamageColorIndex.Item,
-                owner = c.gameObject,
-                force = 0f,
-                position = c.corePosition,
-                rotation = c.gameObject.transform.rotation
-            };
-            ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                MessageHandler.globalMessage("fren");
+                CharacterMaster characterMaster = (c != null) ? c.master : null;
+
+                GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/GummyCloneProjectile");
+                FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
+                {
+                    projectilePrefab = projectilePrefab,
+                    crit = c.RollCrit(),
+                    damage = 0f,
+                    damageColorIndex = DamageColorIndex.Item,
+                    owner = c.gameObject,
+                    force = 0f,
+                    position = c.corePosition,
+                    rotation = c.gameObject.transform.rotation
+                };
+                ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+            }
         }
 
         // fire some sus sawblades out of your body
         static public void friendlySaw(uint targetID)
         {
-            MessageHandler.globalMessage("LooK! I SaWeD thIS MONSTER iN hAlF!!1!11");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireSaw();
+            if (c != null)
+            {
+                MessageHandler.globalMessage("LooK! I SaWeD thIS MONSTER iN hAlF!!1!11");
+                c.equipmentSlot.FireSaw();
+            }
         }
 
         // trigger the elephant on self
         static public void freeArmor(uint targetID)
         {
-            MessageHandler.globalMessage("hehe thicc boi");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireGainArmor();
+            if (c != null)
+            {
+                MessageHandler.globalMessage("hehe thicc boi");
+                c.equipmentSlot.FireGainArmor();
+            }
         }
 
         // get a free vending machine!
         static public void freeVending(uint targetID)
-        {
-            MessageHandler.globalMessage("drink up ur sprote ya goatt");
+        {  
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            Ray ray = new Ray(c.equipmentSlot.GetAimRay().origin, Vector3.down);
-            RaycastHit raycastHit;
-            GameObject prefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/VendingMachineProjectile");
-            ProjectileManager.instance.FireProjectile(prefab, c.footPosition, Quaternion.identity, c.gameObject, c.damage, 0f, Util.CheckRoll(c.crit, c.master), DamageColorIndex.Default, null, -1f);
+            if (c != null)
+            {
+                MessageHandler.globalMessage("drink up ur sprote ya goatt");
+                Ray ray = new Ray(c.equipmentSlot.GetAimRay().origin, Vector3.down);
+                RaycastHit raycastHit;
+                GameObject prefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/VendingMachineProjectile");
+                ProjectileManager.instance.FireProjectile(prefab, c.footPosition, Quaternion.identity, c.gameObject, c.damage, 0f, Util.CheckRoll(c.crit, c.master), DamageColorIndex.Default, null, -1f);
+            }
         }
 
         static public void freeHole(uint targetID)
         {
-            MessageHandler.globalMessage("S U C C");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireBlackhole();
+            if (c != null)
+            {
+                MessageHandler.globalMessage("S U C C");
+                c.equipmentSlot.FireBlackhole();
+            }
         }
 
         static async public void freeMissiles(uint targetID)
         {
-            MessageHandler.globalMessage("Diplomatic Missiles Imbound!");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            for (int i = 0; i < 10; i++)
+            if (c != null)
             {
-                c.equipmentSlot.FireMissile();
-                await Task.Delay(250);
+                MessageHandler.globalMessage("Diplomatic Missiles Imbound!");
+                for (int i = 0; i < 10; i++)
+                {
+                    c.equipmentSlot.FireMissile();
+                    await Task.Delay(250);
+                }
             }
         }
 
         static public void freeScan(uint targetID)
         {
-            MessageHandler.globalMessage("ZZZZZZZZZ SCANNNING ZZZZZZ CONTROLSZZZZZZZZZZZZZZZZZZ MANIPULATING SCIENTIFIC DATA SHWOWAHEUAHS TAKE OVER BLAST CONTROLLLLLLLLLLLLLL WORLD GOVMENT SHOWUAHSOUDSHEWWWW SHUT DOWN INFASTRUCTURE HWOUDHSO SSHASI HSHIP EVERUHTN TO CHINA SOHWSUHAWYUH ITS JUST BERUUUUUUUMPHHHHMMMMMMMMMMMMM LOOK AT THIS PERSON *HHIZZZ STATIC NOISES*");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireScanner();
+            if (c != null)
+            {
+                MessageHandler.globalMessage("ZZZZZZZZZ SCANNNING ZZZZZZ CONTROLSZZZZZZZZZZZZZZZZZZ MANIPULATING SCIENTIFIC DATA SHWOWAHEUAHS TAKE OVER BLAST CONTROLLLLLLLLLLLLLL WORLD GOVMENT SHOWUAHSOUDSHEWWWW SHUT DOWN INFASTRUCTURE HWOUDHSO SSHASI HSHIP EVERUHTN TO CHINA SOHWSUHAWYUH ITS JUST BERUUUUUUUMPHHHHMMMMMMMMMMMMM LOOK AT THIS PERSON *HHIZZZ STATIC NOISES*");
+                c.equipmentSlot.FireScanner();
+            }
         }
 
         static public void fireball(uint targetID)
         {
-            MessageHandler.globalMessage("You got dat fire burnin on the dannceee flowW");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireFireBallDash();
+            if (c != null)
+            {
+                c.equipmentSlot.FireFireBallDash();
+                MessageHandler.globalMessage("You got dat fire burnin on the dannceee flowW");
+            }
         }
 
         static public void freeMolotov(uint targetID)
         {
-            MessageHandler.globalMessage("I SAY YOU GOT DAT FIYAH BURNIN ON DUH DANCE FLOWWWWWWW");
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            c.equipmentSlot.FireMolotov();
+            if (c != null)
+            {
+                c.equipmentSlot.FireMolotov();
+                MessageHandler.globalMessage("I SAY YOU GOT DAT FIYAH BURNIN ON DUH DANCE FLOWWWWWWW");
+            }
         }
 
         // Buff ALL Monsters with war cry equipment
         static public void monsterWarCry()
         {
-            MessageHandler.globalMessage("Rebellion blood fuels the great enemy horde...");
             CharacterBody c = findRandomMonster();
-            c.equipmentSlot.FireTeamWarCry();
+            if (c != null)
+            {
+                MessageHandler.globalMessage("Rebellion blood fuels the great enemy horde...");
+                c.equipmentSlot.FireTeamWarCry();
+            }
         }
 
         // Buff ALL Monsters with war cry equipment
         static public void monsterDash()
         {
-            MessageHandler.globalMessage("How dO i FlY thIS tHIngnNGNGNGNGNGnng???!");
-            for (int i = 0; i < 1; i++)
-            { 
-                CharacterBody c = findRandomMonster();
-                c.equipmentSlot.FireFireBallDash();
+            if (findRandomMonster() != null)
+            {
+                MessageHandler.globalMessage("How dO i FlY thIS tHIngnNGNGNGNGNGnng???!");
+                for (int i = 0; i < 1; i++)
+                {
+                    CharacterBody c = findRandomMonster();
+                    c.equipmentSlot.FireFireBallDash();
+                }
             }
         }
 
         // Buff ALL Monsters with war cry equipment
         static public void monsterSaw()
         {
-            MessageHandler.globalMessage("You should've 'saw' that coming...");
-            for (int i = 0; i < 3; i++)
+            if (findRandomMonster() != null)
             {
-                CharacterBody c = findRandomMonster();
-                c.equipmentSlot.FireSaw();
+                MessageHandler.globalMessage("You should've 'saw' that coming...");
+                for (int i = 0; i < 3; i++)
+                {
+                    CharacterBody c = findRandomMonster();
+                    c.equipmentSlot.FireSaw();
+                }
             }
         }
 
         // Buff ALL Monsters with war cry equipment
         static public void monsterMolotov()
         {
-            MessageHandler.globalMessage("Burn in hell. Just like the monster you a--wait a minute");
-            for (int i = 0; i < 3; i++)
+            if (findRandomMonster() != null)
             {
-                CharacterBody c = findRandomMonster();
-                c.equipmentSlot.FireMolotov();
+                MessageHandler.globalMessage("Burn in hell. Just like the monster you a--wait a minute");
+                for (int i = 0; i < 3; i++)
+                {
+                    CharacterBody c = findRandomMonster();
+                    c.equipmentSlot.FireMolotov();
+                }
             }
         }
 
         // Buff ALL Monsters with war cry equipment
         static public void monsterArmor()
         {
-            MessageHandler.globalMessage("He's a big chungusssssssss big chungusssssssss");
-            for (int i = 0; i < 5; i++)
+            if (findRandomMonster() != null)
             {
-                CharacterBody c = findRandomMonster();
-                c.equipmentSlot.FireGainArmor();
+                MessageHandler.globalMessage("He's a big chungusssssssss big chungusssssssss");
+                for (int i = 0; i < 5; i++)
+                {
+                    CharacterBody c = findRandomMonster();
+                    c.equipmentSlot.FireGainArmor();
+                }
             }
         }
         // spawn a legendary chest in a random location on the map
@@ -989,18 +1141,21 @@ namespace ArtifactGroup
         static async public void confuse(uint targetID)
         {
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
-            MessageHandler.globalMessage(c.GetUserName() + " is feeling a bit dizzy...");
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " is feeling a bit dizzy...");
 
-            var rnd = new Random();
+                var rnd = new Random();
 
-            c.baseMoveSpeed *= -1;
-            c.moveSpeed *= -1;
+                c.baseMoveSpeed *= -1;
+                c.moveSpeed *= -1;
 
-            int wait = rnd.Next(300, 3300);
-            // await for a set amount of time before setting movement back to normal (in ms)
-            await Task.Delay(wait);
-            c.baseMoveSpeed *= -1;
-            c.moveSpeed *= -1;
+                int wait = rnd.Next(300, 3300);
+                // await for a set amount of time before setting movement back to normal (in ms)
+                await Task.Delay(wait);
+                c.baseMoveSpeed *= -1;
+                c.moveSpeed *= -1;
+            }
         }
 
         // Directly Corrupt the appearance of the UI
@@ -1011,32 +1166,37 @@ namespace ArtifactGroup
 
         static public void enemyArrowRain()
         {
-            MessageHandler.globalMessage("The volleys tear at your flesh and bone!");
             var owner = findRandomMonster();
-
-            // 30 random spots
-            for (int i = 0; i < 30; i++)
+            if (owner != null)
             {
-                ProjectileManager.instance.FireProjectile(ArrowRain.projectilePrefab,
-                    findRandomPosGround(), owner.gameObject.transform.rotation, owner.gameObject, owner.baseDamage
-                    * ArrowRain.damageCoefficient * 3, 0f, Util.CheckRoll(owner.crit, owner.master), DamageColorIndex.Default, null, -1f);
+                MessageHandler.globalMessage("The volleys tear at your flesh and bone!");
+                // 30 random spots
+                for (int i = 0; i < 30; i++)
+                {
+                    ProjectileManager.instance.FireProjectile(ArrowRain.projectilePrefab,
+                        findRandomPosGround(), owner.gameObject.transform.rotation, owner.gameObject, owner.baseDamage
+                        * ArrowRain.damageCoefficient * 3, 0f, Util.CheckRoll(owner.crit, owner.master), DamageColorIndex.Default, null, -1f);
+                }
             }
         }
         // fire an arrow rain from your aimray
         static public void friendlyArrowRain(uint targetID)
         {
-            MessageHandler.globalMessage("May the spectral arrows guide your killing...");
             var owner = grabUser(targetID);
-            Ray aimRay = owner.equipmentSlot.GetAimRay();
-            float maxDistance = 1000f;
-            RaycastHit raycastHit;
-
-            // fire at where user is pointing to
-            if (Physics.Raycast(aimRay, out raycastHit, maxDistance, LayerIndex.world.mask, QueryTriggerInteraction.Ignore))
+            if (owner != null)
             {
-                ProjectileManager.instance.FireProjectile(ArrowRain.projectilePrefab,
-                    raycastHit.point, owner.gameObject.transform.rotation, owner.gameObject, owner.baseDamage
-                    * ArrowRain.damageCoefficient * 5, 0f, Util.CheckRoll(owner.crit, owner.master), DamageColorIndex.Default, null, -1f);
+                MessageHandler.globalMessage("May the spectral arrows guide your killing...");
+                Ray aimRay = owner.equipmentSlot.GetAimRay();
+                float maxDistance = 1000f;
+                RaycastHit raycastHit;
+
+                // fire at where user is pointing to
+                if (Physics.Raycast(aimRay, out raycastHit, maxDistance, LayerIndex.world.mask, QueryTriggerInteraction.Ignore))
+                {
+                    ProjectileManager.instance.FireProjectile(ArrowRain.projectilePrefab,
+                        raycastHit.point, owner.gameObject.transform.rotation, owner.gameObject, owner.baseDamage
+                        * ArrowRain.damageCoefficient * 5, 0f, Util.CheckRoll(owner.crit, owner.master), DamageColorIndex.Default, null, -1f);
+                }
             }
         }
         // fire an engineer mine from your aimray
@@ -1066,31 +1226,40 @@ namespace ArtifactGroup
         static public void jetpack(uint targetID)
         {
             var c = grabUser(targetID);
-            MessageHandler.globalMessage(c.GetUserName() + " believes he can flyyyyyyyyyyy");
-            c.equipmentSlot.FireJetpack();
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " believes he can flyyyyyyyyyyy");
+                c.equipmentSlot.FireJetpack();
 
-            AkSoundEngine.PostEvent(3706064369, c.gameObject);
+                AkSoundEngine.PostEvent(3706064369, c.gameObject);
 
-            // play sound for all players, localized to id of target
-            new networkBehavior.Playsound(3706064369, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+                // play sound for all players, localized to id of target
+                new networkBehavior.Playsound(3706064369, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+            }
         }
 
         // enemies grow wings and flyyyyyyyyyyyyyyy
         static public void evilJetpack()
         {
-            MessageHandler.globalMessage("Look at the little demons go!");
-            for (int i = 0; i < 10; i++)
+            if (findRandomMonster() != null)
             {
-                CharacterBody c = findRandomMonster();
-                c.equipmentSlot.FireJetpack();
+                MessageHandler.globalMessage("Look at the little demons go!");
+                for (int i = 0; i < 10; i++)
+                {
+                    CharacterBody c = findRandomMonster();
+                    c.equipmentSlot.FireJetpack();
+                }
             }
         }
 
         static public void freeCrit(uint targetID)
         {
-            MessageHandler.globalMessage("mm yummy crit");
             var c = grabUser(targetID);
-            c.AddTimedBuff(RoR2Content.Buffs.FullCrit, 8f);
+            if (c != null)
+            {
+                MessageHandler.globalMessage("aaah spicy crit");
+                c.AddTimedBuff(RoR2Content.Buffs.FullCrit, 8f);
+            }
         }
 
         // welp this is terrifying and I love it so much.
@@ -1109,51 +1278,70 @@ namespace ArtifactGroup
         // code is such a strange little thing...
         static public void basicGolemFistFriendly(uint targetID)
         {
-            MessageHandler.globalMessage("BRO FIST");
-            var c = grabUser(targetID);
-            var ray = c.equipmentSlot.GetAimRay();
-            RaycastHit raycastHit;
-            // simulate raycast hitting a surface
-            Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask);
+            try
+            {
+                var c = grabUser(targetID);
+                if (c != null)
+                {
+                    MessageHandler.globalMessage("BRO FIST");
+                    var ray = c.equipmentSlot.GetAimRay();
+                    RaycastHit raycastHit;
+                    // simulate raycast hitting a surface
+                    Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask);
 
-            // setup golem vars
-            var link = new EntityStates.TitanMonster.FireFist();
+                    // setup golem vars
+                    var link = new EntityStates.TitanMonster.FireFist();
 
-            FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
-            fireProjectileInfo.projectilePrefab = link.fistProjectilePrefab; // loophoooooooles
-            fireProjectileInfo.position = raycastHit.point;
-            fireProjectileInfo.rotation = Quaternion.identity;
-            fireProjectileInfo.owner = c.gameObject;
-            fireProjectileInfo.damage = c.baseDamage * 20;
-            fireProjectileInfo.force = EntityStates.TitanMonster.FireFist.fistForce;
-            fireProjectileInfo.crit = c.RollCrit();
-            fireProjectileInfo.fuseOverride = EntityStates.TitanMonster.FireFist.entryDuration - EntityStates.TitanMonster.FireFist.trackingDuration;
-            ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                    FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
+                    fireProjectileInfo.projectilePrefab = link.fistProjectilePrefab; // loophoooooooles
+                    fireProjectileInfo.position = raycastHit.point;
+                    fireProjectileInfo.rotation = Quaternion.identity;
+                    fireProjectileInfo.owner = c.gameObject;
+                    fireProjectileInfo.damage = c.baseDamage * 20;
+                    fireProjectileInfo.force = EntityStates.TitanMonster.FireFist.fistForce;
+                    fireProjectileInfo.crit = c.RollCrit();
+                    fireProjectileInfo.fuseOverride = EntityStates.TitanMonster.FireFist.entryDuration - EntityStates.TitanMonster.FireFist.trackingDuration;
+                    ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                }
+            }
+            catch
+            {
+                Debug.Log("basicGolemFistFriendly ::: E");
+            }
         }
 
         // code is such a strange little thing...
         static public void basicGolemFistEvil(uint targetID)
         {
-            MessageHandler.globalMessage("DONT GET FISTED!!!!?!?");
-            var c = grabUser(targetID);
-            var ray = c.equipmentSlot.GetAimRay();
-            RaycastHit raycastHit;
-            // simulate raycast hitting a surface
-            Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask);
+            try
+            {
+                var c = grabUser(targetID);
+                if (c != null)
+                {
+                    MessageHandler.globalMessage("DONT GET FISTED!!!!?!?");
+                    var ray = c.equipmentSlot.GetAimRay();
+                    RaycastHit raycastHit;
+                    // simulate raycast hitting a surface
+                    Physics.Raycast(c.equipmentSlot.GetAimRay(), out raycastHit, 900f, LayerIndex.world.mask | LayerIndex.defaultLayer.mask);
 
-            // setup golem vars
-            var link = new EntityStates.TitanMonster.FireFist();
+                    // setup golem vars
+                    var link = new EntityStates.TitanMonster.FireFist();
 
-            FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
-            fireProjectileInfo.projectilePrefab = link.fistProjectilePrefab; // loophoooooooles
-            fireProjectileInfo.position = c.footPosition;
-            fireProjectileInfo.rotation = Quaternion.identity;
-            fireProjectileInfo.owner = new GameObject();
-            fireProjectileInfo.damage = new EntityStates.TitanMonster.FireFist().damageStat * EntityStates.TitanMonster.FireFist.fistDamageCoefficient;
-            fireProjectileInfo.force = EntityStates.TitanMonster.FireFist.fistForce;
-            fireProjectileInfo.crit = c.RollCrit();
-            fireProjectileInfo.fuseOverride = EntityStates.TitanMonster.FireFist.entryDuration - EntityStates.TitanMonster.FireFist.trackingDuration;
-            ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                    FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
+                    fireProjectileInfo.projectilePrefab = link.fistProjectilePrefab; // loophoooooooles
+                    fireProjectileInfo.position = c.footPosition;
+                    fireProjectileInfo.rotation = Quaternion.identity;
+                    fireProjectileInfo.owner = new GameObject();
+                    fireProjectileInfo.damage = c.maxHealth * 0.25f;
+                    fireProjectileInfo.force = EntityStates.TitanMonster.FireFist.fistForce;
+                    fireProjectileInfo.crit = c.RollCrit();
+                    fireProjectileInfo.fuseOverride = EntityStates.TitanMonster.FireFist.entryDuration - EntityStates.TitanMonster.FireFist.trackingDuration;
+                    ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                }
+            }
+            catch {
+                Debug.Log("GolemFistEvil ::: E");
+            }
         }
 
         // code is such a strange little thing...
@@ -1213,73 +1401,577 @@ namespace ArtifactGroup
             MessageHandler.globalMessage("The squad might be losing their minds...");
             new networkBehavior.olbiterateUI().Send(R2API.Networking.NetworkDestination.Clients);
         }
-        /*
-        static public void randomTransformation(uint targetID)
+        
+        static public void Yummy(uint targetID)
         {
             var c = grabUser(targetID);
-            MessageHandler.globalMessage("??????  " + c.GetUserName() + " undergone a transformation?");
-            Debug.Log("0");
-            CharacterBody m = spawnRandomMonster().GetComponent<CharacterBody>();
-            Debug.Log(m.ToString());
-            Debug.Log("1");
-            c.master.bodyInstanceObject = m.master.bodyInstanceObject;
-            Debug.Log("5");
-            c.master.bodyInstanceId = m.master.bodyInstanceId;
-            Debug.Log("6");
-            c.master._bodyInstanceId = m.master._bodyInstanceId;
-            Debug.Log("7");
-            c.master.bodyPrefab = m.master.bodyPrefab;
-            Debug.Log("9");
-            c.linkedToMaster = true;
-            Debug.Log("9");
+            if (c != null)
+            {
+                MessageHandler.globalMessage("mmmm yummy froot");
+                c.equipmentSlot.FireFruit();
 
-            String[] options = { "cscBeetle", "cscBeetleGuard", "cscBeetleQueen", "cscBell", "cscBrother", "cscClayBoss", "cscClayBruiser",
+                // generate a raw client package
+                uint idTarget = c.networkIdentity.netId.Value;
+
+                // play sound for all clients
+                new networkBehavior.Playsound(625680363, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+            }
+        }
+
+        static public void friendlyVoidBlast(uint targetID)
+        {
+            try
+            {
+                MessageHandler.globalMessage("DOOM BLAST");
+                var c = grabUser(targetID);
+                var b = new EntityStates.VoidSurvivor.Weapon.FireCorruptDisks();
+                for (int i = 0; i < b.projectileCount; i++)
+                {
+                    float num = (float)i - (float)(b.projectileCount - 1) / 2f;
+                    float bonusYaw = num * b.yawPerProjectile;
+                    float d = num * b.offsetPerProjectile;
+                    Ray aimRay = c.equipmentSlot.GetAimRay();
+                    aimRay.direction = Util.ApplySpread(aimRay.direction, 0f, c.spreadBloomAngle + b.spread, 1f, 1f, bonusYaw, b.bonusPitch);
+                    Vector3 onUnitSphere = UnityEngine.Random.onUnitSphere;
+                    Vector3.ProjectOnPlane(onUnitSphere, aimRay.direction);
+                    Quaternion rotation = Util.QuaternionSafeLookRotation(aimRay.direction, onUnitSphere);
+                    FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
+                    fireProjectileInfo.projectilePrefab = b.projectilePrefab;
+                    fireProjectileInfo.position = aimRay.origin + Vector3.Cross(aimRay.direction, Vector3.up) * d;
+                    fireProjectileInfo.rotation = rotation;
+                    fireProjectileInfo.owner = c.gameObject;
+                    fireProjectileInfo.damage = c.damage * 10;
+                    fireProjectileInfo.force = b.force;
+                    fireProjectileInfo.crit = Util.CheckRoll(b.critStat, c.master);
+                    ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                }
+            }
+            catch
+            {
+                Debug.Log("Void Blast::: E");
+            }
+        }
+
+        static public void evilVoidBlast()
+        {
+            var b = new EntityStates.VoidSurvivor.Weapon.FireCorruptDisks();
+            if (findRandomMonster() != null)
+            {
+                MessageHandler.globalMessage("A Group of DOOM BlASTS SEEK YOUR DEATH");
+                for (int i = 0; i < 5; i++)
+                {
+                    var c = findRandomMonster();
+                    float num = (float)i - (float)(b.projectileCount - 1) / 2f;
+                    float bonusYaw = num * b.yawPerProjectile;
+                    float d = num * b.offsetPerProjectile;
+                    Ray aimRay = c.equipmentSlot.GetAimRay();
+                    aimRay.direction = Util.ApplySpread(aimRay.direction, 0f, c.spreadBloomAngle + b.spread, 1f, 1f, bonusYaw, b.bonusPitch);
+                    Vector3 onUnitSphere = UnityEngine.Random.onUnitSphere;
+                    Vector3.ProjectOnPlane(onUnitSphere, aimRay.direction);
+                    Quaternion rotation = Util.QuaternionSafeLookRotation(aimRay.direction, onUnitSphere);
+                    FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
+                    fireProjectileInfo.projectilePrefab = b.projectilePrefab;
+                    fireProjectileInfo.position = aimRay.origin + Vector3.Cross(aimRay.direction, Vector3.up) * d;
+                    fireProjectileInfo.rotation = rotation;
+                    fireProjectileInfo.owner = c.gameObject;
+                    fireProjectileInfo.damage = c.damage * 3;
+                    fireProjectileInfo.force = b.force;
+                    fireProjectileInfo.crit = Util.CheckRoll(b.critStat, c.master);
+                    ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+                }
+            }       
+        }
+
+        static async public void megaTarBallFriendly(uint targetID)
+        {
+            var c = grabUser(targetID);
+            if(c != null)
+            {
+                MessageHandler.globalMessage("This amount of poo is very unhealthy, you need to stop.");
+                for (int i = 0; i < 10; i++)
+                {
+                    c = grabUser(targetID);
+                    var b = new EntityStates.ClayBoss.FireTarball();
+
+                    Util.PlaySound(EntityStates.ClayBoss.FireTarball.attackSoundString, c.gameObject);
+
+                    Vector3 forward = Vector3.ProjectOnPlane(c.equipmentSlot.GetAimRay().direction, Vector3.up);
+                    ProjectileManager.instance.FireProjectile(EntityStates.ClayBoss.FireTarball.projectilePrefab, c.equipmentSlot.GetAimRay().origin, Util.QuaternionSafeLookRotation(forward), c.gameObject, c.damage * 10, 0f, Util.CheckRoll(c.crit, c.master), DamageColorIndex.Default, null, -1f);
+                    c.AddSpreadBloom(EntityStates.ClayBoss.FireTarball.spreadBloomValue);
+                    await Task.Delay(200);
+                }
+            }
+        }
+
+        static async public void megaTarBallEVIL()
+        {
+            if (findRandomMonster() != null)
+            {
+                MessageHandler.globalMessage("Sludge, sludge everywhere.");
+                for (int i = 0; i < 10; i++)
+                {
+                    var c = findRandomMonster();
+                    var b = new EntityStates.VoidMegaCrab.Weapon.FireCrabWhiteCannon();
+                    Util.PlaySound(EntityStates.ClayBoss.FireTarball.attackSoundString, c.gameObject);
+                    Vector3 forward = Vector3.ProjectOnPlane(c.equipmentSlot.GetAimRay().direction, Vector3.up);
+                    ProjectileManager.instance.FireProjectile(EntityStates.ClayBoss.FireTarball.projectilePrefab, c.equipmentSlot.GetAimRay().origin, Util.QuaternionSafeLookRotation(forward), c.gameObject, c.damage * 2, 0f, Util.CheckRoll(c.crit, c.master), DamageColorIndex.Default, null, -1f);
+                    c.AddSpreadBloom(EntityStates.ClayBoss.FireTarball.spreadBloomValue);
+                    await Task.Delay(200);
+                }
+            }
+        }
+
+        static public void bloodShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Blood Shrines have spawned on the map!");
+            }
+            else
+            {
+                MessageHandler.globalMessage("A Blood Shrine has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineBlood");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static public void chanceShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Chance Shrines have spawned on the map!");
+            }
+            else
+            {
+                MessageHandler.globalMessage("A Chance Shrine has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineChance");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static public void orderShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Order Shrines have spawned on the map (dear god).");
+            }
+            else
+            {
+                MessageHandler.globalMessage("An Order Shrine has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineRestack");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static public void combatShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Combat Shrines have spawned on the map!");
+            }
+            else
+            {
+                MessageHandler.globalMessage("A Combat Shrine has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineCombat");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static public void healingShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Healing Shrines have spawned on the map!");
+            }
+            else
+            {
+                MessageHandler.globalMessage("A Healing Shrine has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineHealing");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static public void cleanseShrineSpawn()
+        {
+            double outcome = 1;
+            int spawnCount = 0;
+            while (outcome > 0.5)
+            {
+                spawnCount++;
+                outcome = r.NextDouble();
+            }
+            if (spawnCount > 1)
+            {
+                MessageHandler.globalMessage(spawnCount + " Cleansing Pools have spawned on the map!");
+            }
+            else
+            {
+                MessageHandler.globalMessage("A Cleansing Pool has spawned on the map!");
+            }
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShrineCleanse");
+                card.directorCreditCost = 0;
+                DirectorCore.spawnedObjects.Capacity = 99999;
+                RoR2.SceneDirector.cardSelector.Capacity = 99999;
+
+                DirectorPlacementRule rule = new DirectorPlacementRule();
+                rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+
+                DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(card, rule, new Xoroshiro128Plus(1));
+                directorSpawnRequest.ignoreTeamMemberLimit = true;
+                Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
+                DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
+            }
+        }
+
+        static async public void spawnWallFriendly(uint targetID)
+        {
+            var c = grabUser(targetID);
+            if (c != null)
+            {
+                MessageHandler.globalMessage("We will build a great great wall.");
+                var prefab = EntityStates.Mage.Weapon.PrepWall.projectilePrefab;
+                playAll(1161093638);
+                for (int i = 0; i < 20; i++)
+                {
+                    Vector3 forward = Vector3.forward * new Random().Next(0, 360);
+                    forward.y = 0f;
+                    forward.Normalize();
+                    Vector3 vector = Vector3.Cross(Vector3.up, forward);
+                    bool crit = Util.CheckRoll(c.crit, c.master);
+                    Vector3 pos = findRandomPosGround();
+                    prefab.transform.localScale.Set(5, 5, 5);
+                    ProjectileManager.instance.FireProjectile(prefab, pos, Util.QuaternionSafeLookRotation(vector), c.gameObject, c.damage * 4, 0f, crit, DamageColorIndex.Default, null, -1f);
+                    ProjectileManager.instance.FireProjectile(prefab, pos, Util.QuaternionSafeLookRotation(-vector), c.gameObject, c.damage * 4, 0f, crit, DamageColorIndex.Default, null, -1f);
+                    await Task.Delay(250);
+                }
+                prefab.transform.localScale.Set(1, 1, 1);
+            }
+        }
+
+        static async public void spawnWallEvil()
+        {
+            try
+            {
+                var c = findRandomMonster();
+                if (c != null)
+                {
+                    MessageHandler.globalMessage("Curse these stupid WALLS.");
+                    var prefab = EntityStates.Mage.Weapon.PrepWall.projectilePrefab;
+                    playAll(1161093638);
+                    for (int i = 0; i < 20; i++)
+                    {
+                        Vector3 forward = Vector3.forward * new Random().Next(0, 360);
+                        forward.y = 0f;
+                        forward.Normalize();
+                        Vector3 vector = Vector3.Cross(Vector3.up, forward);
+                        bool crit = Util.CheckRoll(c.crit, c.master);
+                        Vector3 pos = findRandomPosGround();
+                        prefab.transform.localScale.Set(5, 5, 5);
+                        ProjectileManager.instance.FireProjectile(prefab, pos, Util.QuaternionSafeLookRotation(vector), c.gameObject, c.damage * 4, 0f, crit, DamageColorIndex.Default, null, -1f);
+                        ProjectileManager.instance.FireProjectile(prefab, pos, Util.QuaternionSafeLookRotation(-vector), c.gameObject, c.damage * 4, 0f, crit, DamageColorIndex.Default, null, -1f);
+                        await Task.Delay(250);
+                    }
+                    prefab.transform.localScale.Set(1, 1, 1);
+                }
+            }
+            catch { }
+        }
+
+        static async public void randomTransformation(uint targetID)
+        {
+            var c = grabUser(targetID);
+            if (c != null)
+            {
+                String[] options2 = { "cscBeetle", "cscBeetleGuard", "cscBeetleQueen", "cscBell", "cscBrother", "cscClayBoss", "cscClayBruiser",
             "cscElectricWorm", "cscGolem", "cscGravekeeper", "cscGreaterWisp", "cscHermitCrab", "cscImp", "cscImpBoss", "cscJellyfish"
             , "cscLemurian", "cscLemurianBruiser", "cscLesserWisp", "cscLunarExploder", "cscLunarGolem", "cscLunarWisp", "cscMagmaWorm",
             "cscMiniMushroom", "cscNullifier", "cscParent", "cscParentPod", "cscRoboBallBoss", "cscRoboBallGreenBuddy", "cscRoboBallRedBuddy",
             "cscScav", "cscScavLunar", "cscSquidTurret", "cscSuperRoboBallBoss", "cscTitanGold", "cscVagrant", "cscVulture",
             "cscGrandparent", "cscBackupDrone", "cscArchWisp"};
 
-            var randoMob = options[r.Next(0, options.Length)];
+                String[] options = { "WispSoulBody", "Bandit2Body", "BeetleBody", "BeetleGuardBody", "ClayBruiserBody", "CommandoBody", "CrocoBody",
+                "BeetleQueen2Body", "BellBody", "BisonBody", "BrotherBody", "BrotherHurtBody", "BrotherHauntBody", "CaptainBody", "ClayBossBody",
+                "Drone1Body", "Drone2Body", "FlameDroneBody", "MegaDroneBody", "MissileDroneBody", "ElectricWormBody", "EngiBody", "EngiWalkerTurretBody"
+            , "GolemBody", "GrandParentBody", "GreaterWispBody", "HermitCrabBody", "HuntressBody", "ImpBody", "ImpBossBody", "JellyfishBody",
+            "LemurianBody", "LoaderBody", "LunarExploderBody", "LunarGolemBody", "LunarWispBody", "MageBody", "MagmaWormBody", "MercBody", "MiniMushroomBody",
+            "ParentBody", "RoboBallBossBody", "RoboBallMiniBody", "SuperRoboBallBossBody", "ScavBody", "ScavLunar1Body", "TitanBody", "TitanGoldBody",
+            "ToolbotBody", "VagrantBody", "VultureBody", "WispBody", "Assassin2Body", "ClayGrenadierBody", "FlyingVerminBody", "RailgunnerBody", "VoidSurvivorBody"
+            , "AssassinBody", "BomberBody"};
 
-            SpawnCard card = Resources.Load<SpawnCard>("spawncards/characterspawncards/" + randoMob);
-            card.directorCreditCost = 0;
-            DirectorCore.spawnedObjects.Capacity = 99999;
-            RoR2.SceneDirector.cardSelector.Capacity = 99999;
+                String randoMob = options[r.Next(0, options.Length)];
 
-            DirectorPlacementRule rule = new DirectorPlacementRule();
-            rule.placementMode = DirectorPlacementRule.PlacementMode.Random;
+                for (int i = 0; i < RoR2.NetworkUser.instancesList.Count; i++)
+                {
+                    var user = RoR2.NetworkUser.instancesList[i];
+                    if (user.GetCurrentBody().netId == c.netId && !isTransformed(user.netId.Value)) // if the body is our target, with the applied net user
+                    {
+                        var tp = new transformedPlayer();
+                        var transformBack = user.GetCurrentBody().bodyIndex;
+                        tp.originalIndex = transformBack;
+                        tp.userID = user.netId.Value;
+                        transformedPlayers.Add(tp);
+                        Random r = new Random();
+                        var n = r.Next(3, 60);
+                        MessageHandler.globalMessage(c.GetUserName() + " has undergone a transformation for " + n + " seconds!");
 
-            c.master.bodyPrefab = card.prefab;
-            card.ob
-            Transform component = c.master.bodyInstanceObject.GetComponent<Transform>();
-            Vector3 vector = component.position;
-            Quaternion rotation = component.rotation;
-            c.master.Respawn(c.footPosition, c.transform.rotation);
+                        user.SetBodyPreference(BodyCatalog.FindBodyIndex(randoMob));
+                        c.master.Respawn(c.footPosition, c.transform.rotation);
+                        await Task.Delay(1000 * n);
+                        if (getTransformBack(user.netId.Value) != BodyIndex.None)
+                        {
+                            user.SetBodyPreference(getTransformBack(user.netId.Value));
+                            c.master.Respawn(RoR2.NetworkUser.instancesList[i].GetCurrentBody().footPosition, RoR2.NetworkUser.instancesList[i].transform.rotation);
+                            removeTransformed(user.netId.Value);
+                        }
+                        else
+                        {
+                            Debug.Log("(Artifact of Entropy) Transform Back Failed! Survivor is stuck as a transformed Object!!!");
+                        }
+                    }
+                }
+            }
             //c.master.Respawn(c.footPosition, c.gameObject.transform.rotation);
             //Debug.Log("10");
         }
-        */
-        static public CharacterBody grabUser(uint targetID) // get body to affect using UID info
+
+        public static void levelUpPlayer(uint targetID)
         {
+            var c = grabUser(targetID);
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " has received a bunch of exp!");
+                ExperienceManager.instance.AwardExperience(c.aimOrigin, c, (ulong)c.experience * (ulong)c.level + 150);
+            }
+        }
+
+        public static void giveVoidItem(uint targetID)
+        {
+            var c = grabUser(targetID);
+            if (c != null)
+            {
+                MessageHandler.globalMessage(c.GetUserName() + " has received a void item!");
+                Random rnd = new Random();
+                int index = rnd.Next(1, 15);
+                ItemIndex dex = ItemIndex.None;
+                switch (index)
+                {
+                    case 1:
+                        dex = DLC1Content.Items.VoidMegaCrabItem.itemIndex;
+                        break;
+                    case 2:
+                        dex = DLC1Content.Items.BearVoid.itemIndex;
+                        break;
+                    case 3:
+                        dex = DLC1Content.Items.BleedOnHitVoid.itemIndex;
+                        break;
+                    case 4:
+                        dex = DLC1Content.Items.ChainLightningVoid.itemIndex;
+                        break;
+                    case 5:
+                        dex = DLC1Content.Items.CloverVoid.itemIndex;
+                        break;
+                    case 6:
+                        dex = DLC1Content.Items.TreasureCacheVoid.itemIndex;
+                        break;
+                    case 7:
+                        dex = DLC1Content.Items.SlowOnHitVoid.itemIndex;
+                        break;
+                    case 8:
+                        dex = DLC1Content.Items.CritGlassesVoid.itemIndex;
+                        break;
+                    case 9:
+                        dex = DLC1Content.Items.MissileVoid.itemIndex;
+                        break;
+                    case 11:
+                        dex = DLC1Content.Items.ElementalRingVoid.itemIndex;
+                        break;
+                    case 12:
+                        dex = DLC1Content.Items.EquipmentMagazineVoid.itemIndex;
+                        break;
+                    case 13:
+                        dex = DLC1Content.Items.ExplodeOnDeathVoid.itemIndex;
+                        break;
+                    case 14:
+                        dex = DLC1Content.Items.ExtraLifeVoid.itemIndex;
+                        break;
+                }
+                c.inventory.GiveItem(dex);
+                MessageHandler.globalItemGetMessage(c, dex, 4);
+            }
+        }
+
+
+        public static bool isTransformed(uint netID) // is the player currently not in their original form?
+        {
+            for(int i = 0; i < transformedPlayers.Count; i++)
+            {
+                if(transformedPlayers[i].userID == netID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static BodyIndex getTransformBack(uint netID)
+        {
+            for (int i = 0; i < transformedPlayers.Count; i++)
+            {
+                if (transformedPlayers[i].userID == netID)
+                {
+                    return transformedPlayers[i].originalIndex;
+                }
+            }
+            return BodyIndex.None;
+        }
+
+        public static void removeTransformed(uint netID)
+        {
+            for (int i = 0; i < transformedPlayers.Count; i++)
+            {
+                if (transformedPlayers[i].userID == netID)
+                {
+                    transformedPlayers.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+        static public void randomTransformationGang(uint targetID)
+        {
+            var c = grabUser(targetID);
+            if (c != null)
+            {
+                randomTransformSubset(c);
+            }
+        }
+
+        static public CharacterBody grabUser(uint targetID) // get body to affect using UID info
+        { 
             for(int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
             {
-                CharacterBody c = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
-                if(c.networkIdentity.netId.Value == targetID)
+                NetworkUser n = NetworkUser.readOnlyInstancesList[i];
+                if (n != null)
                 {
-                    return c;
+                    CharacterBody c = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
+                    if (c != null && c.networkIdentity.netId.Value == targetID && c.master.hasBody == true)
+                    {
+                        return c;
+                    }
                 }
             }
 
             //MessageHandler.globalMessage("Error: issue locating target body! (Grabuser)");
-            return NetworkUser.readOnlyInstancesList[0].GetCurrentBody(); 
+            return null; 
         }
 
         static public GameObject spawnRandomMonster()
         {
             String[] options = { "cscBeetle", "cscBeetleGuard", "cscBeetleQueen", "cscBell", "cscBrother", "cscClayBoss", "cscClayBruiser",
             "cscElectricWorm", "cscGolem", "cscGravekeeper", "cscGreaterWisp", "cscHermitCrab", "cscImp", "cscImpBoss", "cscJellyfish"
-            , "cscLemurian", "cscLemurianBruiser", "cscLesserWisp", "cscLunarExploder", "cscLunarGolem", "cscLunarWisp", "cscMagmaWorm",
+            , "cscLemurian", "cscLemurianBruiser", "cscLunarExploder", "cscLunarGolem", "cscLunarWisp", "cscMagmaWorm",
             "cscMiniMushroom", "cscNullifier", "cscParent", "cscParentPod", "cscRoboBallBoss", "cscRoboBallGreenBuddy", "cscRoboBallRedBuddy",
             "cscScav", "cscScavLunar", "cscSquidTurret", "cscSuperRoboBallBoss", "cscTitanGold", "cscVagrant", "cscVulture",
             "cscGrandparent", "cscBackupDrone", "cscArchWisp"};
@@ -1370,25 +2062,45 @@ namespace ArtifactGroup
         private static CharacterBody findRandomMonster()
         {
             var monsters = TeamComponent.GetTeamMembers(TeamIndex.Monster);
+            if (monsters.Count != 0)
+            {
+                int randomMonster = Math.Max((int)(Math.Floor((monsters.Count * r.NextDouble()) - 1)), 0);
+                var m = monsters[randomMonster];
 
-            int randomMonster = (int)(Math.Round((monsters.Count * r.NextDouble()) - 1));
-            var m = monsters[randomMonster];
-
-            return m.body;
+                return m.body;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // play sound to ALL player locations
         private static void playAll(uint uid)
         {
-            // local sound playing
-            for (int i = 0; i < PlayerCharacterMasterController.instances.Count; i++)
+            if (NetworkServer.active)
             {
-                AkSoundEngine.PostEvent(uid, PlayerCharacterMasterController.instances[i].body.gameObject);
+                // local sound playing
+                for (int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
+                {
+                    var controller = NetworkUser.readOnlyInstancesList[i];
+                    if (controller != null && controller.GetCurrentBody() != null 
+                        && controller.GetCurrentBody().gameObject != null && controller.GetCurrentBody().networkIdentity != null
+                        && controller.GetCurrentBody().networkIdentity.netId != null)
+                    {
+                        AkSoundEngine.PostEvent(uid, controller.GetCurrentBody().gameObject);
 
-                // play sound for all clients
-                new networkBehavior.Playsound(uid, PlayerCharacterMasterController.instances[i].body.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                        // play sound for all clients
+                        new networkBehavior.Playsound(uid, controller.GetCurrentBody().networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                    }
+                }
             }
-            }  
+            }
+        public struct transformedPlayer
+        {
+            public BodyIndex originalIndex;
+            public uint userID;
         }
+    }
 }
 

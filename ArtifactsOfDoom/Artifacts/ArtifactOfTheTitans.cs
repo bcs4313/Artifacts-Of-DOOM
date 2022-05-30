@@ -18,6 +18,9 @@ namespace ArtifactGroup
 
 		int mostRecentCreditCost = 1; // used for scaling
 		public List<monsterIdentity> creditIDS = new List<monsterIdentity>();
+		
+		// client synchronization data structure
+		public static List<desyncedMonster> desynchronizedMonsters = new List<desyncedMonster>();
 
 		public static ConfigEntry<int> TimesToPrintMessageOnStart;
 		public override string ArtifactName => "Artifact of The Titans";
@@ -44,11 +47,36 @@ namespace ArtifactGroup
 					mostRecentCreditCost = spawn.spawnRequest.spawnCard.directorCreditCost;
 				}
 			};
+
 			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
 				int cost = mostRecentCreditCost;
 
-				if(cost > 0)
+				// client handler for lost packets and desynchronized body spawns
+				if(ArtifactEnabled && !NetworkServer.active)
+                {
+					for(int i = 0; i < desynchronizedMonsters.Count; i++)
+                    {
+						if(body.netId.Value == desynchronizedMonsters[i].uid)
+						{
+							Debug.Log("(Artifact of The Titans): Resolved resize failure of UID: " + body.netId.Value);
+							networkBehavior.resizeMonster(body, desynchronizedMonsters[i].scalar);
+							desynchronizedMonsters.RemoveAt(i);
+                        }
+						else
+                        {
+							var m = desynchronizedMonsters[i];
+							m.overload += 1;
+							if(m.overload == 50)
+                            {
+								Debug.Log("(Artifact of The Titans): Resize failure remains unresolved of UID: " + body.netId.Value);
+								desynchronizedMonsters.RemoveAt(i);
+							}
+						}
+                    }
+                }
+
+				if(cost > 0 && ArtifactEnabled && NetworkServer.active)
                 {
 					bool inLog = false;
 					// first we will check if this monster is already logged
@@ -72,7 +100,7 @@ namespace ArtifactGroup
 					}
 
 				}
-				else
+				else if (ArtifactEnabled && NetworkServer.active)
                 {
 					bool foundReference = false;
 					// now we encounter a special situation where the monster needs to be assigned a cost
@@ -131,9 +159,6 @@ namespace ArtifactGroup
 						}
 					}
 
-				}
-				if (ArtifactEnabled && NetworkServer.active && body.teamComponent.teamIndex == TeamIndex.Monster)
-				{
 					// generate a raw client package
 					uint idTarget = body.networkIdentity.netId.Value;
 
@@ -154,6 +179,12 @@ namespace ArtifactGroup
 			public bool isElite;
 		}
 
+		public struct desyncedMonster
+        {
+			public uint uid;
+			public double scalar;
+			public int overload; // once an overload value hits 50 (50 spawn triggers), the monster is deleted. This is done to save space in our list.
+        }
     }
 
 }

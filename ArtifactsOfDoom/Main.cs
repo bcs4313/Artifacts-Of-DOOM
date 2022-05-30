@@ -26,7 +26,7 @@ namespace ArtifactsOfDoom
 
         public const string ModGuid = "com.Dragonov7733.ArtifactsOfDoom";
         public const string ModName = "Artifacts of Doom";
-        public const string ModVer = "1.3.0";
+        public const string ModVer = "1.4.0";
 
         public static AssetBundle MainAssets;
 
@@ -34,12 +34,12 @@ namespace ArtifactsOfDoom
         
         private void Awake()
         {
-            Debug.Log("WAR: Main is running...");
+            Debug.Log("Artifacts Of Doom: Main is running...");
             MainAssets = AssetBundle.LoadFromFile(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/artifacticons");
 
-            Debug.Log("WAR: Loaded Assets");
+            Debug.Log("Artifacts Of Doom: Loaded Assets");
 
-            Debug.Log("Registering Net Message");
+            Debug.Log("Artifacts Of Doom: Registering Net Message");
             // Register all net messages from the networkBehavior class
             NetworkingAPI.RegisterMessageType<networkBehavior.Amogus>();
             NetworkingAPI.RegisterMessageType<networkBehavior.FattenPlayer>();
@@ -53,23 +53,16 @@ namespace ArtifactsOfDoom
             
             foreach(Type t in ArtifactTypes)
             {
-                Debug.Log("WAR: Found Assembly Instance = " + t.FullName);
+                Debug.Log("Artifacts Of Doom: Found Assembly Instance = " + t.FullName);
                 ArtifactBase artifact = (ArtifactBase)Activator.CreateInstance(t);
                 artifact.Init();
             }
 
             foreach (var artifactType in ArtifactTypes)
             {
-                Debug.Log("WAR: Creating instance = " + artifactType.AssemblyQualifiedName);
+                Debug.Log("Artifacts Of Doom: Creating instance = " + artifactType.AssemblyQualifiedName);
                 ArtifactBase artifact = (ArtifactBase)Activator.CreateInstance(artifactType);
-                if (ValidateArtifact(artifact, Artifacts))
-                {
-                    //artifact.Init();
-                }
-                else
-                {
-                    //artifact.Init();
-                }
+                Artifacts.Add(artifact);
             }
 
             // add all available sounds...
@@ -84,14 +77,6 @@ namespace ArtifactsOfDoom
             OptionsLink.Config = Config;
             OptionsLink.constructSettings();
         }
-        public bool ValidateArtifact(ArtifactBase artifact, List<ArtifactBase> artifactList)
-        {
-            var enabled = Config.Bind<bool>("Artifact: " + artifact.ArtifactName, "Enable Artifact?", true, "Should this artifact appear for selection?").Value;
-            if (enabled)
-            {
-                artifactList.Add(artifact);
-            }
-            return enabled;
-        }
+      
     }
 }

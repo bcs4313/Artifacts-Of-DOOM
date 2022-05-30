@@ -27,10 +27,9 @@ namespace ArtifactGroup
      */
     public class EntropyHost
     {
-		public static int eventTotal = 61; // total random events to handle / work with
+		public static int eventTotal = 80; // total random events to handle / work with
 
 		private List<Event> events; // holds all events, with corresponding weights, hooks, and outcomes
-
 
 		public EntropyHost()
         {
@@ -383,7 +382,84 @@ namespace ArtifactGroup
 						entropyBlaster.avengersASSEMBLE();
 					}
 					break;
-
+				case 61:
+					if (isSelective)
+                    {
+						entropyBlaster.randomTransformation(targetID);
+                    }
+					break;
+				case 62:
+					if (isSelective)
+                    {
+						entropyBlaster.randomTransformationGang(targetID);
+                    }
+					break;
+				case 64:
+					entropyBlaster.distortScreen();
+					break;
+				case 65:
+					if(isSelective)
+                    {
+						entropyBlaster.Yummy(targetID);
+                    }
+					break;
+				case 66:
+					if(isSelective)
+                    {
+						entropyBlaster.friendlyVoidBlast(targetID);
+                    }
+					break;
+				case 67:
+					entropyBlaster.bloodShrineSpawn();
+					break;
+				case 68:
+					entropyBlaster.chanceShrineSpawn();
+					break;
+				case 69:
+					entropyBlaster.combatShrineSpawn();
+					break;
+				case 70:
+					entropyBlaster.healingShrineSpawn();
+					break;
+				case 71:
+					entropyBlaster.orderShrineSpawn();
+					break;
+				case 72:
+					entropyBlaster.cleanseShrineSpawn();
+					break;
+				case 73:
+					entropyBlaster.evilVoidBlast();
+					break;
+				case 74:
+					if (isSelective)
+					{
+						entropyBlaster.megaTarBallFriendly(targetID);
+					}
+					break;
+				case 75:
+					entropyBlaster.megaTarBallEVIL();
+					break;
+				case 76:
+					if (isSelective)
+					{
+						entropyBlaster.spawnWallFriendly(targetID);
+					}
+					break;
+				case 77:
+						entropyBlaster.spawnWallEvil();
+					break;
+				case 78:
+					if (isSelective)
+					{
+						entropyBlaster.levelUpPlayer(targetID);
+					}
+					break;
+				case 79:
+					if (isSelective)
+                    {
+						entropyBlaster.giveVoidItem(targetID);
+                    }
+					break;
 			}
 		}
 

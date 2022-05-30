@@ -32,8 +32,9 @@ namespace ArtifactGroup
 {
     class EntropySubsetGen
     {
-        static public Random r = new Random();
+        int seed = 0;
         static public String[] enemySubset = new string[0];
+        static public String[] transformSubset = new string[0];
         static public ItemIndex[] itemSubset = new ItemIndex[0];
         static public int[] itemColorSubset = new int[0];
 
@@ -55,7 +56,7 @@ namespace ArtifactGroup
             while (result < subsetIncreaseChance)
             {
                 subsetTotal++;
-                result = r.NextDouble();
+                result = ArtifactOfEntropy.rnd.NextDouble();
             }
 
             // now create the array and generate the set
@@ -63,13 +64,48 @@ namespace ArtifactGroup
             for (int i = 0; i < subset.Length; i++)
             {
                 // select a random enemy in the fullset
-                int randomEnemy = r.Next(0, fullSet.Length);
+                int randomEnemy = ArtifactOfEntropy.rnd.Next(0, fullSet.Length);
                 subset[i] = fullSet[randomEnemy];
             }
 
             // now update the static variable
             enemySubset = subset;
         }
+
+        public static void generateTransformSubset()
+        {
+            String[] fullSet = { "WispSoulBody", "Bandit2Body", "BeetleBody", "BeetleGuardBody", "ClayBruiserBody", "CommandoBody", "CrocoBody",
+                "BeetleQueen2Body", "BellBody", "BisonBody", "BrotherBody", "BrotherHurtBody", "BrotherHauntBody", "CaptainBody", "ClayBossBody",
+                "Drone1Body", "Drone2Body", "FlameDroneBody", "MegaDroneBody", "MissileDroneBody", "ElectricWormBody", "EngiBody", "EngiWalkerTurretBody"
+            , "GolemBody", "GrandParentBody", "GreaterWispBody", "HermitCrabBody", "HuntressBody", "ImpBody",  "JellyfishBody",
+            "LemurianBody", "LoaderBody", "LunarExploderBody", "LunarGolemBody", "LunarWispBody", "MageBody", "MagmaWormBody", "MercBody", "MiniMushroomBody",
+            "ParentBody", "RoboBallBossBody", "RoboBallMiniBody", "SuperRoboBallBossBody", "ScavBody", "ScavLunar1Body", "TitanBody", "TitanGoldBody",
+            "ToolbotBody", "VagrantBody", "VultureBody", "WispBody", "Assassin2Body", "ClayGrenadierBody", "FlyingVerminBody", "RailgunnerBody", "VoidSurvivorBody"
+            , "AssassinBody", "BomberBody"};
+
+            // calculate how many enemies are in the subset
+            int subsetTotal = 1;
+            double subsetIncreaseChance = 0.5; // coin flip chance to add to subset each time
+            double result = 0;
+            while (result < subsetIncreaseChance)
+            {
+                subsetTotal++;
+                result = ArtifactOfEntropy.rnd.NextDouble();
+            }
+
+            // now create the array and generate the set
+            String[] subset = new String[subsetTotal];
+            for (int i = 0; i < subset.Length; i++)
+            {
+                // select a random enemy in the fullset
+                int randomEnemy = ArtifactOfEntropy.rnd.Next(0, fullSet.Length);
+                subset[i] = fullSet[randomEnemy];
+            }
+
+            // now update the static variable
+            transformSubset = subset;
+        }
+
         public static void generateItemSubset()
         {
             // calculate how many items are in the subset
@@ -79,7 +115,7 @@ namespace ArtifactGroup
             while (result < subsetIncreaseChance)
             {
                 subsetTotal++;
-                result = r.NextDouble();
+                result = ArtifactOfEntropy.rnd.NextDouble();
             }
 
             // now create the array and generate the set
