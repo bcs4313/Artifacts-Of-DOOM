@@ -26,7 +26,7 @@ namespace ArtifactsOfDoom
 
         public const string ModGuid = "com.Dragonov7733.ArtifactsOfDoom";
         public const string ModName = "Artifacts of Doom";
-        public const string ModVer = "1.4.0";
+        public const string ModVer = "1.4.4";
 
         public static AssetBundle MainAssets;
 

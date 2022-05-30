@@ -47,50 +47,54 @@ namespace ArtifactGroup
 
         static public void WarpEnemies()
         {
-            MessageHandler.globalMessage("Is this hell?");
-            double x = r.NextDouble() * 2 + 0.3;
-            double y = r.NextDouble() * 2 + 0.3;
-            double z = r.NextDouble() * 2 + 0.3;
-            foreach (CharacterMaster c in RoR2.CharacterMaster._readOnlyInstancesList)
+            try
             {
-                CharacterBody body = c.GetBody();
-                Vector3 size = new Vector3();
-                Transform newTrans = c.gameObject.transform.root;
-               
-                size = body.gameObject.transform.localScale;
-
-                if (body.teamComponent.teamIndex == TeamIndex.Monster)
+                double x = r.NextDouble() * 2 + 0.3;
+                double y = r.NextDouble() * 2 + 0.3;
+                double z = r.NextDouble() * 2 + 0.3;
+                foreach (CharacterMaster c in RoR2.CharacterMaster._readOnlyInstancesList)
                 {
-                    size.x = body.gameObject.transform.localScale.x * (float)x;
-                    size.y = body.gameObject.transform.localScale.y * (float)y;
-                    size.z = body.gameObject.transform.localScale.z * (float)z;
+                    CharacterBody body = c.GetBody();
+                    Vector3 size = new Vector3();
+                    Transform newTrans = c.gameObject.transform.root;
 
+                    size = body.gameObject.transform.localScale;
 
-                    ModelLocator modelLocator = c.GetBody().GetComponent<ModelLocator>();
-                    if (modelLocator)
+                    if (body.teamComponent.teamIndex == TeamIndex.Monster)
                     {
-                        Transform modelTransform = modelLocator.modelBaseTransform;
-                        //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
-                        if (modelTransform)
+                        size.x = body.gameObject.transform.localScale.x * (float)x;
+                        size.y = body.gameObject.transform.localScale.y * (float)y;
+                        size.z = body.gameObject.transform.localScale.z * (float)z;
+
+
+                        ModelLocator modelLocator = c.GetBody().GetComponent<ModelLocator>();
+                        if (modelLocator)
                         {
-                            modelLocator._modelTransform.localScale = size;
+                            Transform modelTransform = modelLocator.modelBaseTransform;
+                            //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
+                            if (modelTransform)
+                            {
+                                modelLocator._modelTransform.localScale = size;
+                                MessageHandler.globalMessage("Is this hell?");
+                                // trigger size change for client
+                                // generate a raw client package
+                                uint idTarget = c.networkIdentity.netId.Value;
 
-                            // trigger size change for client
-                            // generate a raw client package
-                            uint idTarget = c.networkIdentity.netId.Value;
-
+                            }
+                            else
+                            {
+                                MessageHandler.globalMessage("??");
+                            }
                         }
                         else
                         {
-                            MessageHandler.globalMessage("??");
+                            MessageHandler.globalMessage("?");
                         }
                     }
-                    else
-                    {
-                        MessageHandler.globalMessage("?");
-                    }
                 }
+
             }
+            catch { }
         }
 
         static public void makeChonky(uint targetID)
@@ -123,7 +127,7 @@ namespace ArtifactGroup
                         modelLocator._modelTransform.localScale = size;
 
                         MessageHandler.globalMessage(c.GetUserName() + " needs to lay off the food...");
-
+                        
                         // reduce firerate by 35%, Increase Dmg by 35%, 
                         // Reduce speed by 25%, increase health by 25%
                         c.baseAttackSpeed *= (float)0.75;
