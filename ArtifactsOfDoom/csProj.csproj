@@ -1,0 +1,479 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="libs\**" />
+    <EmbeddedResource Remove="libs\**" />
+    <None Remove="libs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="artifacticons" />
+    <None Remove="Epic.bnk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="libs\R2API.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="artifacticons" />
+    <EmbeddedResource Include="Epic.bnk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+    <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.1-r.0" />
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>libs\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="com.unity.multiplayer-hlapi.Runtime">
+      <HintPath>libs\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+      <Aliases></Aliases>
+    </Reference>
+    <Reference Include="Decalicious">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Decalicious.dll</HintPath>
+    </Reference>
+    <Reference Include="EOS">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\EOS.dll</HintPath>
+    </Reference>
+    <Reference Include="Facepunch.Steamworks">
+      <HintPath>libs\Facepunch.Steamworks.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GenericIK">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\GenericIK.dll</HintPath>
+    </Reference>
+    <Reference Include="HGCSharpUtils">
+      <HintPath>libs\HGCSharpUtils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="HGUnityUtils">
+      <HintPath>libs\HGUnityUtils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KdTreeLib">
+      <HintPath>libs\KdTreeLib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KinematicCharacterController">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\KinematicCharacterController.dll</HintPath>
+    </Reference>
+    <Reference Include="LegacyResourcesAPI">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\LegacyResourcesAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+      <HintPath>libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ModLoader">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\ModLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>libs\Mono.Security.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="pb_Stl">
+      <HintPath>libs\pb_Stl.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Poly2Tri">
+      <HintPath>libs\Poly2Tri.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ProBuilderCore">
+      <HintPath>libs\ProBuilderCore.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ProBuilderMeshOps">
+      <HintPath>libs\ProBuilderMeshOps.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="R2API">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\BepInEx\plugins\tristanmcpherson-R2API\R2API\R2API.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Core">
+      <HintPath>libs\Rewired_Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Rewired_CSharp">
+      <HintPath>libs\Rewired_CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Rewired_Windows">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Rewired_Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Windows_Lib">
+      <HintPath>libs\Rewired_Windows_Lib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RiskOfOptions">
+      <HintPath>..\..\..\Downloads\RiskOfOptions\RiskOfOptions.dll</HintPath>
+    </Reference>
+    <Reference Include="RoR2">
+      <HintPath>libs\RoR2.dll</HintPath>
+      <Aliases></Aliases>
+    </Reference>
+    <Reference Include="SimpleJSON">
+      <HintPath>libs\SimpleJSON.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.EnterpriseServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Internals">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.ServiceModel.Internals.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\5.0.0\ref\net5.0\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.Postprocessing.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ProBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.Csg">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ProBuilder.Csg.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.KdTree">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ProBuilder.KdTree.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.Poly2Tri">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ProBuilder.Poly2Tri.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.Stl">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ProBuilder.Stl.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.ScriptableBuildPipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XR.LegacyInputHelpers">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>H:\Steam Drive\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Wwise">
+      <HintPath>libs\Wwise.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Zio">
+      <HintPath>libs\Zio.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="libs\BepInEx.dll" />
+    <None Include="libs\Facepunch.Steamworks.dll" />
+    <None Include="libs\HGCSharpUtils.dll" />
+    <None Include="libs\HGUnityUtils.dll" />
+    <None Include="libs\KdTreeLib.dll" />
+    <None Include="libs\KinematicCharacterController.dll" />
+    <None Include="libs\MMHOOK_Assembly-CSharp.dll" />
+    <None Include="libs\Mono.Security.dll" />
+    <None Include="libs\pb_Stl.dll" />
+    <None Include="libs\Poly2Tri.dll" />
+    <None Include="libs\ProBuilderCore.dll" />
+    <None Include="libs\ProBuilderMeshOps.dll" />
+    <None Include="libs\R2API.dll" />
+    <None Include="libs\Rewired_Core.dll" />
+    <None Include="libs\Rewired_CSharp.dll" />
+    <None Include="libs\Rewired_Windows_Lib.dll" />
+    <None Include="libs\SimpleJSON.dll" />
+    <None Include="libs\Unity.Postprocessing.Runtime.dll" />
+    <None Include="libs\Unity.RenderPipelines.Core.Runtime.dll" />
+    <None Include="libs\Unity.RenderPipelines.Core.ShaderLibrary.dll" />
+    <None Include="libs\Unity.TextMeshPro.dll" />
+    <None Include="libs\UnityEngine.AIModule.dll" />
+    <None Include="libs\UnityEngine.AnimationModule.dll" />
+    <None Include="libs\UnityEngine.ARModule.dll" />
+    <None Include="libs\UnityEngine.AssetBundleModule.dll" />
+    <None Include="libs\UnityEngine.AudioModule.dll" />
+    <None Include="libs\UnityEngine.BaselibModule.dll" />
+    <None Include="libs\UnityEngine.ClothModule.dll" />
+    <None Include="libs\UnityEngine.ClusterInputModule.dll" />
+    <None Include="libs\UnityEngine.ClusterRendererModule.dll" />
+    <None Include="libs\UnityEngine.CoreModule.dll" />
+    <None Include="libs\UnityEngine.CrashReportingModule.dll" />
+    <None Include="libs\UnityEngine.DirectorModule.dll" />
+    <None Include="libs\UnityEngine.dll" />
+    <None Include="libs\UnityEngine.FileSystemHttpModule.dll" />
+    <None Include="libs\UnityEngine.GameCenterModule.dll" />
+    <None Include="libs\UnityEngine.GridModule.dll" />
+    <None Include="libs\UnityEngine.HotReloadModule.dll" />
+    <None Include="libs\UnityEngine.ImageConversionModule.dll" />
+    <None Include="libs\UnityEngine.InputModule.dll" />
+    <None Include="libs\UnityEngine.LocalizationModule.dll" />
+    <None Include="libs\UnityEngine.PerformanceReportingModule.dll" />
+    <None Include="libs\UnityEngine.Physics2DModule.dll" />
+    <None Include="libs\UnityEngine.PhysicsModule.dll" />
+    <None Include="libs\UnityEngine.ProfilerModule.dll" />
+    <None Include="libs\UnityEngine.ScreenCaptureModule.dll" />
+    <None Include="libs\UnityEngine.SharedInternalsModule.dll" />
+    <None Include="libs\UnityEngine.SpatialTracking.dll" />
+    <None Include="libs\UnityEngine.SpriteMaskModule.dll" />
+    <None Include="libs\UnityEngine.SpriteShapeModule.dll" />
+    <None Include="libs\UnityEngine.StreamingModule.dll" />
+    <None Include="libs\UnityEngine.StyleSheetsModule.dll" />
+    <None Include="libs\UnityEngine.SubstanceModule.dll" />
+    <None Include="libs\UnityEngine.TerrainModule.dll" />
+    <None Include="libs\UnityEngine.TerrainPhysicsModule.dll" />
+    <None Include="libs\UnityEngine.TextCoreModule.dll" />
+    <None Include="libs\UnityEngine.TextRenderingModule.dll" />
+    <None Include="libs\UnityEngine.TilemapModule.dll" />
+    <None Include="libs\UnityEngine.Timeline.dll" />
+    <None Include="libs\UnityEngine.TimelineModule.dll" />
+    <None Include="libs\UnityEngine.TLSModule.dll" />
+    <None Include="libs\UnityEngine.UI.dll" />
+    <None Include="libs\UnityEngine.UIElementsModule.dll" />
+    <None Include="libs\UnityEngine.UIModule.dll" />
+    <None Include="libs\UnityEngine.UmbraModule.dll" />
+    <None Include="libs\UnityEngine.UNETModule.dll" />
+    <None Include="libs\UnityEngine.UnityAnalyticsModule.dll" />
+    <None Include="libs\UnityEngine.UnityConnectModule.dll" />
+    <None Include="libs\UnityEngine.UnityTestProtocolModule.dll" />
+    <None Include="libs\UnityEngine.UnityWebRequestAssetBundleModule.dll" />
+    <None Include="libs\UnityEngine.UnityWebRequestAudioModule.dll" />
+    <None Include="libs\UnityEngine.UnityWebRequestModule.dll" />
+    <None Include="libs\UnityEngine.UnityWebRequestTextureModule.dll" />
+    <None Include="libs\UnityEngine.UnityWebRequestWWWModule.dll" />
+    <None Include="libs\UnityEngine.VehiclesModule.dll" />
+    <None Include="libs\UnityEngine.VFXModule.dll" />
+    <None Include="libs\UnityEngine.VideoModule.dll" />
+    <None Include="libs\UnityEngine.VRModule.dll" />
+    <None Include="libs\UnityEngine.WindModule.dll" />
+    <None Include="libs\UnityEngine.XRModule.dll" />
+    <None Include="libs\Wwise.dll" />
+  </ItemGroup>
+
+</Project>

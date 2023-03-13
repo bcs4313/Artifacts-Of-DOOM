@@ -1,0 +1,11 @@
+﻿{
+	"name": "ArtifactsOfDoom",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/bcs4313/Artifacts-Of-DOOM",
+	"description": "A series of artifacts that enhances difficulty, scales monsters, causes chaos, and more!",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1905",
+		"tristanmcpherson-R2API-4.3.21",
+		"RiskofThunder-HookGenPatcher-1.2.3"
+	]
+}
