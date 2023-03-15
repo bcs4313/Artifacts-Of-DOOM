@@ -486,6 +486,7 @@ namespace ArtifactGroup
 
 		void MyFunc(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
 		{
+			/*
 				orig(self); // Don't forget to call this, or the vanilla / other mods' codes will not execute!
 				hud = self;
 				//hud.mainContainer.transform // This will return the main container. You should put your UI elements under it or its children!
@@ -502,6 +503,7 @@ namespace ArtifactGroup
 				Amogus.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
 				//Debug.Log("Amogus layer = " + Amogus.layer.ToString());
 				Amogus.layer = 0;
+			*/
 		}
 
 		public static void adjustAmogus()

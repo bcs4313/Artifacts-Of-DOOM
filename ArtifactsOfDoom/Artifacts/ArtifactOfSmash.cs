@@ -45,10 +45,65 @@ namespace ArtifactGroup
 			CreateArtifact();
 			Hooks();
 		}
+
+		public void applyForce(DamageReport report, CharacterBody smasher, CharacterBody defender, float forceCoefficient)
+		{
+			// determine scalar quantity for applied force
+			float scalar = (report.damageDealt / defender.healthComponent.health) * 70;
+
+			// enforce a maximum force value to make forces more stable
+			float controlledScalar = (float)Math.Abs(defender.rigidbody.mass * scalar / 3);
+
+
+			// debug
+			Debug.Log(defender.name + ": Base Scalar = " + scalar);
+			Debug.Log(defender.name + ": Base Mass = " + defender.rigidbody.mass);
+			Debug.Log(defender.name + ": Controlled Scalar / Mass = " + (controlledScalar / defender.rigidbody.mass));
+
+			Vector3 launch = defender.corePosition - smasher.footPosition;
+			launch.Normalize();
+			launch *= controlledScalar * forceCoefficient;
+			Debug.Log(defender.name + ": Final Vector = " + launch + " Acceleration: " + (launch.magnitude / defender.rigidbody.mass / 10) + " m/s^2");
+			Debug.Log("x: " + launch.x + " y:" + launch.y + " z:" + launch.z + " ");
+			if (float.IsNaN(launch.x) || float.IsNaN(launch.x) || float.IsNaN(launch.x) || float.IsInfinity(launch.magnitude))
+            {
+				Debug.Log(defender.name + " Launch Vector is invalid, returning from launch function: ");
+				return;
+            }
+
+			if (defender.characterMotor != null)
+			{
+				Debug.Log("MOT: ");
+				defender.characterMotor.ApplyForce(launch);
+			}
+			else
+			{
+				Debug.Log("RIG: ");
+				defender.rigidbody.AddForce((launch / defender.rigidbody.mass) * 45, ForceMode.Acceleration);
+			}
+		}
+
+		// this calculation takes into account redirected forces from impacts, which isn't accounted for
+		// by magnitude calculations alone
+		public float calculateImpact(Vector3 lastVelocity, Vector3 newVelocity)
+        {
+			return Math.Abs(lastVelocity.x - newVelocity.x) + Math.Abs(lastVelocity.y - newVelocity.y) + Math.Abs(lastVelocity.z - newVelocity.z);
+		}
+
 		public override void Hooks()
 		{
 			/// We can Access the Run object on initialization here...
 			Run.onRunStartGlobal += overrides;
+
+			// replace this with info that will reward the player for basically any kill
+			On.RoR2.DeathRewards.OnKilledServer += (orig, self, damageReport) =>
+			{
+				if (ArtifactEnabled && (damageReport.attacker == null) || damageReport.attackerBody == null)
+				{
+					TeamManager.instance.GiveTeamMoney(TeamIndex.Player, self.fallbackGold);
+				}
+				orig.Invoke(self, damageReport);
+			};
 
 			// hook to detect impacts
 			On.RoR2.CharacterMotor.AfterCharacterUpdate += (orig_AfterCharacterUpdate orig, global::RoR2.CharacterMotor self, float deltaTime) =>
@@ -59,28 +114,43 @@ namespace ArtifactGroup
 					CharacterBody characterBody = self.body;
 					DamageInfo info = new DamageInfo();
 
-					// impact damage
-					if (characterBody.acceleration * 1.5 < Math.Max(self.lastVelocity.magnitude - self.velocity.magnitude, 0) * 10)
+					// impact damage for monsters
+					if (characterBody.maxJumpHeight * 1.5 < Math.Abs(calculateImpact(self.lastVelocity, self.velocity)))
 					{
 						if (characterBody.teamComponent.teamIndex == TeamIndex.Monster)
 						{
-							info.damage = (Math.Max(self.lastVelocity.magnitude - self.velocity.magnitude, 0) * (characterBody.healthComponent.fullHealth)) * 0.024f * enemyDMGMult;
-							info.damageType = DamageType.BlightOnHit;
-							characterBody.healthComponent.TakeDamage(info);
-							//Debug.Log("Monster: Damage Log DMG = " + self.velocity.magnitude);
+							if (characterBody.isBoss)
+							{
+								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.006f * enemyDMGMult;
+								info.damageType = DamageType.BlightOnHit;
+								characterBody.healthComponent.TakeDamage(info);
+							}
+							else
+							{
+								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.02f * enemyDMGMult;
+								info.damageType = DamageType.BlightOnHit;
+								characterBody.healthComponent.TakeDamage(info);
+                            }
+							
 						}
-						else
-                        {
-							info.damage = (Math.Max(self.lastVelocity.magnitude - self.velocity.magnitude, 0) * (characterBody.healthComponent.fullHealth)) * 0.004f * playerDMGMult;
+					}
+
+					// impact damage for survivors
+					if (characterBody.maxJumpHeight * 8 < Math.Abs(calculateImpact(self.lastVelocity, self.velocity)))
+					{
+						if (characterBody.teamComponent.teamIndex == TeamIndex.Player)
+						{
+							info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.0025f * playerDMGMult;
 							info.damageType = DamageType.BlightOnHit;
 							characterBody.healthComponent.TakeDamage(info);
+							Debug.Log(characterBody.maxJumpHeight * 5.5 + " < " + Math.Abs(self.lastVelocity.magnitude - self.velocity.magnitude));
 							//Debug.Log("Monster: Damage Log DMG = " + self.velocity.magnitude);
 						}
 					}
 				}
 			};
 
-			
+			// knockback hook
 			On.RoR2.CharacterBody.OnTakeDamageServer += (orig_OnTakeDamageServer orig, global::RoR2.CharacterBody self, global::RoR2.DamageReport damageReport) =>
 			{
 				orig.Invoke(self, damageReport);
@@ -100,40 +170,16 @@ namespace ArtifactGroup
 									{
 										if (defender.isBoss == false)
 										{
-											// find angle between victim and smasher
-											//float angleToSMASH = Vector3.Angle(smasher.corePosition, defender.corePosition) ;
-											Vector3 launch = Vector3.LerpUnclamped(smasher.footPosition, defender.corePosition,
-												Math.Max((((damageReport.damageDealt / defender.healthComponent.health) * defender.characterMotor.mass) / Vector3.Distance(smasher.corePosition, defender.corePosition) * 80), 10 * defender.characterMotor.mass / Vector3.Distance(smasher.corePosition, defender.corePosition))) + Vector3.up *
-												((float)Math.Log(damageReport.damageDealt / defender.healthComponent.health * 20, 1.6)) * 20;
-											float scalar = damageReport.damageDealt;
-											// generate vector from angle
-											//Vector3 vecForAng = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angleToSMASH), Mathf.Tan(Mathf.Deg2Rad * angleToSMASH), Mathf.Cos(Mathf.Deg2Rad * angleToSMASH));
-											defender.characterMotor.ApplyForce(launch);
-
+											applyForce(damageReport, smasher, defender, 3);
 										}
 										else
 										{
-											// find angle between victim and smasher
-											//float angleToSMASH = Vector3.Angle(smasher.corePosition, defender.corePosition);
-											Vector3 launch = Vector3.LerpUnclamped(smasher.footPosition, defender.corePosition,
-												Math.Max((((damageReport.damageDealt / defender.healthComponent.health) * defender.characterMotor.mass) / Vector3.Distance(smasher.corePosition, defender.corePosition) * 80), 10 * defender.characterMotor.mass / Vector3.Distance(smasher.corePosition, defender.corePosition))) + Vector3.up *
-												((float)Math.Log(damageReport.damageDealt / defender.healthComponent.health * 20, 1.6)) * 2;
-											float scalar = damageReport.damageDealt;
-											// generate vector from angle
-											//Vector3 vecForAng = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angleToSMASH), Mathf.Tan(Mathf.Deg2Rad * angleToSMASH), Mathf.Cos(Mathf.Deg2Rad * angleToSMASH));
-											defender.characterMotor.ApplyForce(launch);
+											applyForce(damageReport, smasher, defender, 3.3f);
 										}
 									}
 									else
 									{
-										float a = 2.6f;
-										float angleToSMASH = Vector3.Angle(smasher.corePosition, defender.corePosition);
-										// Set vector position as a fraction of the distance between these two markers / distance is divided for consistent smashing
-										Vector3 launch = Vector3.LerpUnclamped(smasher.corePosition, defender.corePosition, Math.Max((((damageReport.damageDealt / defender.healthComponent.health) * defender.characterMotor.mass) / Vector3.Distance(smasher.corePosition, defender.corePosition) * 100), 24 / Vector3.Distance(smasher.corePosition, defender.corePosition)));
-										float scalar = damageReport.damageDealt;
-										// generate vector from angle
-										//Vector3 vecForAng = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angleToSMASH), Mathf.Tan(Mathf.Deg2Rad * angleToSMASH), Mathf.Cos(Mathf.Deg2Rad * angleToSMASH));
-										defender.characterMotor.ApplyForce(launch);
+										applyForce(damageReport, smasher, defender, 4.5f);
 									}
 								}
 							}
@@ -147,69 +193,29 @@ namespace ArtifactGroup
 						{
 							if (defender.characterMotor == null || defender.characterMotor.mass == null)
 							{
-								//Debug.Log("x");
-								// find angle between victim and smasher
-								//float angleToSMASH = Vector3.Angle(smasher.corePosition, defender.corePosition);
-								Vector3 launch = Vector3.LerpUnclamped(smasher.footPosition, defender.corePosition,
-									Math.Max((((damageReport.damageDealt / defender.healthComponent.health)) * defender.rigidbody.mass / Vector3.Distance(smasher.corePosition, defender.corePosition) * 80), 10 * defender.rigidbody.mass * Vector3.Distance(smasher.corePosition, defender.corePosition))) + Vector3.up *
-									((float)Math.Log(damageReport.damageDealt / defender.healthComponent.health * 20, 1.6)) / 420;
-								float scalar = damageReport.damageDealt;
-								// generate vector from angle
-								//Vector3 vecForAng = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angleToSMASH), Mathf.Tan(Mathf.Deg2Rad * angleToSMASH), Mathf.Cos(Mathf.Deg2Rad * angleToSMASH));
-								//Debug.Log("Force = " + launch.magnitude);
-								//Debug.Log("Acceleration = " + (launch.magnitude / defender.rigidbody.mass) / 140 + " m/s^2");
-								//Debug.Log("Mass = " + defender.rigidbody.mass);
-								if (launch.magnitude == float.NaN)
-								{
-									// do nothing because somehow the vector was lost (crash prevention)
-								}
-								else
-								{
-									Vector3 acceleration = (launch / defender.rigidbody.mass) / 10;
-									defender.rigidbody.AddForce(acceleration, ForceMode.Acceleration);
-								}
+								applyForce(damageReport, smasher, defender, 3);
 							}
 							else
 							{
-								//Debug.Log("y");
-								// find angle between victim and smasher
-								//float angleToSMASH = Vector3.Angle(smasher.corePosition, defender.corePosition) ;
-								Vector3 launch = Vector3.LerpUnclamped(smasher.footPosition, defender.corePosition,
-									Math.Max((((damageReport.damageDealt / defender.healthComponent.health) * defender.characterMotor.mass) / Vector3.Distance(smasher.corePosition, defender.corePosition) * 80), 10 * defender.characterMotor.mass / Vector3.Distance(smasher.corePosition, defender.corePosition))) + Vector3.up *
-									((float)Math.Log(damageReport.damageDealt / defender.healthComponent.health * 20, 1.6)) * 10;
-								float scalar = damageReport.damageDealt;
-								// generate vector from angle
-								//Vector3 vecForAng = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angleToSMASH), Mathf.Tan(Mathf.Deg2Rad * angleToSMASH), Mathf.Cos(Mathf.Deg2Rad * angleToSMASH));
-								//Debug.Log("Force = " + launch.magnitude);
-								defender.characterMotor.ApplyForce(launch);
+								applyForce(damageReport, smasher, defender, 3);
 							}
 						}
 					}
-				}			
-			};
-
-			// replace this with info that will reward the player for basically any kill
-			On.RoR2.DeathRewards.OnKilledServer += (orig, self, damageReport) =>
-			{
-				if(ArtifactEnabled && (damageReport.attacker == null) || damageReport.attackerBody == null)
-                {
-					TeamManager.instance.GiveTeamMoney(TeamIndex.Player, self.fallbackGold);
-				}
-				orig.Invoke(self, damageReport);
+				};
 			};
 
 
-			void overrides(Run run)
-			{
-				if (NetworkServer.active && ArtifactEnabled)
+				void overrides(Run run)
 				{
-					MessageHandler.globalMessage("You're making a big mistake... or Smash... I don't friggin know SMASHY SMASHY");
-					enabled = true;
-					playerDMGMult = OptionsLink.AOS_PlayerDMGMult.Value;
-					enemyDMGMult = OptionsLink.AOS_EnemyDMGMult.Value;
+					if (NetworkServer.active && ArtifactEnabled)
+					{
+						MessageHandler.globalMessage("You're making a big mistake... or Smash... I don't friggin know SMASHY SMASHY");
+						enabled = true;
+						playerDMGMult = OptionsLink.AOS_PlayerDMGMult.Value;
+						enemyDMGMult = OptionsLink.AOS_EnemyDMGMult.Value;
+					}
 				}
 			}
-		}
 	}
 }
 		

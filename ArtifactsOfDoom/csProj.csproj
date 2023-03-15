@@ -13,6 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Artifacts\ArtifactOfDefiance.cs" />
+    <Compile Remove="Artifacts\DefianceSystem\DefianceNetBehavior.cs" />
+    <Compile Remove="Artifacts\DefianceSystem\DefianceTeamManager.cs" />
+    <Compile Remove="Artifacts\DefianceSystem\DifficultyPatcher.cs" />
+    <Compile Remove="Artifacts\DefianceSystem\TransformSpace.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="artifacticons" />
     <None Remove="Epic.bnk" />
   </ItemGroup>
@@ -393,6 +401,11 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="Artifacts\ArtifactOfDefiance.cs" />
+    <None Include="Artifacts\DefianceSystem\DefianceNetBehavior.cs" />
+    <None Include="Artifacts\DefianceSystem\DefianceTeamManager.cs" />
+    <None Include="Artifacts\DefianceSystem\DifficultyPatcher.cs" />
+    <None Include="Artifacts\DefianceSystem\TransformSpace.cs" />
     <None Include="libs\BepInEx.dll" />
     <None Include="libs\Facepunch.Steamworks.dll" />
     <None Include="libs\HGCSharpUtils.dll" />

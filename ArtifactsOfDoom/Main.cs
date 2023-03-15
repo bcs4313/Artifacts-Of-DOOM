@@ -41,9 +41,9 @@ namespace ArtifactsOfDoom
 			NetworkingAPI.RegisterMessageType<networkBehavior.Playsound>();
 			NetworkingAPI.RegisterMessageType<networkBehavior.resizeEntity>();
 			NetworkingAPI.RegisterMessageType<networkBehavior.olbiterateUI>();
-			NetworkingAPI.RegisterMessageType<DefianceNetBehavior.joinDefianceTeam>();
-			NetworkingAPI.RegisterMessageType<DefianceNetBehavior.updateTargetMaster>();
-			NetworkingAPI.RegisterMessageType<DefianceNetBehavior.clientSyncSettings>();
+			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.joinDefianceTeam>();
+			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.updateTargetMaster>();
+			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.clientSyncSettings>();
 			IEnumerable<Type> enumerable = from type in Assembly.GetExecutingAssembly().GetTypes()
 										   where !type.IsAbstract && type.IsSubclassOf(typeof(ArtifactBase))
 										   select type;
