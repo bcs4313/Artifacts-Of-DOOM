@@ -98,11 +98,14 @@ namespace ArtifactGroup
 			// replace this with info that will reward the player for basically any kill
 			On.RoR2.DeathRewards.OnKilledServer += (orig, self, damageReport) =>
 			{
-				if (ArtifactEnabled && (damageReport.attacker == null) || damageReport.attackerBody == null)
+				if (ArtifactEnabled && damageReport.victimBody.teamComponent.teamIndex == TeamIndex.Monster)
 				{
-					TeamManager.instance.GiveTeamMoney(TeamIndex.Player, self.fallbackGold);
+					TeamManager.instance.GiveTeamMoney(TeamIndex.Player, damageReport.victimMaster.money);
 				}
-				orig.Invoke(self, damageReport);
+				else
+                {
+					orig.Invoke(self, damageReport);
+				}
 			};
 
 			// hook to detect impacts

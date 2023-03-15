@@ -119,7 +119,7 @@ namespace ArtifactGroup
                         return;
                     }
 
-                    MessageHandler.globalMessage("ooga I shit pant");
+                    MessageHandler.globalMessage("\"ooga I shit pant\"");
                     Transform modelTransform = modelLocator.modelBaseTransform;
                     //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
                     if (modelTransform)
@@ -1275,7 +1275,7 @@ namespace ArtifactGroup
             for (int i = 0; i < CameraRigController.instancesList.Count; i++)
             {
                 CameraRigController.instancesList[0].
-                    }
+            }
             */
         }
 
@@ -1353,7 +1353,7 @@ namespace ArtifactGroup
         {
             MessageHandler.globalMessage("AVENGERS... ASSEMBLE!!!");
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 3; i++)
             {
                 // select a random network player
                 int randomPlayer = new Random().Next(0, NetworkUser.readOnlyInstancesList.Count);
@@ -1366,8 +1366,8 @@ namespace ArtifactGroup
 
 
                 masterCopySpawnCard.GiveItem(DLC1Content.Items.GummyCloneIdentifier, 1);
-                masterCopySpawnCard.GiveItem(RoR2Content.Items.BoostDamage, proj.damageBoostCount);
-                masterCopySpawnCard.GiveItem(RoR2Content.Items.BoostHp, proj.hpBoostCount);
+                //masterCopySpawnCard.GiveItem(RoR2Content.Items.BoostDamage, proj.damageBoostCount);
+                //masterCopySpawnCard.GiveItem(RoR2Content.Items.BoostHp, proj.hpBoostCount);
 
                 DirectorCore.MonsterSpawnDistance input = DirectorCore.MonsterSpawnDistance.Close;
                 DirectorPlacementRule directorPlacementRule = new DirectorPlacementRule
