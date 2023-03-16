@@ -48,11 +48,28 @@ namespace ArtifactGroup
 
 		public void applyForce(DamageReport report, CharacterBody smasher, CharacterBody defender, float forceCoefficient)
 		{
-			// determine scalar quantity for applied force
-			float scalar = (report.damageDealt / defender.healthComponent.health) * 70;
+			float scalar = 0;
+			float percentMultiplier = 0;
+			if (defender.teamComponent.teamIndex == TeamIndex.Monster)
+			{
+				// determine scalar quantity for applied force, with logarithmic scaling for increasing damage proportions
+				scalar = (float)Math.Log((double)(report.damageDealt / defender.healthComponent.health) * 7.5 + 1, 1.2);
 
-			// enforce a maximum force value to make forces more stable
-			float controlledScalar = (float)Math.Abs(defender.rigidbody.mass * scalar / 3);
+				// multiply knockback depending on "percent" health remaining as well, like in smash
+				// maximum percent multiplier is 4x for missing ALL health (for monsters)
+				percentMultiplier = ((1 - defender.healthComponent.health / defender.baseMaxHealth) * 3f) + 1;
+			}
+			else
+            {
+				scalar = (float)Math.Log((double)(report.damageDealt / defender.healthComponent.health) * 80 + 6, 1.5);
+
+				// multiply knockback depending on "percent" health remaining as well, like in smash
+				// maximum percent multiplier is 8x for missing ALL health (for survivors)
+				percentMultiplier = (float)(Math.Pow(1.8 - defender.healthComponent.health / defender.baseMaxHealth, 2.73));
+			}
+
+			// enforce a scalar that accounts for mass
+			float controlledScalar = (float)Math.Abs(defender.rigidbody.mass * scalar / 3) * percentMultiplier;
 
 
 			// debug
@@ -95,6 +112,28 @@ namespace ArtifactGroup
 			/// We can Access the Run object on initialization here...
 			Run.onRunStartGlobal += overrides;
 
+			// all actor health gets a 50% boost to account for extra damage caused by knockbacks, and to reduce
+			// overall knockback sensitivity
+			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
+			{
+				orig.Invoke(self, body);
+				if (NetworkServer.active && ArtifactEnabled)
+				{
+					if (body.teamComponent.teamIndex == TeamIndex.Monster)
+					{
+						uint idTarget = body.networkIdentity.netId.Value;
+						body.baseMaxHealth *= 2f;
+						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
+					}
+					else
+					{
+						body.baseMaxHealth *= 2f;
+						uint idTarget = body.networkIdentity.netId.Value;
+						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
+					}
+				}
+			};
+
 			// replace this with info that will reward the player for basically any kill
 			On.RoR2.DeathRewards.OnKilledServer += (orig, self, damageReport) =>
 			{
@@ -118,7 +157,7 @@ namespace ArtifactGroup
 					DamageInfo info = new DamageInfo();
 
 					// impact damage for monsters
-					if (characterBody.maxJumpHeight * 1.5 < Math.Abs(calculateImpact(self.lastVelocity, self.velocity)))
+					if (characterBody.maxJumpHeight * 3 < Math.Abs(calculateImpact(self.lastVelocity, self.velocity)))
 					{
 						if (characterBody.teamComponent.teamIndex == TeamIndex.Monster)
 						{
@@ -130,7 +169,7 @@ namespace ArtifactGroup
 							}
 							else
 							{
-								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.02f * enemyDMGMult;
+								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.014f * enemyDMGMult;
 								info.damageType = DamageType.BlightOnHit;
 								characterBody.healthComponent.TakeDamage(info);
                             }
@@ -156,7 +195,6 @@ namespace ArtifactGroup
 			// knockback hook
 			On.RoR2.CharacterBody.OnTakeDamageServer += (orig_OnTakeDamageServer orig, global::RoR2.CharacterBody self, global::RoR2.DamageReport damageReport) =>
 			{
-				orig.Invoke(self, damageReport);
 				if (NetworkServer.active && ArtifactEnabled)
 				{
 					if (self.isFlying == false && damageReport.victim.body.characterMotor != null)
@@ -177,7 +215,7 @@ namespace ArtifactGroup
 										}
 										else
 										{
-											applyForce(damageReport, smasher, defender, 3.3f);
+											applyForce(damageReport, smasher, defender, 6.3f);
 										}
 									}
 									else
@@ -205,6 +243,7 @@ namespace ArtifactGroup
 						}
 					}
 				};
+				orig.Invoke(self, damageReport);
 			};
 
 

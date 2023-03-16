@@ -116,6 +116,10 @@ namespace ArtifactGroup
 						/// Scale the health given each time
 						//characterBody.baseMaxHealth = characterBody.baseMaxHealth * (float)(((characterBody.level) * 0.2) + 1);
 						characterBody.baseMaxHealth = scalePlayerHealth(characterBody.levelMaxHealth, characterBody.level);
+						
+						// inform client of new max health
+						uint idTarget = characterBody.networkIdentity.netId.Value;
+						new networkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
 					}
 				}
 				else
@@ -164,6 +168,10 @@ namespace ArtifactGroup
 					{
 						body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level);
 						body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+
+						// inform client of new max health
+						uint idTarget = body.networkIdentity.netId.Value;
+						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth);
 					}
 
 					//Debug.Log("DmgMult: " + ((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 32, Math.Max(RoR2.Run.instance.stageClearCount - 1.6, 0))));
@@ -177,6 +185,10 @@ namespace ArtifactGroup
 					if (characterBody.teamComponent.teamIndex == TeamIndex.Player)
 					{
 						characterBody.baseMaxHealth = scalePlayerHealth(characterBody.levelMaxHealth, characterBody.level);
+						
+						// inform client of new max health
+						uint idTarget = characterBody.networkIdentity.netId.Value;
+						new networkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
 					}
 				}
 				if (NetworkServer.active && characterBody.teamComponent.teamIndex == TeamIndex.Player && loadingStage == true && ArtifactEnabled)

@@ -18,6 +18,61 @@ namespace ArtifactGroup
     [BepInDependency("com.bepis.r2api")]
     public class networkBehavior : BaseUnityPlugin // class handles all network behavior for now. 
     { // may be decomposed later
+
+        public class informMaxHealth : INetMessage
+        {
+            public double newMax; // the host report of the player max health
+            public uint targetId; // network id of the player
+
+            public void Deserialize(NetworkReader reader)
+            { // must be read in serialization order, like a scanner
+                newMax = reader.ReadDouble();
+                targetId = reader.ReadUInt32(); // default Unsigned Integer Size
+            }
+
+            public informMaxHealth()
+            {
+            }
+
+            public informMaxHealth(uint _targetId, double _newMax)
+            {
+                targetId = _targetId;
+                newMax = _newMax;
+            }
+
+            public void OnReceived()
+            {
+                if (NetworkServer.active)
+                {
+                    return;
+                }
+
+                // first we must find the monster body in the instances list for this client. Then we resize em.
+                var allBodies = TeamComponent.GetTeamMembers(TeamIndex.Player).Select((x) => x.body);
+                if (allBodies == null)
+                {
+                    Debug.Log("Master is null... aborting");
+                    return;
+                }
+
+                foreach (CharacterBody c in allBodies)
+                {
+                    if (c.networkIdentity.netId.Value == targetId)
+                    {
+                        float oldMax = c.maxHealth;
+                        c.maxHealth = (float)newMax;
+                        Debug.Log("HealthInform Packet::: " + oldMax + " => " + newMax);
+                    }
+                }
+            }
+
+            public void Serialize(NetworkWriter writer)
+            {
+                writer.Write(newMax);
+                writer.Write(targetId);
+            }
+        }
+
         public class FattenPlayer : INetMessage
         {
             public double xscalar; // the host report of the player approximate size
