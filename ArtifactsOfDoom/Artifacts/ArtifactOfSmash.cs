@@ -17,12 +17,14 @@ using KinematicCharacterController;
 using static On.RoR2.CharacterMotor;
 using System;
 using orig_Update = On.RoR2.CharacterBody.orig_Update;
+using EntityStates.BrotherMonster;
+using RoR2.Projectile;
 
 namespace ArtifactGroup
 {
 	class ArtifactOfSmash : ArtifactBase
 	{
-
+		private float bossDMGMult = 1.0f;
 		private float enemyDMGMult = 1.0f;
 		private float playerDMGMult = 1.0f;
 
@@ -46,18 +48,26 @@ namespace ArtifactGroup
 			Hooks();
 		}
 
+		// stores vector coordinates related to the velocity of the most recent hit the player has taken
+		public struct knockMark
+        {
+			// stored "knock" values give the maximum velocity damage a player can take from one source
+			public float x;
+			public float y;
+			public float z;
+        }
+
 		public void applyForce(DamageReport report, CharacterBody smasher, CharacterBody defender, float forceCoefficient)
 		{
 			float scalar = 0;
 			float percentMultiplier = 0;
 			if (defender.teamComponent.teamIndex == TeamIndex.Monster)
 			{
-				// determine scalar quantity for applied force, with logarithmic scaling for increasing damage proportions
-				scalar = (float)Math.Log((double)(report.damageDealt / defender.healthComponent.health) * 7.5 + 1, 1.2);
+				scalar = (float)Math.Log((double)(report.damageDealt / defender.healthComponent.health) * 160, 1.5);
 
 				// multiply knockback depending on "percent" health remaining as well, like in smash
-				// maximum percent multiplier is 4x for missing ALL health (for monsters)
-				percentMultiplier = ((1 - defender.healthComponent.health / defender.baseMaxHealth) * 3f) + 1;
+				// maximum percent multiplier is 8x for missing ALL health (for survivors)
+				percentMultiplier = (float)(Math.Pow(1.8 - defender.healthComponent.health / defender.baseMaxHealth, 3.2));
 			}
 			else
             {
@@ -73,29 +83,40 @@ namespace ArtifactGroup
 
 
 			// debug
-			Debug.Log(defender.name + ": Base Scalar = " + scalar);
-			Debug.Log(defender.name + ": Base Mass = " + defender.rigidbody.mass);
-			Debug.Log(defender.name + ": Controlled Scalar / Mass = " + (controlledScalar / defender.rigidbody.mass));
+			//Debug.Log(defender.name + ": Base Scalar = " + scalar);
+			//Debug.Log(defender.name + ": Base Mass = " + defender.rigidbody.mass);
+			//Debug.Log(defender.name + ": Controlled Scalar / Mass = " + (controlledScalar / defender.rigidbody.mass));
 
 			Vector3 launch = defender.corePosition - smasher.footPosition;
 			launch.Normalize();
 			launch *= controlledScalar * forceCoefficient;
-			Debug.Log(defender.name + ": Final Vector = " + launch + " Acceleration: " + (launch.magnitude / defender.rigidbody.mass / 10) + " m/s^2");
-			Debug.Log("x: " + launch.x + " y:" + launch.y + " z:" + launch.z + " ");
+			//Debug.Log(defender.name + ": Final Vector = " + launch + " Acceleration: " + (launch.magnitude / defender.rigidbody.mass / 10) + " m/s^2");
+			//Debug.Log("x: " + launch.x + " y:" + launch.y + " z:" + launch.z + " ");
 			if (float.IsNaN(launch.x) || float.IsNaN(launch.x) || float.IsNaN(launch.x) || float.IsInfinity(launch.magnitude))
             {
-				Debug.Log(defender.name + " Launch Vector is invalid, returning from launch function: ");
+				//Debug.Log(defender.name + " Launch Vector is invalid, returning from launch function: ");
 				return;
             }
 
 			if (defender.characterMotor != null)
 			{
-				Debug.Log("MOT: ");
+				//Debug.Log("MOT: ");
 				defender.characterMotor.ApplyForce(launch);
-			}
+
+				if (defender.teamComponent.teamIndex == TeamIndex.Player)
+				{
+					/*
+					knockMark knock = new knockMark();
+					knock.x = launch.x / defender.rigidbody.mass;
+					knock.y = launch.y / defender.rigidbody.mass;
+                    knock.z = launch.z / defender.rigidbody.mass;
+					Debug.Log("KNOCK: X: " + knock.x + " Y: " + knock.y + " Z: " + knock.);
+					*/
+				}
+            }
 			else
 			{
-				Debug.Log("RIG: ");
+				//Debug.Log("RIG: ");
 				defender.rigidbody.AddForce((launch / defender.rigidbody.mass) * 45, ForceMode.Acceleration);
 			}
 		}
@@ -146,6 +167,37 @@ namespace ArtifactGroup
 					orig.Invoke(self, damageReport);
 				}
 			};
+			/*
+			On.RoR2.CharacterBody.Update += (orig_Update orig, RoR2.CharacterBody self) =>
+			{
+				if (ArtifactEnabled && NetworkServer.active && self.teamComponent.teamIndex == TeamIndex.Player)
+                {
+					// placeholder
+					knockMark v = new knockMark();
+					Vector3 cv = self.characterMotor.velocity;
+
+
+					// unmark coordinate values that have undergone a 75% or more change
+					// (in the opposite direction)
+					float xdiff = v.x - cv.x;
+					float ydiff = v.y - cv.y;
+					float zdiff = v.z - cv.z;
+                    if ((xdiff / v.x) > 0.75)
+                    {
+						v.x = 0;
+                    }
+					if ((ydiff / v.y) > 0.75)
+					{
+						v.y = 0;
+					}
+					if ((zdiff / v.z) > 0.75)
+					{
+						v.z = 0;
+					}
+				}
+                orig.Invoke(self);
+			};
+			*/
 
 			// hook to detect impacts
 			On.RoR2.CharacterMotor.AfterCharacterUpdate += (orig_AfterCharacterUpdate orig, global::RoR2.CharacterMotor self, float deltaTime) =>
@@ -163,7 +215,7 @@ namespace ArtifactGroup
 						{
 							if (characterBody.isBoss)
 							{
-								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.006f * enemyDMGMult;
+								info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.006f * bossDMGMult;
 								info.damageType = DamageType.BlightOnHit;
 								characterBody.healthComponent.TakeDamage(info);
 							}
@@ -184,11 +236,64 @@ namespace ArtifactGroup
 						{
 							info.damage = (Math.Max(calculateImpact(self.lastVelocity, self.velocity), 0) * (characterBody.healthComponent.fullHealth)) * 0.0025f * playerDMGMult;
 							info.damageType = DamageType.BlightOnHit;
+
+							// play a funny explosion animation on death
+							if(info.damage > characterBody.healthComponent.health)
+                            {
+								new BlastAttack
+								{
+									attacker = characterBody.gameObject,
+									inflictor = characterBody.gameObject,
+									teamIndex = TeamIndex.Player,
+									baseDamage = 0,
+									baseForce = 0,
+									position = characterBody.corePosition,
+									radius = EntityStates.JellyfishMonster.JellyNova.novaRadius * 2,
+									procCoefficient = 2f,
+									attackerFiltering = AttackerFiltering.NeverHitSelf
+								}.Fire();
+								if (EntityStates.LunarExploderMonster.DeathState.deathExplosionEffect)
+								{
+									EffectManager.SpawnEffect(EntityStates.JellyfishMonster.JellyNova.novaEffectPrefab, new EffectData
+									{
+										origin = self.body.corePosition,
+										scale = EntityStates.JellyfishMonster.JellyNova.novaRadius * 1.5f
+
+									}, true); ;
+								}
+
+								new BlastAttack
+								{
+									attacker = characterBody.gameObject,
+									inflictor = characterBody.gameObject,
+									teamIndex = TeamIndex.Player,
+									baseDamage = 0,
+									baseForce = 0,
+									position = characterBody.corePosition,
+									radius = EntityStates.JellyfishMonster.JellyNova.novaRadius,
+									procCoefficient = 2f,
+									attackerFiltering = AttackerFiltering.NeverHitSelf
+								}.Fire();
+								if (EntityStates.LunarExploderMonster.DeathState.deathExplosionEffect)
+								{
+									EffectManager.SpawnEffect(EntityStates.JellyfishMonster.JellyNova.novaEffectPrefab, new EffectData
+									{
+										origin = self.body.corePosition,
+										scale = EntityStates.JellyfishMonster.JellyNova.novaRadius * 0.5f
+
+									}, true); ;
+								}
+							}
+
 							characterBody.healthComponent.TakeDamage(info);
-							Debug.Log(characterBody.maxJumpHeight * 5.5 + " < " + Math.Abs(self.lastVelocity.magnitude - self.velocity.magnitude));
+							//Debug.Log(characterBody.maxJumpHeight * 5.5 + " < " + Math.Abs(self.lastVelocity.magnitude - self.velocity.magnitude));
 							//Debug.Log("Monster: Damage Log DMG = " + self.velocity.magnitude);
+
+	
 						}
 					}
+
+					// 
 				}
 			};
 
@@ -211,16 +316,16 @@ namespace ArtifactGroup
 									{
 										if (defender.isBoss == false)
 										{
-											applyForce(damageReport, smasher, defender, 3);
+											applyForce(damageReport, smasher, defender, 3 * OptionsLink.AOS_EnemyForceCoefficient.Value);
 										}
 										else
 										{
-											applyForce(damageReport, smasher, defender, 6.3f);
+											applyForce(damageReport, smasher, defender, 6.3f * OptionsLink.AOS_BossForceCoefficient.Value);
 										}
 									}
 									else
 									{
-										applyForce(damageReport, smasher, defender, 4.5f);
+										applyForce(damageReport, smasher, defender, 4.5f * OptionsLink.AOS_PlayerForceCoefficient.Value);
 									}
 								}
 							}
@@ -255,6 +360,7 @@ namespace ArtifactGroup
 						enabled = true;
 						playerDMGMult = OptionsLink.AOS_PlayerDMGMult.Value;
 						enemyDMGMult = OptionsLink.AOS_EnemyDMGMult.Value;
+						bossDMGMult = OptionsLink.AOS_EnemyDMGMult.Value;
 					}
 				}
 			}

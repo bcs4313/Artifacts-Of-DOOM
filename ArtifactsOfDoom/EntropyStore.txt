@@ -1,0 +1,45 @@
+﻿							Spawn lunar exploder fire area effect
+							for (int i = 0; i < EntityStates.LunarExploderMonster.DeathState.projectileCount; i++)
+							{
+								float num = 360f / (float)EntityStates.LunarExploderMonster.DeathState.projectileCount;
+								Vector3 forward = Vector3.ProjectOnPlane(self.body.equipmentSlot.GetAimRay().direction, Vector3.up);
+								FireProjectileInfo fireProjectileInfo = default(FireProjectileInfo);
+								fireProjectileInfo.projectilePrefab = EntityStates.LunarExploderMonster.DeathState.projectilePrefab;
+								fireProjectileInfo.position = self.body.corePosition;
+								fireProjectileInfo.rotation = Util.QuaternionSafeLookRotation(forward);
+								fireProjectileInfo.owner = self.body.gameObject;
+								fireProjectileInfo.damage = 0;
+								fireProjectileInfo.crit = false;
+								ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+							}
+							if (EntityStates.LunarExploderMonster.DeathState.deathExplosionEffect)
+							{
+								EffectManager.SpawnEffect(EntityStates.LunarExploderMonster.DeathState.deathExplosionEffect, new EffectData
+								{
+									origin = self.body.corePosition,
+									scale = EntityStates.LunarExploderMonster.DeathState.deathExplosionRadius
+								}, true);
+							}
+
+
+							Jellyfish explosion effect:
+							new BlastAttack
+							{
+								attacker = characterBody.gameObject,
+								inflictor = characterBody.gameObject,
+								teamIndex = TeamIndex.Player,
+								baseDamage = 0,
+								baseForce = 0,
+								position = characterBody.corePosition,
+								radius = EntityStates.JellyfishMonster.JellyNova.novaRadius,
+								procCoefficient = 2f,
+								attackerFiltering = AttackerFiltering.NeverHitSelf
+							}.Fire();
+							if (EntityStates.LunarExploderMonster.DeathState.deathExplosionEffect)
+							{
+								EffectManager.SpawnEffect(EntityStates.JellyfishMonster.JellyNova.novaEffectPrefab, new EffectData
+								{
+									origin = self.body.corePosition,
+									scale = EntityStates.JellyfishMonster.JellyNova.novaRadius
+								}, true);
+							}

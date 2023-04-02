@@ -134,13 +134,8 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of The Titans", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.titanBase)));
-			OptionsLink.AOS_EnemyDMGMult = OptionsLink.Config.Bind<float>("Artifact of Smash", "Enemy Impact Dmg Mult.", 1f, "Multiplier for damage done to enemies via impact. \nRange: (0, 5) \nDefault: 1");
-			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_EnemyDMGMult, new SliderConfig
-			{
-				min = 0f,
-				max = 5f,
-				formatString = "{0:F2}"
-			}));
+
+
 			OptionsLink.AOS_PlayerDMGMult = OptionsLink.Config.Bind<float>("Artifact of Smash", "Player Impact Dmg Mult.", 1f, "Multiplier for damage done to survivors via impact. \nRange: (0, 5) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_PlayerDMGMult, new SliderConfig
 			{
@@ -148,10 +143,46 @@ namespace ArtifactsOfDoom
 				max = 5f,
 				formatString = "{0:F2}"
 			}));
+
+			OptionsLink.AOS_PlayerForceCoefficient = OptionsLink.Config.Bind<float>("Artifact of Smash", "Player Knockback Coefficient.", 1f, "All changes in acceleration to the player are multiplied by this coefficient. \nRange: (0, 10) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_PlayerForceCoefficient, new SliderConfig
+			{
+				min = 0f,
+				max = 10f,
+				formatString = "{0:F2}"
+			}));
+			OptionsLink.AOS_EnemyDMGMult = OptionsLink.Config.Bind<float>("Artifact of Smash", "Enemy Impact Dmg Mult.", 1f, "Multiplier for damage done to non-boss enemies via impact. \nRange: (0, 5) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_EnemyDMGMult, new SliderConfig
+			{
+				min = 0f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+			OptionsLink.AOS_EnemyForceCoefficient = OptionsLink.Config.Bind<float>("Artifact of Smash", "Enemy Knockback Coefficient.", 1f, "All changes in acceleration to non-boss enemies are multiplied by this coefficient. \nRange: (0, 10) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_EnemyForceCoefficient, new SliderConfig
+			{
+				min = 0f,
+				max = 10f,
+				formatString = "{0:F2}"
+			}));
+			OptionsLink.AOS_BossDMGMult = OptionsLink.Config.Bind<float>("Artifact of Smash", "Boss Impact Dmg Mult.", 1f, "Multiplier for damage done to boss enemies via impact. \nRange: (0, 5) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_BossDMGMult, new SliderConfig
+			{
+				min = 0f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+			OptionsLink.AOS_BossForceCoefficient = OptionsLink.Config.Bind<float>("Artifact of Smash", "Boss Knockback Coefficient.", 1f, "All changes in acceleration to boss enemies are multiplied by this coefficient. \nRange: (0, 10) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOS_BossForceCoefficient, new SliderConfig
+			{
+				min = 0f,
+				max = 10f,
+				formatString = "{0:F2}"
+			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Smash", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.smashBase)));
 		}
 
-		// Token: 0x06000009 RID: 9 RVA: 0x000029B0 File Offset: 0x00000BB0
+
 		private static void saveConfig()
 		{
 			string text = "";
@@ -165,7 +196,6 @@ namespace ArtifactsOfDoom
 			Debug.Log("Copied Entropy Code " + GUIUtility.systemCopyBuffer + " to the clipboard!");
 		}
 
-		// Token: 0x0600000A RID: 10 RVA: 0x00002A7C File Offset: 0x00000C7C
 		private static void loadConfig()
 		{
 			string systemCopyBuffer = GUIUtility.systemCopyBuffer;
@@ -189,7 +219,6 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_NewEventsPerStage_O.Value = bool.Parse(array[5]);
 		}
 
-		// Token: 0x0600000B RID: 11 RVA: 0x00002B90 File Offset: 0x00000D90
 		private static void voidBase()
 		{
 			OptionsLink.AOE_Seed.Value = "-1";
@@ -200,7 +229,6 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_NewEventsPerStage.Value = false;
 		}
 
-		// Token: 0x0600000C RID: 12 RVA: 0x00002BF8 File Offset: 0x00000DF8
 		private static void warBase()
 		{
 			OptionsLink.AOW_BaseDropChance.Value = 5f;
@@ -211,7 +239,6 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_SwarmTime.Value = "5";
 		}
 
-		// Token: 0x0600000D RID: 13 RVA: 0x00002C68 File Offset: 0x00000E68
 		private static void titanBase()
 		{
 			OptionsLink.AOT_CreditScalingMultiplier.Value = 0.15f;
@@ -221,125 +248,66 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOT_FixedMonsterScaling.Value = 0f;
 		}
 
-		// Token: 0x0600000E RID: 14 RVA: 0x00002CC6 File Offset: 0x00000EC6
 		private static void smashBase()
 		{
 			OptionsLink.AOS_EnemyDMGMult.Value = 1f;
 			OptionsLink.AOS_PlayerDMGMult.Value = 1f;
+			OptionsLink.AOS_BossDMGMult.Value = 1f;
+			OptionsLink.AOS_PlayerForceCoefficient.Value = 1f;
+			OptionsLink.AOS_EnemyForceCoefficient.Value = 1f;
+			OptionsLink.AOS_BossForceCoefficient.Value = 1f;
 		}
 
-		// Token: 0x04000002 RID: 2
 		public static ConfigFile Config;
 
-		// Token: 0x04000003 RID: 3
 		public static ConfigEntry<float> AOW_BaseDropChance;
-
-		// Token: 0x04000004 RID: 4
 		public static ConfigEntry<float> AOW_DropChanceExpScaling;
-
-		// Token: 0x04000005 RID: 5
 		public static ConfigEntry<float> AOW_EvolutionExpScaling;
-
-		// Token: 0x04000006 RID: 6
 		public static ConfigEntry<string> AOW_SwarmTime;
-
-		// Token: 0x04000007 RID: 7
 		public static ConfigEntry<string> AOW_MaxSwarm;
-
-		// Token: 0x04000008 RID: 8
 		public static ConfigEntry<string> AOW_EntityCap;
 
 		// Token: 0x04000009 RID: 9
 		public static ConfigEntry<string> AOE_Seed;
-
-		// Token: 0x0400000A RID: 10
 		public static ConfigEntry<string> AOE_EventHookMultiplier;
-
-		// Token: 0x0400000B RID: 11
 		public static ConfigEntry<string> AOE_EventChanceMultiplier;
-
-		// Token: 0x0400000C RID: 12
 		public static ConfigEntry<float> AOE_EventChanceOffset;
-
-		// Token: 0x0400000D RID: 13
 		public static ConfigEntry<bool> AOE_SimultaneousOutcomes;
-
-		// Token: 0x0400000E RID: 14
 		public static ConfigEntry<bool> AOE_NewEventsPerStage;
 
-		// Token: 0x0400000F RID: 15
 		public static ConfigEntry<bool> AOU_ShareVoidItems;
-
-		// Token: 0x04000010 RID: 16
 		public static ConfigEntry<bool> AOU_ShareLunarItems;
 
-		// Token: 0x04000011 RID: 17
 		public static StringInputFieldOption AOE_Seed_O;
-
-		// Token: 0x04000012 RID: 18
 		public static StringInputFieldOption AOE_EventHookMultiplier_O;
-
-		// Token: 0x04000013 RID: 19
 		public static StringInputFieldOption AOE_EventChanceMultiplier_O;
-
-		// Token: 0x04000014 RID: 20
 		public static SliderOption AOE_EventChanceOffset_O;
-
-		// Token: 0x04000015 RID: 21
 		public static CheckBoxOption AOE_SimultaneousOutcomes_O;
-
-		// Token: 0x04000016 RID: 22
 		public static CheckBoxOption AOE_NewEventsPerStage_O;
 
-		// Token: 0x04000017 RID: 23
 		public static ConfigEntry<float> AOT_CreditScalingMultiplier;
-
-		// Token: 0x04000018 RID: 24
 		public static ConfigEntry<float> AOT_BossGrowthPerStage;
-
-		// Token: 0x04000019 RID: 25
 		public static ConfigEntry<float> AOT_EliteMultiplier;
-
-		// Token: 0x0400001A RID: 26
 		public static ConfigEntry<float> AOT_FixedMonsterScaling;
-
-		// Token: 0x0400001B RID: 27
 		public static ConfigEntry<float> AOT_FixedBossScaling;
 
-		// Token: 0x0400001C RID: 28
 		public static ConfigEntry<string> AOD_Blacklist;
-
-		// Token: 0x0400001D RID: 29
 		public static ConfigEntry<float> AOD_LevelMultiplier;
-
-		// Token: 0x0400001E RID: 30
 		public static ConfigEntry<float> AOD_ExtraLevels;
-
-		// Token: 0x0400001F RID: 31
 		public static ConfigEntry<bool> AOD_ForceBossSpawn;
-
-		// Token: 0x04000020 RID: 32
 		public static ConfigEntry<bool> AOD_OneShotProtection;
-
-		// Token: 0x04000021 RID: 33
 		public static ConfigEntry<bool> AOD_VisiblePlayers;
-
-		// Token: 0x04000022 RID: 34
 		public static ConfigEntry<bool> AOD_DeathMessages;
-
-		// Token: 0x04000023 RID: 35
 		public static ConfigEntry<KeyboardShortcut> AOD_KeySuicide;
-
-		// Token: 0x04000024 RID: 36
 		public static ConfigEntry<KeyboardShortcut> AOD_KeyChooseHuman;
-
-		// Token: 0x04000025 RID: 37
 		public static ConfigEntry<KeyboardShortcut> AOD_KeyChooseMonster;
 
-		// Token: 0x04000026 RID: 38
 		public static ConfigEntry<float> AOS_EnemyDMGMult;
-
-		// Token: 0x04000027 RID: 39
+		public static ConfigEntry<float> AOS_EnemyForceCoefficient;
+		public static ConfigEntry<float> AOS_BossDMGMult;
+		public static ConfigEntry<float> AOS_BossForceCoefficient;
 		public static ConfigEntry<float> AOS_PlayerDMGMult;
+		public static ConfigEntry<float> AOS_PlayerForceCoefficient;
+
 	}
 }

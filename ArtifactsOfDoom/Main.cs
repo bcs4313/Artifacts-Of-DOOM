@@ -27,7 +27,6 @@ namespace ArtifactsOfDoom
 	})]
 	public class Main : BaseUnityPlugin
 	{
-		// Token: 0x06000016 RID: 22 RVA: 0x00002FF4 File Offset: 0x000011F4
 		private void Awake()
 		{
 			Debug.Log("Artifacts Of Doom: Main is running...");
