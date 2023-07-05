@@ -146,8 +146,8 @@ namespace Messenger
                 rarityColor = voidColor;
             }
 
-            globalMessage("<color=" + commonColor + ">" + username + "(dead)" + "</color>" +
-                " has received: " + "<color=" + rarityColor + ">" +
+            globalMessage("<color=" + commonColor + ">" + username + " (dead) " + "</color>" +
+                "has received: " + "<color=" + rarityColor + ">" +
                 Language.currentLanguage.GetLocalizedStringByToken
                 (PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken) + "</color>" + "..."); // notify player of getting item
         }

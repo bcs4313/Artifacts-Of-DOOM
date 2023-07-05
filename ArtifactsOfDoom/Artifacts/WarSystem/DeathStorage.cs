@@ -4,17 +4,24 @@ using R2API.Networking.Interfaces;
 using UnityEngine;
 using Messenger;
 using System.Collections.Generic;
+using System;
 
 namespace ArtifactsOfDoom
 {
     public class deathStorage
     {
-        static List<List<ItemIndex>> chest = new List<List<ItemIndex>>(24);
+        static public List<List<ItemIndex>> chest = new List<List<ItemIndex>>(24);
         static List<string> usernames = new List<string>(24);
+        static public List<String> dead_players = new List<String>();
+
         // initialize death storage
         static public void init()
         {
             Debug.Log("DeathStorage Init...");
+            chest.Clear();
+            chest.TrimExcess();
+            dead_players.Clear();
+            usernames.Clear();
 
             foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
             {
@@ -35,47 +42,54 @@ namespace ArtifactsOfDoom
         // Called when a user should get an item on death
         static public void deathUpdate(ItemIndex item, int index)
         {
+            MessageHandler.globalMessage("Death Update for index: " + index);
             chest[index].Add(item);
         }
 
         // Called on scene change, gives items to dead players
-        static public void regenerateItems()
+        static public void regenerateALLItems()
         {
-            Debug.Log("Regenerating Items...");
             for (int i = 0; i < chest.Count; i++)
             {
-                string usernameOfDead = usernames[i];
-                List<ItemIndex> playerChest = chest[i];
+                regeneratePlayer(i);
+            }
+        }
 
-                // find the player that matches the username
-                int index = 0;
-                for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-                {
-                    if (NetworkUser.readOnlyInstancesList[x].userName.CompareTo(usernameOfDead) == 0)
-                    {
-                        index = x;
+        // Called on an individual revive
+        static public void regeneratePlayer(int i)
+        {
+            Debug.Log("Regenerating Items..." + " index: " + i);
+            string usernameOfDead = usernames[i];
+            List<ItemIndex> playerChest = chest[i];
 
-                    }
-                }
+            // find the player that matches the username
+            int index = 0;
+            for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
+            {
+                if (NetworkUser.readOnlyInstancesList[x].userName.CompareTo(usernameOfDead) == 0)
+                {
+                    index = x;
 
-                if (NetworkUser.readOnlyInstancesList[index].GetCurrentBody().inventory == null)
-                {
-                    Debug.Log("Issue finding body to give to! (DeathStorage)");
                 }
-                else
+            }
+
+            if (NetworkUser.readOnlyInstancesList[index].GetCurrentBody().inventory == null)
+            {
+                Debug.Log("Issue finding body to give to! (DeathStorage)");
+            }
+            else
+            {
+                //Debug.Log("body found (DeathStorage)");
+                foreach (ItemIndex dex in playerChest)
                 {
-                    //Debug.Log("body found (DeathStorage)");
-                    foreach (ItemIndex dex in playerChest)
-                    {
-                        Debug.Log("Giving " + PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken + " to " + NetworkUser.readOnlyInstancesList[index].userName);
-                        NetworkUser.readOnlyInstancesList[index].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
-                        MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[index].GetCurrentBody(), dex, 0);
-                    }
-                    //Debug.Log("Loop End");
-                    // now clear the list of items
-                    playerChest.Clear();
-                    playerChest.TrimExcess();
+                    Debug.Log("Giving " + PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken + " to " + NetworkUser.readOnlyInstancesList[index].userName);
+                    NetworkUser.readOnlyInstancesList[index].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
+                    MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[index].GetCurrentBody(), dex, 0);
                 }
+                //Debug.Log("Loop End");
+                // now clear the list of items
+                playerChest.Clear();
+                playerChest.TrimExcess();
             }
         }
 

@@ -39,8 +39,6 @@ namespace ArtifactGroup
 		// items that are evolve capped to a value
 		String[] enemy_limiters = { "Hoof", "SprintOutOfCombat", "SprintBonus" };
 
-		List<String> dead_players = new List<String>();
-
 		// evolve cap counter
 		int[] enemy_limits = { 8, 3, 8 };
 
@@ -133,11 +131,6 @@ namespace ArtifactGroup
 				orig.Invoke(self);
 				ArtifactOfTitans.desynchronizedMonsters.Clear(); // weird to put it here but C# was really stubborn with this particular hook
 
-				if (ArtifactEnabled && NetworkServer.active)
-				{
-					deathStorage.init();
-				}
-
 				// Define a TeamDef object (from original)
 				TeamDef def = RoR2.TeamCatalog.GetTeamDef(TeamIndex.Monster);
 
@@ -195,9 +188,6 @@ namespace ArtifactGroup
 				{
 					if (deadLock == false)
 					{
-						MessageHandler.globalMessage("Regenerating Items...");
-						deathStorage.regenerateItems();
-						dead_players.Clear();
 						loadingStage = false;
 						deadLock = true;
 					}
@@ -243,8 +233,6 @@ namespace ArtifactGroup
 				// force evolution artifact
 				RunArtifactManager.instance.SetArtifactEnabled(ArtifactCatalog.FindArtifactDef("MonsterTeamGainsItems"), true);
 				enabled = true;
-
-				deathStorage.init();
 			}
 
 		}
@@ -363,12 +351,6 @@ namespace ArtifactGroup
 		{
 			if (NetworkServer.active && ArtifactEnabled)
 			{
-				if (damageReport.victim.body.isPlayerControlled) // check if a player died
-				{
-					//MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
-					dead_players.Add(damageReport.victim.body.GetUserName());
-				}
-
 				/// drop chance scales with stages and time
 				double baseDropChance = OptionsLink.AOW_BaseDropChance.Value; // 8
 
@@ -488,31 +470,31 @@ namespace ArtifactGroup
 
 			CharacterBody user = NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody();
 
-			if (dead_players.Contains(user.GetUserName()) == false)
-			{
-				if (ArtifactOfUnity.enabled == false)
-				{
-					NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
-					MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody(), dex, colorID);
-				}
-				else
-				{
-					//Debug.Log("Unity Give-->");
-					// get item index from item controller
-					ItemIndex give = dex;
 
-					for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-					{
-						NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);
-						MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody(), dex, colorID);
-					}
-				}
+			if (ArtifactOfUnity.enabled == false)
+			{
+				NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
+				MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody(), dex, colorID);
 			}
 			else
 			{
-				Debug.Log("Storing item for dead player in index: " + plyr);
-				deathStorage.deathUpdate(dex, plyr);
-				MessageHandler.GlobalItemDeadMessage(dex, colorID, deathStorage.retrieveUsername(plyr));
+				//Debug.Log("Unity Give-->");
+				// get item index from item controller
+				ItemIndex give = dex;
+
+				for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
+				{
+					if (deathStorage.dead_players.Contains(user.GetUserName()) == false)
+					{
+						
+						NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);
+						MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[x].GetCurrentBody(), dex, colorID);
+					}
+					else
+					{
+						ArtifactOfUnity.giveToDeadPlayer(dex, x);
+					}
+				}
 			}
 			//PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(dex), locale, transform.forward * 0f);
 		}

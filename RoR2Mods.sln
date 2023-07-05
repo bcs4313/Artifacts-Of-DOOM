@@ -8,7 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{3A26DDA8-2697-4D64-962B-DB9E2DC00EF6}"
 	ProjectSection(SolutionItems) = preProject
 		manifest.json = manifest.json
-		README.md = README.md
+		..\..\..\..\AppData\Local\Temp\Rar$DRa17332.23633\README.md = ..\..\..\..\AppData\Local\Temp\Rar$DRa17332.23633\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{000A653E-EB93-4991-A8FC-EAF2CE008835}"
