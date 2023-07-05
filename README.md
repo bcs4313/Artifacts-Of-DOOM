@@ -26,7 +26,7 @@ Consider rainstorm to be monsoon difficulty, monsoon is just terrifying, drizzle
 
 **Artifact Of Unity**&nbsp;
 <img src=https://cdn.discordapp.com/attachments/613179339269210149/976266868060983316/Revised_-_Icon_3._Artifact_of_Unity.png align="center" width="85px" height="85px"/>
-* All items are shared amongst players, but enemies are much stronger.
+* All items are shared among players, but enemies are much stronger.
 
 **Artifact Of The Titans**&nbsp;
 <img src=https://cdn.discordapp.com/attachments/613179339269210149/976266993281953873/Revised_-_Icon_2._Artifact_of_the_Titans.png align="center" width="85px" height="85px"/>
@@ -94,12 +94,27 @@ A metric ton of bugfix/tuning/quality of life updates.
 * Fixed a bug where events that played sounds to all players would bug out if the host is dead and the client is not.
 * Fixed a synchronization issue with titans that makes some enemies fail to resize. This is due to packet loss and higher ping levels. The system is not FOOLPROOF, but is relatively consistent.
 * Some adjustments to Artifact Of Entropy's code have reduced its lagginess by a large margin.
+
+1.5
+Major overhaul to how Artifact of Smash functions
+* Drastically decreased crashes from the artifact, especially for hitting wisps.
+* Increased Impact Threshold for damaging players
+* Enemy / Survivor health doubled
+* Added exponential knockback scaling based on missing health before the hit
+* Enemies dying from impacts now reward players for the kill
+* Changed knockback formula to reduce lag
+* Added explosion animation for players dying from impact.
+* Added settings to adjust knockback and damage levels for non-boss enemies, bosses, 
+and players separately.
+- unconfirmed fix: Artifact of War/Unity health bars should be fixed for clients.
+
+1.5.1
+Fixed a sus bug from Artifact of Entropy.
 ```
 
 Currently Planned Features: 
 * A video demonstrating the 5 artifacts, and what you can do with them.
 * Getting golems to resize without a strange visual bug...
-* Fixing a visual bug with Artifact of War's healthbars client-side.
 * Stabilization and bug fixes for all artifacts (we are getting there).
 * More outcomes for the entropy artifact.
-* Thinking of a new artifact...
+* Working on a new artifact (4/2/2023)...
