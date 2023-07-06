@@ -2,7 +2,7 @@
 
 Adds 5 customizable artifacts to traumatize your friends with.
 
-![Picture marking your imminent death](https://cdn.discordapp.com/attachments/613179339269210149/974067165730832465/trauma.jpg)
+![Picture marking your imminent death](https://cdn.discordapp.com/attachments/519358395661156353/1126339595710242816/20221203003816_1.jpg)
 
 # Artifacts Added
 
@@ -110,6 +110,9 @@ and players separately.
 
 1.5.1
 Fixed a sus bug from Artifact of Entropy.
+
+1.5.3
+Added a feature that resynchronizes lost items if a player dies with Artifact of Unity on. The setting can be toggled on/off.
 ```
 
 Currently Planned Features: 
