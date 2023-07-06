@@ -42,6 +42,10 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_EntityCap = OptionsLink.Config.Bind<string>("Artifact of War", "Monster Count Cap", "250", "Max amount of monsters that can exist on a stage at once. \nRange: (0.0-inf) \nDefault: 250");
 			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOW_EntityCap));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of War", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.warBase)));
+			
+			OptionsLink.AOU_DeathRecovery = OptionsLink.Config.Bind<bool>("Artifact of Unity", "Death Recovery", true, "Players that die will continue to receive the items collected by other players. The items will be restored once they are revived.");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOU_DeathRecovery));
+
 			OptionsLink.AOD_Blacklist = OptionsLink.Config.Bind<string>("Artifact of Defiance", "Enemy Blacklist", "Beetle, LesserWisp", "A list of monsters that the enemy monster team no longer can spawn as. Enter each monster as its name in the game (middle clicking on a monster will reveal the name). Each value is comma separated, without quotations.");
 			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOD_Blacklist));
 			OptionsLink.AOD_ForceBossSpawn = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Force Teleporter Boss Spawn", true, "Forces a monster team member to always spawn as the teleporter boss. The enemy blacklist overrides this rule (Default: true).");
@@ -275,8 +279,9 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<bool> AOE_SimultaneousOutcomes;
 		public static ConfigEntry<bool> AOE_NewEventsPerStage;
 
-		public static ConfigEntry<bool> AOU_ShareVoidItems;
 		public static ConfigEntry<bool> AOU_ShareLunarItems;
+		public static ConfigEntry<bool> AOU_ShareVoidItems;
+		public static ConfigEntry<bool> AOU_DeathRecovery;
 
 		public static StringInputFieldOption AOE_Seed_O;
 		public static StringInputFieldOption AOE_EventHookMultiplier_O;

@@ -473,18 +473,21 @@ namespace ArtifactGroup
 
 			if (ArtifactOfUnity.enabled == false)
 			{
-				NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
-				MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody(), dex, colorID);
+				if (NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody() != null)
+				{
+					NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody().inventory.GiveItem(PickupCatalog.FindPickupIndex(dex).itemIndex);
+					MessageHandler.globalItemGetMessage(NetworkUser.readOnlyInstancesList[plyr].GetCurrentBody(), dex, colorID);
+				}
 			}
 			else
 			{
-				//Debug.Log("Unity Give-->");
+				Debug.Log("Unity:--:War Give-->");
 				// get item index from item controller
 				ItemIndex give = dex;
 
 				for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
 				{
-					if (deathStorage.dead_players.Contains(user.GetUserName()) == false)
+					if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody() != null)
 					{
 						
 						NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);

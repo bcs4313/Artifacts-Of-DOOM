@@ -75,141 +75,27 @@ namespace ArtifactGroup
 					}
 				}
 			};
-			/*
-			On.RoR2.Inventory.GiveItemString_string += (orig_GiveItemString_string orig, global::RoR2.Inventory self, string itemString) =>
-			{
-				orig.Invoke(self, itemString);
-				Debug.Log("(Artifact Of UNITY) grant trigger (code GRANT_S)");
-				if (NetworkServer.active && ArtifactEnabled)
-				{
-					if (self != null && itemString != null)
-					{
-						// get item index from item controller
-						ItemIndex give = ItemCatalog.FindItemIndex(itemString);
-
-						if(give != ItemIndex.None)
-						{
-							for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-							{
-								if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.netId.Value.CompareTo(self.netId.Value) != 0)
-								{
-									NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);
-								}
-							}
-						}
-					}
-				}
-			};
-
-			On.RoR2.Inventory.GiveItemString_string_int += (orig_GiveItemString_string_int orig, global::RoR2.Inventory self, string itemString, int count) =>
-			{
-				orig.Invoke(self, itemString, count);
-				Debug.Log("(Artifact Of UNITY) grant trigger (code GRANT_SI)");
-				if (NetworkServer.active && ArtifactEnabled)
-				{
-					if (itemString != null && self != null && count > 0)
-					{
-						// get item index from item controller
-						ItemIndex give = ItemCatalog.FindItemIndex(itemString);
-						if (give != ItemIndex.None)
-						{
-							for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-							{
-								if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.netId.Value.CompareTo(self.netId.Value) != 0)
-								{
-									NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give, count);
-								}
-							}
-						}
-					}
-				}
-			};\
-			*/
-			/*
-			On.RoR2.Inventory.GiveItem_ItemDef_int += (orig_GiveItem_ItemDef_int orig, global::RoR2.Inventory self, global::RoR2.ItemDef itemDef, int count) =>
-			{
-				orig.Invoke(self, itemDef, count);
-				Debug.Log("(Artifact Of UNITY) grant trigger (code GRANT_ID)");
-				if (NetworkServer.active && ArtifactEnabled)
-				{
-					try
-					{
-						if (itemDef != null && count > 0 && self != null)
-						{
-							// get item index from item controller
-							ItemIndex give = itemDef.itemIndex;
-
-							if (give != ItemIndex.None)
-							{
-								for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-								{
-									if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.netId.Value.CompareTo(self.netId.Value) != 0)
-									{
-										NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give, count);
-									}
-								}
-							}
-						}
-					}
-					catch
-                    {
-						Debug.Log("GRANT_ID CANCEL");
-                    }
-				}
-
-			};
-			*/
-			/*
-			On.RoR2.Inventory.GiveItem_ItemIndex_int += (orig_GiveItem_ItemIndex_int orig, global::RoR2.Inventory self, ItemIndex itemIndex, int count) =>
-			{
-				orig.Invoke(self, itemIndex, count);
-				Debug.Log("(Artifact Of UNITY) grant trigger (code GRANT_II)");
-				if (NetworkServer.active && ArtifactEnabled)
-				{
-					// get item index from item controller
-					ItemIndex give = itemIndex;
-					if (count > 0 && self != null && itemIndex != ItemIndex.None)
-					{
-						for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
-						{
-							if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.netId.Value.CompareTo(self.netId.Value) != 0)
-							{
-								NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give, count);
-							}
-						}
-					}
-				}
-			};
-			*/
 
 			On.RoR2.GenericPickupController.AttemptGrant += (orig_AttemptGrant orig, global::RoR2.GenericPickupController self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
 				if (NetworkServer.active && ArtifactEnabled)
 				{
-					MessageHandler.globalMessage(body.GetUserName() + " :: unityGrant -> " + body.GetUserName());
 					Debug.Log("(Artifact Of UNITY) grant trigger (code GRANT_P)");
 					// get item index from item controller
 					ItemIndex give = self.pickupIndex.itemIndex;
-					Debug.Log("1");
 					for (int x = 0; x < NetworkUser.readOnlyInstancesList.Count; x++)
 					{
-						Debug.Log("2");
 						if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody() != null) // if alive
 						{
-							Debug.Log("3");
 							if (NetworkUser.readOnlyInstancesList[x].GetCurrentBody().netId.Value.CompareTo(body.netId.Value) != 0) // if not the person who picked up the item
 							{
-								Debug.Log("4");
-								MessageHandler.globalMessage(body.GetUserName() + " :: unityGrantToAlive -> " + body.GetUserName());
-								Debug.Log("5");
 								NetworkUser.readOnlyInstancesList[x].GetCurrentBody().inventory.GiveItem(give);
                             }
 								
 						}
 						else // if dead
                         {
-							MessageHandler.globalMessage(NetworkUser.readOnlyInstancesList[x].userName + " :: unityGrantToDead?");
 							giveToDeadPlayer(give, x);
 						}
 					}
@@ -218,8 +104,8 @@ namespace ArtifactGroup
 
 			On.RoR2.GlobalEventManager.OnCharacterDeath += (orig_OnCharacterDeath orig, global::RoR2.GlobalEventManager self, global::RoR2.DamageReport damageReport) =>
 			{
-				MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " :: onchardeath");
-				if (damageReport.victim.body.isPlayerControlled) // check if a player died
+				orig.Invoke(self, damageReport);
+				if (ArtifactEnabled && damageReport.victim.body.isPlayerControlled && OptionsLink.AOU_DeathRecovery.Value == true) // check if a player died
 				{
 					MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
 					deathStorage.dead_players.Add(damageReport.victim.body.GetUserName());
@@ -229,18 +115,14 @@ namespace ArtifactGroup
 			On.RoR2.GlobalEventManager.OnCharacterHitGroundServer += (orig_OnCharacterHitGroundServer orig, global::RoR2.GlobalEventManager self, global::RoR2.CharacterBody characterBody, Vector3 impactVelocity) =>
 			{
 				orig.Invoke(self, characterBody, impactVelocity);
-				MessageHandler.globalMessage(characterBody.GetUserName() + " :: hitgroundproc");
-				if (ArtifactEnabled && characterBody.isPlayerControlled && characterBody != null && deathStorage.dead_players.Contains(characterBody.GetUserName()))
+				if (ArtifactEnabled && characterBody.isPlayerControlled && characterBody != null && deathStorage.dead_players.Contains(characterBody.GetUserName()) && OptionsLink.AOU_DeathRecovery.Value == true)
 				{
-					MessageHandler.globalMessage("Regen...");
-
 					for (int i = 0; i < deathStorage.chest.Count; i++)
 					{
 						if (characterBody.master.netId == NetworkUser.readOnlyInstancesList[i].master.netId)
 						{
 							deathStorage.regeneratePlayer(i);
 							deathStorage.dead_players.RemoveAt(i);
-							MessageHandler.globalMessage("Regenerating Items for " + characterBody.GetUserName());
 						}
 					}
 				}
@@ -258,7 +140,11 @@ namespace ArtifactGroup
 						// get characterbody of interest
 						for (int i = 0; i < NetworkUser.readOnlyInstancesList.Count; i++)
 						{
-							if (NetworkUser.readOnlyInstancesList[i].GetCurrentBody().inventory == self)
+							if(NetworkUser.readOnlyInstancesList[i].GetCurrentBody() == null) // dead player (for deathstorage
+                            {
+								deathStorage.deathDestroy(itemIndex, i);
+							}
+							else if (NetworkUser.readOnlyInstancesList[i].GetCurrentBody().inventory == self)
 							{
 								source = NetworkUser.readOnlyInstancesList[i].GetCurrentBody();
 							}
@@ -309,13 +195,14 @@ namespace ArtifactGroup
 		}
 		static public void giveToDeadPlayer(ItemIndex dex, int plyr)
 		{
-			int colorID = 1;
-			NetworkUser user = NetworkUser.readOnlyInstancesList[plyr];
+			if (OptionsLink.AOU_DeathRecovery.Value == true)
+			{
+				int colorID = 1;
+				NetworkUser user = NetworkUser.readOnlyInstancesList[plyr];
 
-			if (deathStorage.dead_players.Contains(user.userName))
-				MessageHandler.globalMessage("Storing item for dead player: " + user.userName);
-			deathStorage.deathUpdate(dex, plyr);
-			MessageHandler.GlobalItemDeadMessage(dex, colorID, deathStorage.retrieveUsername(plyr));
+				deathStorage.deathUpdate(dex, plyr);
+				MessageHandler.GlobalItemDeadMessage(dex, colorID, deathStorage.retrieveUsername(plyr));
+			}
 		}
 	}
 }
