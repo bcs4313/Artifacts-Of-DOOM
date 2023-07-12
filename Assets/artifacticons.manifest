@@ -1,0 +1,29 @@
+ManifestFileVersion: 0
+CRC: 4115273679
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 97c2f7e21192a146af615f2e0cae0dd9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b474380d27eb4bc856799e9c585c4864
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Icons/icon.png
+- Assets/Icons/ArtifactOfWarDisabled.png
+- Assets/Icons/ArtifactOfWar.png
+- Assets/Icons/ArtifactOfTheTitans.png
+- Assets/Icons/ArtifactOfEntropy.png
+- Assets/Icons/ArtifactOfUnityDisabled.png
+- Assets/Icons/ArtifactOfTheTitansDisabled.png
+- Assets/Icons/ArtifactOfSmashDisabled.png
+- Assets/Icons/Amogus.jpg
+- Assets/Icons/ArtifactOfEntropyDisabled.png
+- Assets/Icons/ArtifactOfSmash.png
+- Assets/Icons/ArtifactOfUnity.png
+Dependencies: []

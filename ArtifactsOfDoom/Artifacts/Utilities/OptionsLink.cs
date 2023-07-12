@@ -46,36 +46,6 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOU_DeathRecovery = OptionsLink.Config.Bind<bool>("Artifact of Unity", "Death Recovery", true, "Players that die will continue to receive the items collected by other players. The items will be restored once they are revived.");
 			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOU_DeathRecovery));
 
-			OptionsLink.AOD_Blacklist = OptionsLink.Config.Bind<string>("Artifact of Defiance", "Enemy Blacklist", "Beetle, LesserWisp", "A list of monsters that the enemy monster team no longer can spawn as. Enter each monster as its name in the game (middle clicking on a monster will reveal the name). Each value is comma separated, without quotations.");
-			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOD_Blacklist));
-			OptionsLink.AOD_ForceBossSpawn = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Force Teleporter Boss Spawn", true, "Forces a monster team member to always spawn as the teleporter boss. The enemy blacklist overrides this rule (Default: true).");
-			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_ForceBossSpawn));
-			OptionsLink.AOD_VisiblePlayers = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Distinguished Players", true, "Should players be able to see who is controlliing the monsters? Player controlled monsters will have a red light attached to them (Default: true).");
-			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_VisiblePlayers));
-			OptionsLink.AOD_DeathMessages = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Death Messages", false, "If a player on the monster team dies, should a death message in chat, with their name, be displayed? (Default: false).");
-			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_DeathMessages));
-			OptionsLink.AOD_OneShotProtection = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "One Shot Protection", false, "Should an enemy monster have one shot protection? (Default: false).");
-			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_OneShotProtection));
-			OptionsLink.AOD_ExtraLevels = OptionsLink.Config.Bind<float>("Artifact of Defiance", "Additional Levels", 1f, "Additional levels given to the monster team players (after the level multiplier). \nRange: (1, 99) \nDefault: 1");
-			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOD_ExtraLevels, new SliderConfig
-			{
-				min = 1f,
-				max = 99f,
-				formatString = "{0:F1}"
-			}));
-			OptionsLink.AOD_LevelMultiplier = OptionsLink.Config.Bind<float>("Artifact of Defiance", "Level Multiplier", 1f, "A multiplier of a monster team player's level, with the original monster serving as the base level value.  \nRange: (0, 10) \nDefault: 1");
-			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOD_LevelMultiplier, new SliderConfig
-			{
-				min = 0f,
-				max = 10f,
-				formatString = "{0:F1}"
-			}));
-			OptionsLink.AOD_KeySuicide = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Suicide Keybind", new KeyboardShortcut(KeyCode.Alpha3, Array.Empty<KeyCode>()), "Press this key to kill yourself as a monster. Useful for situations where you spawn as an immobile monster or something that is too weak to fight with.  \nDefault: 3");
-			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeySuicide));
-			OptionsLink.AOD_KeyChooseHuman = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Join Survivors Keybind", new KeyboardShortcut(KeyCode.Alpha1, Array.Empty<KeyCode>()), "Press this key to join the survivor team when the run starts.  \nDefault: 1");
-			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseHuman));
-			OptionsLink.AOD_KeyChooseMonster = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Join Monsters Keybind", new KeyboardShortcut(KeyCode.Alpha2, Array.Empty<KeyCode>()), "Press this key to join the monster team when the run starts.  \nDefault: 2");
-			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseMonster));
 			ModSettingsManager.AddOption(new GenericButtonOption("Import Entropy Config", "Artifact of Entropy", "Import settings from someone else to get their Entropy run experience! Pasted from your clipboard, CTRL+C to copy.", "Import", new UnityAction(OptionsLink.loadConfig)));
 			ModSettingsManager.AddOption(new GenericButtonOption("Export Entropy Config", "Artifact of Entropy", "Export your entropy run setup to share with other people! Be sure to input the run seed in the settings before you export. Saved via clipboard, CTRL+V to paste.", "Export", new UnityAction(OptionsLink.saveConfig)));
 			OptionsLink.AOE_Seed = OptionsLink.Config.Bind<string>("Artifact of Entropy", "Generation Seed", "-1", "Numerical seed that strictly defines the outcome to action links for the run. An input of -1 creates a random seed.A run seed is printed both in chat and in the Debug Log at the start of each stage in this format: (Artifact of Entropy Seed): num This seed can be shared with other players so they can experience your run!. Note: To produce an identical run, settings have to match, or some things may be different. \nRange: (-2,147,483,647, 2,147,483,647)\nDefault: -1");
@@ -184,6 +154,45 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Smash", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.smashBase)));
+
+			/*
+			OptionsLink.AOM_MorphSelect = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Morph Select", "Beetle", "The monster that you will transform into upon entering the world. \n For now, this applies to ALL players when the artifact is enabled. (Default: Beetle)");
+			ModSettingsManager.AddOption(new ChoiceOption(Config.Bind("Disable",
+				"Beetle", "Beetle Guard"),
+				new ChoiceConfig { checkIfDisabled = Disabled }));
+			*/
+
+
+			OptionsLink.AOD_Blacklist = OptionsLink.Config.Bind<string>("Artifact of Defiance", "Enemy Blacklist", "Beetle, LesserWisp", "A list of monsters that the enemy monster team no longer can spawn as. Enter each monster as its name in the game (middle clicking on a monster will reveal the name). Each value is comma separated, without quotations.");
+			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOD_Blacklist));
+			OptionsLink.AOD_ForceBossSpawn = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Force Teleporter Boss Spawn", true, "Forces a monster team member to always spawn as the teleporter boss. The enemy blacklist overrides this rule (Default: true).");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_ForceBossSpawn));
+			OptionsLink.AOD_VisiblePlayers = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Distinguished Players", true, "Should players be able to see who is controlliing the monsters? Player controlled monsters will have a red light attached to them (Default: true).");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_VisiblePlayers));
+			OptionsLink.AOD_DeathMessages = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Death Messages", false, "If a player on the monster team dies, should a death message in chat, with their name, be displayed? (Default: false).");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_DeathMessages));
+			OptionsLink.AOD_OneShotProtection = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "One Shot Protection", false, "Should an enemy monster have one shot protection? (Default: false).");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOD_OneShotProtection));
+			OptionsLink.AOD_ExtraLevels = OptionsLink.Config.Bind<float>("Artifact of Defiance", "Additional Levels", 1f, "Additional levels given to the monster team players (after the level multiplier). \nRange: (1, 99) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOD_ExtraLevels, new SliderConfig
+			{
+				min = 1f,
+				max = 99f,
+				formatString = "{0:F1}"
+			}));
+			OptionsLink.AOD_LevelMultiplier = OptionsLink.Config.Bind<float>("Artifact of Defiance", "Level Multiplier", 1f, "A multiplier of a monster team player's level, with the original monster serving as the base level value.  \nRange: (0, 10) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOD_LevelMultiplier, new SliderConfig
+			{
+				min = 0f,
+				max = 10f,
+				formatString = "{0:F1}"
+			}));
+			OptionsLink.AOD_KeySuicide = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Suicide Keybind", new KeyboardShortcut(KeyCode.Alpha3, Array.Empty<KeyCode>()), "Press this key to kill yourself as a monster. Useful for situations where you spawn as an immobile monster or something that is too weak to fight with.  \nDefault: 3");
+			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeySuicide));
+			OptionsLink.AOD_KeyChooseHuman = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Join Survivors Keybind", new KeyboardShortcut(KeyCode.Alpha1, Array.Empty<KeyCode>()), "Press this key to join the survivor team when the run starts.  \nDefault: 1");
+			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseHuman));
+			OptionsLink.AOD_KeyChooseMonster = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Join Monsters Keybind", new KeyboardShortcut(KeyCode.Alpha2, Array.Empty<KeyCode>()), "Press this key to join the monster team when the run starts.  \nDefault: 2");
+			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseMonster));
 		}
 
 
@@ -306,6 +315,8 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<KeyboardShortcut> AOD_KeySuicide;
 		public static ConfigEntry<KeyboardShortcut> AOD_KeyChooseHuman;
 		public static ConfigEntry<KeyboardShortcut> AOD_KeyChooseMonster;
+
+		public static ConfigEntry<string> AOM_MorphSelect;
 
 		public static ConfigEntry<float> AOS_EnemyDMGMult;
 		public static ConfigEntry<float> AOS_EnemyForceCoefficient;

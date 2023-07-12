@@ -27,10 +27,12 @@ namespace ArtifactsOfDoom
 	})]
 	public class Main : BaseUnityPlugin
 	{
+		public static AssetBundle MorphAssets;
 		private void Awake()
 		{
 			Debug.Log("Artifacts Of Doom: Main is running...");
 			Main.MainAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/artifacticons");
+			Main.MorphAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/transformui");
 			Debug.Log("Artifacts Of Doom: Loaded Assets");
 			Debug.Log("Artifacts of Doom: Loading L4D UI Layout...");
 			Debug.Log("Artifacts Of Doom: Registering Net Messages");
@@ -40,6 +42,7 @@ namespace ArtifactsOfDoom
 			NetworkingAPI.RegisterMessageType<networkBehavior.Playsound>();
 			NetworkingAPI.RegisterMessageType<networkBehavior.resizeEntity>();
 			NetworkingAPI.RegisterMessageType<networkBehavior.olbiterateUI>();
+			NetworkingAPI.RegisterMessageType<networkBehavior.TransformRequest>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.joinDefianceTeam>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.updateTargetMaster>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.clientSyncSettings>();

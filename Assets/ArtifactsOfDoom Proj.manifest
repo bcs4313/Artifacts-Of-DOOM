@@ -1,0 +1,11 @@
+ManifestFileVersion: 0
+CRC: 3863807195
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: artifacticons
+      Dependencies: {}
+    Info_1:
+      Name: transformui
+      Dependencies:
+        Dependency_0: artifacticons

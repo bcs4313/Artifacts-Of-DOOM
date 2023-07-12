@@ -12,6 +12,7 @@ using R2API;
 using static On.RoR2.CharacterMaster;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using csProj.Artifacts.MorphSystem;
 
 namespace ArtifactGroup
 {
@@ -147,7 +148,7 @@ namespace ArtifactGroup
                         }
                     }
                 }
-                MessageHandler.globalMessage("Resize Complete");
+                //MessageHandler.globalMessage("Resize Complete");
             }
 
             public void Serialize(NetworkWriter writer)
@@ -156,6 +157,76 @@ namespace ArtifactGroup
                 writer.Write(yscalar);
                 writer.Write(zscalar);
                 writer.Write(targetId);
+            }
+        }
+
+        // package to send to server that tells the server
+        // what person to transform and what monster they chose.
+        public class TransformRequest : INetMessage
+        {
+
+            public uint targetId; // network id of the player
+            public String targetMonster; // string value of the requested monster
+
+            public void Deserialize(NetworkReader reader)
+            { // must be read in serialization order, like a scanner
+                targetId = reader.ReadUInt32();
+                targetMonster = reader.ReadString();
+            }
+
+            public TransformRequest()
+            {
+
+            }
+
+            public TransformRequest(uint _targetId, String _targetMonster)
+            {
+                targetId = _targetId;
+                targetMonster = _targetMonster;
+            }
+
+            // now just get the player and respawn them!
+            public void OnReceived()
+            {
+                Debug.Log("Received request to change body (Artifact of Metamorphosis)");
+                // a server must receive this message
+                if(!NetworkServer.active)
+                {
+                    Debug.Log("Request denied (isClient) (Artifact of Metamorphosis)");
+                    return;
+                }
+                Debug.Log("1");
+                // get body
+                CharacterBody body = entropyBlaster.grabUser(targetId);
+                NetworkUser user = null;
+                Debug.Log("2");
+                // find network user
+                for (int i = 0; i < RoR2.NetworkUser.instancesList.Count; i++)
+                {
+                    Debug.Log("3");
+                    var user2 = RoR2.NetworkUser.instancesList[i];
+                    if (user2.GetCurrentBody().netId == body.netId) // if the body is our target, with the applied net user
+                    {
+                        Debug.Log("4");
+                        user = user2;
+                    }
+                }
+                Debug.Log("5");
+                if (body != null && user != null)
+                {
+                    Debug.Log("Body target = " + body.GetUserName());
+                    MorphController.transformBody(user, body, targetMonster);
+                }
+                else
+                {
+                    Debug.LogError("Failed to find body/user target in request! (Artifact of Metamorphosis)");
+                }
+            }
+
+            public void Serialize(NetworkWriter writer)
+            {
+                writer.Write(targetId);
+                writer.Write(targetMonster);
             }
         }
 
@@ -485,7 +556,7 @@ namespace ArtifactGroup
             }
 
             Debug.Log("MessageHandler: issue locating target body! Grabuser()");
-            return NetworkUser.readOnlyInstancesList[0].GetCurrentBody();
+            return null;
         }
     }
 }

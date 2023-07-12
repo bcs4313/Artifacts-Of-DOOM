@@ -224,7 +224,6 @@ namespace ArtifactGroup
 			if (NetworkServer.active && ArtifactEnabled)
 			{
 				MessageHandler.globalMessage("The Brutality of War has been enabled.");
-				Run.baseGravity = 1;
 				storedStage = -1;
 				//for(int i = 0; i < ArtifactCatalog.artifactDefs.Length; i++)
 				//{
