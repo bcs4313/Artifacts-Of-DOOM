@@ -155,6 +155,35 @@ namespace ArtifactsOfDoom
 			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Smash", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.smashBase)));
 
+
+
+			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of your monster's abilities \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_DamageMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_DamageMultiplier);
+			ModSettingsManager.AddOption(AOM_DamageMultiplier_O);
+
+			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Health Multiplier", "1.0", "Multiplier for the base health of your monster's abilities \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_HealthMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_HealthMultiplier);
+			ModSettingsManager.AddOption(AOM_HealthMultiplier_O);
+
+			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of your monster \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_SpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_SpeedMultiplier);
+			ModSettingsManager.AddOption(AOM_SpeedMultiplier_O);
+
+			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of your monster \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_AttackSpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_AttackSpeedMultiplier);
+			ModSettingsManager.AddOption(AOM_AttackSpeedMultiplier_O);
+
+			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of your monster (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_CooldownMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_CooldownMultiplier);
+			ModSettingsManager.AddOption(AOM_CooldownMultiplier_O);
+
+			//OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Metamorphosis", "Size Multiplier", 1f, "Modifies the base size of your monster. \nRange: (0.05, 20) \nDefault: 1");
+			//ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOM_SizeMultiplier, new SliderConfig
+			//{
+			//	min = 0.05f,
+			//	max = 20f,
+			//	formatString = "{0:F2}"
+			//}));
 			/*
 			OptionsLink.AOM_MorphSelect = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Morph Select", "Beetle", "The monster that you will transform into upon entering the world. \n For now, this applies to ALL players when the artifact is enabled. (Default: Beetle)");
 			ModSettingsManager.AddOption(new ChoiceOption(Config.Bind("Disable",
@@ -162,7 +191,7 @@ namespace ArtifactsOfDoom
 				new ChoiceConfig { checkIfDisabled = Disabled }));
 			*/
 
-
+			/*
 			OptionsLink.AOD_Blacklist = OptionsLink.Config.Bind<string>("Artifact of Defiance", "Enemy Blacklist", "Beetle, LesserWisp", "A list of monsters that the enemy monster team no longer can spawn as. Enter each monster as its name in the game (middle clicking on a monster will reveal the name). Each value is comma separated, without quotations.");
 			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOD_Blacklist));
 			OptionsLink.AOD_ForceBossSpawn = OptionsLink.Config.Bind<bool>("Artifact of Defiance", "Force Teleporter Boss Spawn", true, "Forces a monster team member to always spawn as the teleporter boss. The enemy blacklist overrides this rule (Default: true).");
@@ -193,6 +222,7 @@ namespace ArtifactsOfDoom
 			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseHuman));
 			OptionsLink.AOD_KeyChooseMonster = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Defiance", "Join Monsters Keybind", new KeyboardShortcut(KeyCode.Alpha2, Array.Empty<KeyCode>()), "Press this key to join the monster team when the run starts.  \nDefault: 2");
 			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyChooseMonster));
+			*/
 		}
 
 
@@ -304,6 +334,18 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<float> AOT_EliteMultiplier;
 		public static ConfigEntry<float> AOT_FixedMonsterScaling;
 		public static ConfigEntry<float> AOT_FixedBossScaling;
+
+		public static ConfigEntry<string> AOM_DamageMultiplier;
+		public static StringInputFieldOption AOM_DamageMultiplier_O;
+		public static ConfigEntry<string> AOM_HealthMultiplier;
+		public static StringInputFieldOption AOM_HealthMultiplier_O;
+		public static ConfigEntry<string> AOM_SpeedMultiplier;
+		public static StringInputFieldOption AOM_SpeedMultiplier_O;
+		public static ConfigEntry<string> AOM_AttackSpeedMultiplier;
+		public static StringInputFieldOption AOM_AttackSpeedMultiplier_O;
+		public static ConfigEntry<string> AOM_CooldownMultiplier;
+		public static StringInputFieldOption AOM_CooldownMultiplier_O;
+		public static ConfigEntry<float> AOM_SizeMultiplier;
 
 		public static ConfigEntry<string> AOD_Blacklist;
 		public static ConfigEntry<float> AOD_LevelMultiplier;
