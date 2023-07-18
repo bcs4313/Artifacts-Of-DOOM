@@ -60,7 +60,7 @@ namespace ArtifactGroup
 						if(body.netId.Value == desynchronizedMonsters[i].uid)
 						{
 							Debug.Log("(Artifact of The Titans): Resolved resize failure of UID: " + body.netId.Value);
-							networkBehavior.resizeMonster(body, desynchronizedMonsters[i].scalar);
+							NetworkBehavior.resizeMonster(body, desynchronizedMonsters[i].scalar);
 							desynchronizedMonsters.RemoveAt(i);
                         }
 						else
@@ -163,7 +163,7 @@ namespace ArtifactGroup
 					uint idTarget = body.networkIdentity.netId.Value;
 
 					// resize entities for all clients
-					new networkBehavior.resizeEntity(scalar, idTarget).Send(NetworkDestination.Clients);
+					new NetworkBehavior.resizeEntity(scalar, idTarget, LocalUserManager.GetFirstLocalUser().userProfile.name).Send(NetworkDestination.Clients);
 				}
 				orig.Invoke(self, body);
 			};

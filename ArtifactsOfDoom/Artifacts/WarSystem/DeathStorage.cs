@@ -50,7 +50,7 @@ namespace ArtifactsOfDoom
             }
         }
 
-        // Called when a user should get an item on death
+        // Called when a user should remove an item on death
         static public void deathDestroy(ItemIndex item, int index)
         {
             if (OptionsLink.AOU_DeathRecovery.Value == true)
@@ -71,7 +71,7 @@ namespace ArtifactsOfDoom
         // Called on an individual revive
         static public void regeneratePlayer(int i)
         {
-            if (OptionsLink.AOU_DeathRecovery.Value == true)
+            if (OptionsLink.AOU_DeathRecovery.Value == true && NetworkServer.active)
             {
                 Debug.Log("Regenerating Items..." + " index: " + i);
                 string usernameOfDead = usernames[i];

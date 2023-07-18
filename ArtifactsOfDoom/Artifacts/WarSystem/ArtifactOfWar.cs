@@ -117,7 +117,7 @@ namespace ArtifactGroup
 						
 						// inform client of new max health
 						uint idTarget = characterBody.networkIdentity.netId.Value;
-						new networkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
+						new NetworkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
 					}
 				}
 				else
@@ -164,7 +164,7 @@ namespace ArtifactGroup
 
 						// inform client of new max health
 						uint idTarget = body.networkIdentity.netId.Value;
-						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth);
+						new NetworkBehavior.informMaxHealth(idTarget, body.baseMaxHealth);
 					}
 
 					//Debug.Log("DmgMult: " + ((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 32, Math.Max(RoR2.Run.instance.stageClearCount - 1.6, 0))));
@@ -181,7 +181,7 @@ namespace ArtifactGroup
 						
 						// inform client of new max health
 						uint idTarget = characterBody.networkIdentity.netId.Value;
-						new networkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
+						new NetworkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
 					}
 				}
 				if (NetworkServer.active && characterBody.teamComponent.teamIndex == TeamIndex.Player && loadingStage == true && ArtifactEnabled)

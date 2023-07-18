@@ -98,7 +98,7 @@ namespace ArtifactGroup
 						}
 						else
                         {
-							new networkBehavior.HookFromClient(self.netId.Value, "PrimarySkill").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(self.netId.Value, "PrimarySkill").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -111,7 +111,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(self.netId.Value, "SecondarySkill").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(self.netId.Value, "SecondarySkill").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -124,7 +124,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(self.netId.Value, "UtilitySkill").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(self.netId.Value, "UtilitySkill").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -137,7 +137,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(self.netId.Value, "SpecialSkill").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(self.netId.Value, "SpecialSkill").Send(NetworkDestination.Server);
 						}
 					}
 				}
@@ -204,7 +204,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(getLocalUID(), "W").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(getLocalUID(), "W").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -217,7 +217,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(getLocalUID(), "Ctrl").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(getLocalUID(), "Ctrl").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -230,7 +230,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(getLocalUID(), "A").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(getLocalUID(), "A").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -243,7 +243,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(getLocalUID(), "S").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(getLocalUID(), "S").Send(NetworkDestination.Server);
 						}
 					}
 
@@ -256,7 +256,7 @@ namespace ArtifactGroup
 						}
 						else
 						{
-							new networkBehavior.HookFromClient(getLocalUID(), "D").Send(NetworkDestination.Server);
+							new NetworkBehavior.HookFromClient(getLocalUID(), "D").Send(NetworkDestination.Server);
 						}
 					}
 				}
@@ -512,7 +512,7 @@ namespace ArtifactGroup
 		}
 
 		// get id of player playing th game atm
-		uint getLocalUID()
+		public static uint getLocalUID()
         {
 			try
 			{

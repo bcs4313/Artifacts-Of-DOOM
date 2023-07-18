@@ -144,13 +144,13 @@ namespace ArtifactGroup
 					{
 						uint idTarget = body.networkIdentity.netId.Value;
 						body.baseMaxHealth *= 2f;
-						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
+						new NetworkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
 					}
 					else
 					{
 						body.baseMaxHealth *= 2f;
 						uint idTarget = body.networkIdentity.netId.Value;
-						new networkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
+						new NetworkBehavior.informMaxHealth(idTarget, body.baseMaxHealth); // inform client of new max health
 					}
 				}
 			};

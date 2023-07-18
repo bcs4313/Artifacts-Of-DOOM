@@ -8,6 +8,7 @@ using BepInEx;
 using R2API;
 using R2API.Networking;
 using R2API.Utils;
+using RoR2.ExpansionManagement;
 using UnityEngine;
 
 namespace ArtifactsOfDoom
@@ -36,13 +37,16 @@ namespace ArtifactsOfDoom
 			Debug.Log("Artifacts Of Doom: Loaded Assets");
 			Debug.Log("Artifacts of Doom: Loading L4D UI Layout...");
 			Debug.Log("Artifacts Of Doom: Registering Net Messages");
-			NetworkingAPI.RegisterMessageType<networkBehavior.Amogus>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.FattenPlayer>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.HookFromClient>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.Playsound>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.resizeEntity>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.olbiterateUI>();
-			NetworkingAPI.RegisterMessageType<networkBehavior.TransformRequest>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.Amogus>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.FattenPlayer>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.HookFromClient>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.Playsound>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.resizeEntity>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.resizeEntityRebound>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.olbiterateUI>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.TransformRequest>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.statRequest>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.statRequestRebound>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.joinDefianceTeam>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.updateTargetMaster>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.clientSyncSettings>();

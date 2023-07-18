@@ -74,6 +74,19 @@ namespace ArtifactGroup
 						}
 					}
 				}
+
+				// death storage regeneration.
+				if (ArtifactEnabled && body.isPlayerControlled && body != null && deathStorage.dead_players.Contains(body.GetUserName()) && OptionsLink.AOU_DeathRecovery.Value == true)
+				{
+					for (int i = 0; i < deathStorage.chest.Count; i++)
+					{
+						if (body.master.netId == NetworkUser.readOnlyInstancesList[i].master.netId)
+						{
+							deathStorage.regeneratePlayer(i);
+							deathStorage.dead_players.RemoveAt(i);
+						}
+					}
+				}
 			};
 
 			On.RoR2.GenericPickupController.AttemptGrant += (orig_AttemptGrant orig, global::RoR2.GenericPickupController self, global::RoR2.CharacterBody body) =>
@@ -108,24 +121,16 @@ namespace ArtifactGroup
 				if (ArtifactEnabled && damageReport.victim.body.isPlayerControlled && OptionsLink.AOU_DeathRecovery.Value == true) // check if a player died
 				{
 					MessageHandler.globalMessage(damageReport.victim.body.GetUserName() + " Has died! He will still receive items over time, though");
-					deathStorage.dead_players.Add(damageReport.victim.body.GetUserName());
+					if (!deathStorage.dead_players.Contains(damageReport.victim.body.GetUserName()))
+					{
+						deathStorage.dead_players.Add(damageReport.victim.body.GetUserName());
+					}
 				}
 			};
 
 			On.RoR2.GlobalEventManager.OnCharacterHitGroundServer += (orig_OnCharacterHitGroundServer orig, global::RoR2.GlobalEventManager self, global::RoR2.CharacterBody characterBody, Vector3 impactVelocity) =>
 			{
 				orig.Invoke(self, characterBody, impactVelocity);
-				if (ArtifactEnabled && characterBody.isPlayerControlled && characterBody != null && deathStorage.dead_players.Contains(characterBody.GetUserName()) && OptionsLink.AOU_DeathRecovery.Value == true)
-				{
-					for (int i = 0; i < deathStorage.chest.Count; i++)
-					{
-						if (characterBody.master.netId == NetworkUser.readOnlyInstancesList[i].master.netId)
-						{
-							deathStorage.regeneratePlayer(i);
-							deathStorage.dead_players.RemoveAt(i);
-						}
-					}
-				}
 			};
 
 			// remove items for other users upon deleting an item from someone else

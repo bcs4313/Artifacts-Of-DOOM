@@ -141,10 +141,10 @@ namespace ArtifactGroup
                         uint idTarget = c.networkIdentity.netId.Value;
 
                         // make player eat some mcds
-                        new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
 
                         // play sound for all clients
-                        new networkBehavior.Playsound(3256861171, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.Playsound(3256861171, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
                     }
                     else
                     {
@@ -195,12 +195,12 @@ namespace ArtifactGroup
                         uint idTarget = c.networkIdentity.netId.Value;
 
                         // starve the player
-                        new networkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.FattenPlayer(idTarget, size.x, size.y, size.z).Send(R2API.Networking.NetworkDestination.Clients);
 
                         AkSoundEngine.PostEvent(1149063705, c.gameObject);
 
                         // play sound for all players, localized to id of target
-                        new networkBehavior.Playsound(1149063705, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.Playsound(1149063705, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
                     }
                     else
                     {
@@ -232,7 +232,7 @@ namespace ArtifactGroup
                 c.characterMotor.ApplyForce(size, true, false);
                 AkSoundEngine.PostEvent(402528823, c.gameObject);
 
-                new networkBehavior.Playsound(402528823, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(402528823, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
             }
 
         }
@@ -294,7 +294,7 @@ namespace ArtifactGroup
                 AkSoundEngine.PostEvent(3190451810, c.gameObject);
 
                 // play sound for all clients
-                new networkBehavior.Playsound(3190451810, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(3190451810, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
         /*
@@ -325,7 +325,7 @@ namespace ArtifactGroup
                 AkSoundEngine.PostEvent(116063087, c.gameObject);
 
                 // play sound for all clients
-                new networkBehavior.Playsound(116063087, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(116063087, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
 
@@ -396,7 +396,7 @@ namespace ArtifactGroup
                         AkSoundEngine.PostEvent(1288205242, body.gameObject);
 
                         // play sound for all clients
-                        new networkBehavior.Playsound(1288205242, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.Playsound(1288205242, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
                     }
                 }
                 MessageHandler.globalMessage("Free Money!");
@@ -450,10 +450,10 @@ namespace ArtifactGroup
                 {
                     AkSoundEngine.PostEvent(515509094, body.gameObject);
 
-                    new networkBehavior.Playsound(515509094, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+                    new NetworkBehavior.Playsound(515509094, targetID).Send(R2API.Networking.NetworkDestination.Clients);
                 }
                 ArtifactOfEntropy.adjustAmogus();
-                new networkBehavior.Amogus().Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Amogus().Send(R2API.Networking.NetworkDestination.Clients);
             }
             catch { }
         }
@@ -670,7 +670,7 @@ namespace ArtifactGroup
 
                 AkSoundEngine.PostEvent(333560252, c.gameObject);
 
-                new networkBehavior.Playsound(333560252, c.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(333560252, c.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
 
@@ -686,7 +686,7 @@ namespace ArtifactGroup
 
                 AkSoundEngine.PostEvent(61879681, monsterShooter.gameObject);
 
-                new networkBehavior.Playsound(61879681, monsterShooter.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(61879681, monsterShooter.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
         
@@ -1165,7 +1165,7 @@ namespace ArtifactGroup
         // Directly Corrupt the appearance of the UI
         static async public void obliterateUI(uint targetID)
         {
-            new networkBehavior.olbiterateUI(targetID).Send(R2API.Networking.NetworkDestination.Clients);
+            new NetworkBehavior.olbiterateUI(targetID).Send(R2API.Networking.NetworkDestination.Clients);
         }
 
         static public void enemyArrowRain()
@@ -1238,7 +1238,7 @@ namespace ArtifactGroup
                 AkSoundEngine.PostEvent(3706064369, c.gameObject);
 
                 // play sound for all players, localized to id of target
-                new networkBehavior.Playsound(3706064369, targetID).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(3706064369, targetID).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
 
@@ -1403,7 +1403,7 @@ namespace ArtifactGroup
         static public void distortScreen()
         {
             MessageHandler.globalMessage("The squad might be losing their minds...");
-            new networkBehavior.olbiterateUI().Send(R2API.Networking.NetworkDestination.Clients);
+            new NetworkBehavior.olbiterateUI().Send(R2API.Networking.NetworkDestination.Clients);
         }
         
         static public void Yummy(uint targetID)
@@ -1418,7 +1418,7 @@ namespace ArtifactGroup
                 uint idTarget = c.networkIdentity.netId.Value;
 
                 // play sound for all clients
-                new networkBehavior.Playsound(625680363, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
+                new NetworkBehavior.Playsound(625680363, idTarget).Send(R2API.Networking.NetworkDestination.Clients);
             }
         }
 
@@ -2095,7 +2095,7 @@ namespace ArtifactGroup
                         AkSoundEngine.PostEvent(uid, controller.GetCurrentBody().gameObject);
 
                         // play sound for all clients
-                        new networkBehavior.Playsound(uid, controller.GetCurrentBody().networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
+                        new NetworkBehavior.Playsound(uid, controller.GetCurrentBody().networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
                     }
                 }
             }

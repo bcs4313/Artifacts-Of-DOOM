@@ -11,9 +11,11 @@ namespace ArtifactsOfDoom
 	// Token: 0x02000003 RID: 3
 	internal static class OptionsLink
 	{
-		// Token: 0x06000008 RID: 8 RVA: 0x000020B0 File Offset: 0x000002B0
 		public static void constructSettings()
 		{
+			Sprite s = Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/icon.png");
+			ModSettingsManager.SetModIcon(s);
+
 			OptionsLink.AOW_BaseDropChance = OptionsLink.Config.Bind<float>("Artifact of War", "Base Item Droprate", 5f, "Base value for the player to get an item on a monster kill. Scales exponentially in later stages. \nRange: (0, 100) \nDefault: 5");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_BaseDropChance, new SliderConfig
 			{
@@ -154,36 +156,38 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Smash", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.smashBase)));
+			
+			OptionsLink.AOD_KeyUI = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Metamorphosis", "UI Keybind", new KeyboardShortcut(KeyCode.F2, Array.Empty<KeyCode>()), "Key to open and close the ui to transform into a monster (Client Side). \nDefault: F2");
+			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyUI));
 
-
-
-			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of your monster's abilities \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_DamageMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_DamageMultiplier);
 			ModSettingsManager.AddOption(AOM_DamageMultiplier_O);
 
-			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Health Multiplier", "1.0", "Multiplier for the base health of your monster's abilities \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Health Multiplier", "1.0", "Multiplier for the base health of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_HealthMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_HealthMultiplier);
 			ModSettingsManager.AddOption(AOM_HealthMultiplier_O);
 
-			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of your monster \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of all players \n(Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_SpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_SpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_SpeedMultiplier_O);
 
-			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of your monster \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_AttackSpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_AttackSpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_AttackSpeedMultiplier_O);
 
-			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of your monster (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of all players (Server Side). (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_CooldownMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_CooldownMultiplier);
 			ModSettingsManager.AddOption(AOM_CooldownMultiplier_O);
 
-			//OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Metamorphosis", "Size Multiplier", 1f, "Modifies the base size of your monster. \nRange: (0.05, 20) \nDefault: 1");
-			//ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOM_SizeMultiplier, new SliderConfig
-			//{
-			//	min = 0.05f,
-			//	max = 20f,
-			//	formatString = "{0:F2}"
-			//}));
+			OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Metamorphosis", "Size Multiplier", 1f, "Modifies the base size of all players (Server Side). Values > 3 produce extremely chunky transformations. \nRange: (0.05, 5) \nDefault: 1");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOM_SizeMultiplier, new SliderConfig
+			{
+				min = 0.05f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Metamorphosis", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.morphBase)));
 			/*
 			OptionsLink.AOM_MorphSelect = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Morph Select", "Beetle", "The monster that you will transform into upon entering the world. \n For now, this applies to ALL players when the artifact is enabled. (Default: Beetle)");
 			ModSettingsManager.AddOption(new ChoiceOption(Config.Bind("Disable",
@@ -301,6 +305,16 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOS_BossForceCoefficient.Value = 1f;
 		}
 
+		private static void morphBase()
+        {
+			OptionsLink.AOM_AttackSpeedMultiplier.Value= "1.0";
+			OptionsLink.AOM_CooldownMultiplier.Value = "1.0";
+			OptionsLink.AOM_DamageMultiplier.Value = "1.0";
+			OptionsLink.AOM_HealthMultiplier.Value = "1.0";
+			OptionsLink.AOM_SizeMultiplier.Value = 1.0f;
+			OptionsLink.AOM_SpeedMultiplier.Value = "1.0";
+		}
+
 		public static ConfigFile Config;
 
 		public static ConfigEntry<float> AOW_BaseDropChance;
@@ -335,6 +349,7 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<float> AOT_FixedMonsterScaling;
 		public static ConfigEntry<float> AOT_FixedBossScaling;
 
+		public static ConfigEntry<KeyboardShortcut> AOD_KeyUI;
 		public static ConfigEntry<string> AOM_DamageMultiplier;
 		public static StringInputFieldOption AOM_DamageMultiplier_O;
 		public static ConfigEntry<string> AOM_HealthMultiplier;
