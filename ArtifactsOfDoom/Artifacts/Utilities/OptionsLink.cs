@@ -8,13 +8,15 @@ using UnityEngine.Events;
 
 namespace ArtifactsOfDoom
 {
-	// Token: 0x02000003 RID: 3
 	internal static class OptionsLink
 	{
 		public static void constructSettings()
 		{
+			Debug.Log("AOD) Setting Icon and Desc");
 			Sprite s = Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/icon.png");
 			ModSettingsManager.SetModIcon(s);
+			ModSettingsManager.SetModDescription("Epic Gaming Moment.");
+			Debug.Log("(AOD) Done");
 
 			OptionsLink.AOW_BaseDropChance = OptionsLink.Config.Bind<float>("Artifact of War", "Base Item Droprate", 5f, "Base value for the player to get an item on a monster kill. Scales exponentially in later stages. \nRange: (0, 100) \nDefault: 5");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_BaseDropChance, new SliderConfig

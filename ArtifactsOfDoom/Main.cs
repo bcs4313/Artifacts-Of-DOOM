@@ -13,9 +13,9 @@ using UnityEngine;
 
 namespace ArtifactsOfDoom
 {
-	// Token: 0x02000005 RID: 5
-	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.4.4")]
+	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.5.3")]
 	[BepInDependency("com.bepis.r2api", "4.0.11")]
+	[BepInDependency("com.rune580.riskofoptions")]
 	[R2APISubmoduleDependency(new string[]
 	{
 		"NetworkingAPI",
@@ -28,10 +28,22 @@ namespace ArtifactsOfDoom
 	})]
 	public class Main : BaseUnityPlugin
 	{
+		public const string PluginGUID = "com.Dragonov7733.ArtifactsOfDoom";
+
+		public const string PluginAuthor = "bcs4313";
+
+		public const string PluginName = "Artifacts of Doom";
+
+		public const string PluginVersion = "1.5.3";
+
+
+
 		public static AssetBundle MorphAssets;
 		private void Awake()
 		{
 			Debug.Log("Artifacts Of Doom: Main is running...");
+			Type[] types = Assembly.GetExecutingAssembly().GetExportedTypes();
+
 			Main.MainAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/artifacticons");
 			Main.MorphAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/transformui");
 			Debug.Log("Artifacts Of Doom: Loaded Assets");
@@ -77,12 +89,16 @@ namespace ArtifactsOfDoom
 
 		// Token: 0x0400002A RID: 42
 		public const string ModGuid = "com.Dragonov7733.ArtifactsOfDoom";
-
+		
 		// Token: 0x0400002B RID: 43
 		public const string ModName = "Artifacts of Doom";
 
+		public const string GUID = "????";
+
+		public const string Name = "Among Us";
+
 		// Token: 0x0400002C RID: 44
-		public const string ModVer = "1.4.4";
+		public const string ModVer = "1.5.3";
 
 		// Token: 0x0400002D RID: 45
 		public static AssetBundle MainAssets;
