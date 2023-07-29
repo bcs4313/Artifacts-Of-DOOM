@@ -104,6 +104,7 @@ namespace ArtifactsOfDoom
                     //Debug.Log("Loop End");
                     // now clear the list of items
                     playerChest.Clear();
+                    chest[i].Clear(); // just to be safe...
                     playerChest.TrimExcess();
                 }
             }

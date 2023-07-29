@@ -155,16 +155,27 @@ namespace ArtifactGroup
 			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
-				if (NetworkServer.active && ArtifactEnabled)
+				if (ArtifactEnabled)
 				{
+					//Debug.Log("BODY_START__WAR");
 					if (body.teamComponent.teamIndex == TeamIndex.Monster)
 					{
-						body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level);
-						body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+						if (self.isBoss)
+						{
+							body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level) + (1000 * 2.5f);
+							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+						}
+						else
+						{
+							body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level);
+							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+						}
 
+						/*
 						// inform client of new max health
 						uint idTarget = body.networkIdentity.netId.Value;
 						new NetworkBehavior.informMaxHealth(idTarget, body.baseMaxHealth);
+						*/
 					}
 
 					//Debug.Log("DmgMult: " + ((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 32, Math.Max(RoR2.Run.instance.stageClearCount - 1.6, 0))));
@@ -173,6 +184,7 @@ namespace ArtifactGroup
 			On.RoR2.GlobalEventManager.OnCharacterHitGroundServer += (orig_OnCharacterHitGroundServer orig, global::RoR2.GlobalEventManager self, global::RoR2.CharacterBody characterBody, Vector3 impactVelocity) =>
 			{
 				orig.Invoke(self, characterBody, impactVelocity);
+				/*
 				if (NetworkServer.active && ArtifactEnabled)
 				{
 					if (characterBody.teamComponent.teamIndex == TeamIndex.Player)
@@ -184,6 +196,7 @@ namespace ArtifactGroup
 						new NetworkBehavior.informMaxHealth(idTarget, characterBody.baseMaxHealth);
 					}
 				}
+				*/
 				if (NetworkServer.active && characterBody.teamComponent.teamIndex == TeamIndex.Player && loadingStage == true && ArtifactEnabled)
 				{
 					if (deadLock == false)
@@ -193,6 +206,32 @@ namespace ArtifactGroup
 					}
 				}
 			};
+
+			On.RoR2.CharacterBody.RecalculateStats += (On.RoR2.CharacterBody.orig_RecalculateStats orig, global::RoR2.CharacterBody self) =>
+			{
+				orig.Invoke(self);
+				if (ArtifactEnabled)
+				{
+					// does this trigger on client and server? if so, the solution to health desync is pretty simple; just use a global hook!
+					//Debug.Log("RECALC_WAR");
+					if(self.teamComponent.teamIndex == TeamIndex.Monster)
+                    {
+						if (self.isBoss)
+						{
+							self.baseMaxHealth = scaleMonsterHealth(self.levelMaxHealth, self.level) + (1000 * 2.5f);
+						}
+						else
+						{
+							self.baseMaxHealth = scaleMonsterHealth(self.levelMaxHealth, self.level);
+						}
+					}
+					else if (self.teamComponent.teamIndex == TeamIndex.Player)
+                    {
+						self.baseMaxHealth = scalePlayerHealth(self.levelMaxHealth, self.level);
+					}
+				}
+			};
+
 			GlobalEventManager.onCharacterDeathGlobal += new Action<DamageReport>(this.SacrificeDrop);
 		}
 
@@ -353,7 +392,7 @@ namespace ArtifactGroup
 				/// drop chance scales with stages and time
 				double baseDropChance = OptionsLink.AOW_BaseDropChance.Value; // 8
 
-				Debug.Log("Base Drop Chance = " + baseDropChance.ToString());
+				//Debug.Log("Base Drop Chance = " + baseDropChance.ToString());
 
 				// evaluate the true drop chance now
 				baseDropChance = baseDropChance * Math.Pow(((Run.instance.stageClearCount) * 1)+1, OptionsLink.AOW_DropChanceExpScaling.Value);
@@ -361,7 +400,7 @@ namespace ArtifactGroup
 				Random rnd = new Random();
 				int gen = rnd.Next(1, 100);
 
-				Debug.Log("Calculated drop chance: " + baseDropChance.ToString());
+				//Debug.Log("Calculated drop chance: " + baseDropChance.ToString());
 
 				if (gen <= baseDropChance)
 				{

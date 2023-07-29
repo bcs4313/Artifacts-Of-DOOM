@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using RoR2;
+using ArtifactsOfDoom;
 
 namespace Messenger
 {
@@ -43,82 +44,85 @@ namespace Messenger
         // what class received it, color coded.
         static public void globalItemGetMessage(CharacterBody ch, ItemIndex dex, int rarity)
         {
-            // color of charactername
-            string charColor = "#ffffff";
-            string rarityColor = "#ffffff";
+            if (!OptionsLink.AOW_OmitMessages.Value)
+            {
+                // color of charactername
+                string charColor = "#ffffff";
+                string rarityColor = "#ffffff";
 
-            if (rarity == 1)
-            {
-                rarityColor = commonColor;
-            }
-            else if (rarity == 2)
-            {
-                rarityColor = uncommonColor;
-            }
-            else if (rarity == 3)
-            {
-                rarityColor = legendaryColor;
-            }
-            else
-            {
-                rarityColor = voidColor;
-            }
+                if (rarity == 1)
+                {
+                    rarityColor = commonColor;
+                }
+                else if (rarity == 2)
+                {
+                    rarityColor = uncommonColor;
+                }
+                else if (rarity == 3)
+                {
+                    rarityColor = legendaryColor;
+                }
+                else
+                {
+                    rarityColor = voidColor;
+                }
 
-            if (ch.GetDisplayName().CompareTo("Commando") == 0)
-            {
-                charColor = commandoColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Huntress") == 0)
-            {
-                charColor = huntressColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Bandit") == 0)
-            {
-                charColor = banditColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("MUL-T") == 0)
-            {
-                charColor = multColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Engineer") == 0)
-            {
-                charColor = engineerColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Artificer") == 0)
-            {
-                charColor = artificerColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Mercenary") == 0)
-            {
-                charColor = mercenaryColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("REX") == 0)
-            {
-                charColor = rexColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Loader") == 0)
-            {
-                charColor = loaderColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Acrid") == 0)
-            {
-                charColor = acridColor;
-            }
-            else if (ch.GetDisplayName().CompareTo("Captain") == 0)
-            {
-                charColor = captainColor;
-            }
-            else
-            {
-                charColor = captainColor;
-            }
+                if (ch.GetDisplayName().CompareTo("Commando") == 0)
+                {
+                    charColor = commandoColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Huntress") == 0)
+                {
+                    charColor = huntressColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Bandit") == 0)
+                {
+                    charColor = banditColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("MUL-T") == 0)
+                {
+                    charColor = multColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Engineer") == 0)
+                {
+                    charColor = engineerColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Artificer") == 0)
+                {
+                    charColor = artificerColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Mercenary") == 0)
+                {
+                    charColor = mercenaryColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("REX") == 0)
+                {
+                    charColor = rexColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Loader") == 0)
+                {
+                    charColor = loaderColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Acrid") == 0)
+                {
+                    charColor = acridColor;
+                }
+                else if (ch.GetDisplayName().CompareTo("Captain") == 0)
+                {
+                    charColor = captainColor;
+                }
+                else
+                {
+                    charColor = captainColor;
+                }
 
-            //Debug.Log(ch.name + " == " + "?");
+                //Debug.Log(ch.name + " == " + "?");
 
-            globalMessage("<color=" + charColor + ">" + ch.GetUserName() + "</color>" +
-                " has received: " + "<color=" + rarityColor + ">" +
-                Language.currentLanguage.GetLocalizedStringByToken
-                (PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken) + "</color>"); // notify player of getting item
+                globalMessage("<color=" + charColor + ">" + ch.GetUserName() + "</color>" +
+                    " has received: " + "<color=" + rarityColor + ">" +
+                    Language.currentLanguage.GetLocalizedStringByToken
+                    (PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken) + "</color>"); // notify player of getting item
+            }
         }
 
         /// <summary>
@@ -128,28 +132,31 @@ namespace Messenger
         /// <param name="rarity"></param>
         static public void GlobalItemDeadMessage(ItemIndex dex, int rarity, String username)
         {
-            string rarityColor = "#ffffff";
-            if (rarity == 1)
+            if (!OptionsLink.AOW_OmitMessages.Value)
             {
-                rarityColor = commonColor;
-            }
-            else if (rarity == 2)
-            {
-                rarityColor = uncommonColor;
-            }
-            else if (rarity == 3)
-            {
-                rarityColor = legendaryColor;
-            }
-            else
-            {
-                rarityColor = voidColor;
-            }
+                string rarityColor = "#ffffff";
+                if (rarity == 1)
+                {
+                    rarityColor = commonColor;
+                }
+                else if (rarity == 2)
+                {
+                    rarityColor = uncommonColor;
+                }
+                else if (rarity == 3)
+                {
+                    rarityColor = legendaryColor;
+                }
+                else
+                {
+                    rarityColor = voidColor;
+                }
 
-            globalMessage("<color=" + commonColor + ">" + username + " (dead) " + "</color>" +
-                "has received: " + "<color=" + rarityColor + ">" +
-                Language.currentLanguage.GetLocalizedStringByToken
-                (PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken) + "</color>" + "..."); // notify player of getting item
+                globalMessage("<color=" + commonColor + ">" + username + " (dead) " + "</color>" +
+                    "has received: " + "<color=" + rarityColor + ">" +
+                    Language.currentLanguage.GetLocalizedStringByToken
+                    (PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken) + "</color>" + "..."); // notify player of getting item
+            }
         }
     }
 

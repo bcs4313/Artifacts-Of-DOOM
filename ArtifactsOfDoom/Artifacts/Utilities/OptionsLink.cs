@@ -45,6 +45,38 @@ namespace ArtifactsOfDoom
 			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOW_MaxSwarm));
 			OptionsLink.AOW_EntityCap = OptionsLink.Config.Bind<string>("Artifact of War", "Monster Count Cap", "250", "Max amount of monsters that can exist on a stage at once. \nRange: (0.0-inf) \nDefault: 250");
 			ModSettingsManager.AddOption(new StringInputFieldOption(OptionsLink.AOW_EntityCap));
+
+			OptionsLink.AOW_OmitMessages = OptionsLink.Config.Bind<bool>("Artifact of War", "Omit Messages", false, "Players will not receive item messages if they are given an item by this artifact. \nDefault: false");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOW_OmitMessages));
+
+			/*
+			OptionsLink.AOW_EnemyDmgScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Damage Scaling", 2f, "An exponent for the damage scaling of monsters. Used to counter player health scaling. \nRange: (0.1-5.0) \nDefault: 2");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyDmgScaling, new SliderConfig
+			{
+				min = 0.1f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+
+			OptionsLink.AOW_EnemyHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Health Scaling", 2f, "An exponent for the health scaling of monsters. Increases with difficulty and stage. Used to counter the player's high item count. \nRange: (0.1-5.0) \nDefault: 2");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyHealthScaling, new SliderConfig
+			{
+				min = 0.1f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+
+			OptionsLink.AOW_PlayerHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Player Health Scaling", 2f, "An exponent for the health scaling of players. Base health increases every stage. \nUsed to counter the monster team's high item count. \nRange: (0.1-5.0) \nDefault: 2");
+			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_PlayerHealthScaling, new SliderConfig
+			{
+				min = 0.1f,
+				max = 5f,
+				formatString = "{0:F2}"
+			}));
+			*/
+
+
+
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of War", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.warBase)));
 			
 			OptionsLink.AOU_DeathRecovery = OptionsLink.Config.Bind<bool>("Artifact of Unity", "Death Recovery", true, "Players that die will continue to receive the items collected by other players. The items will be restored once they are revived.");
@@ -69,12 +101,14 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			});
 			ModSettingsManager.AddOption(OptionsLink.AOE_EventChanceOffset_O);
-			OptionsLink.AOE_SimultaneousOutcomes = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "Simultaneous Outcomes", false, "All Events under the same action will occur at the same time. Default: False");
+			OptionsLink.AOE_SimultaneousOutcomes = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "Simultaneous Outcomes", false, "All Events under the same action will occur at the same time. \nDefault: False");
 			OptionsLink.AOE_SimultaneousOutcomes_O = new CheckBoxOption(OptionsLink.AOE_SimultaneousOutcomes);
 			ModSettingsManager.AddOption(OptionsLink.AOE_SimultaneousOutcomes_O);
-			OptionsLink.AOE_NewEventsPerStage = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "New Events Per Stage", false, "A new set of outcomes will be generated and linked to actions each time a stage is completed. Default: False");
+			OptionsLink.AOE_NewEventsPerStage = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "New Events Per Stage", false, "A new set of outcomes will be generated and linked to actions each time a stage is completed. \nDefault: False");
 			OptionsLink.AOE_NewEventsPerStage_O = new CheckBoxOption(OptionsLink.AOE_NewEventsPerStage);
 			ModSettingsManager.AddOption(OptionsLink.AOE_NewEventsPerStage_O);
+			OptionsLink.AOE_OmitMessages = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "Omit Messages", false, "Players will not receive messages from the effects triggered by this artifact. \nDefault: false");
+			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOE_OmitMessages));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Entropy", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.voidBase)));
 			OptionsLink.AOT_CreditScalingMultiplier = OptionsLink.Config.Bind<float>("Artifact of The Titans", "Credit Scaling", 0.15f, "How much monsters scale to credit cost (linear). Doesn't apply to teleporter bosses. \nRange: (0, 4) \nDefault: 0.15");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOT_CreditScalingMultiplier, new SliderConfig
@@ -159,37 +193,37 @@ namespace ArtifactsOfDoom
 			}));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Smash", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.smashBase)));
 			
-			OptionsLink.AOD_KeyUI = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Metamorphosis", "UI Keybind", new KeyboardShortcut(KeyCode.F2, Array.Empty<KeyCode>()), "Key to open and close the ui to transform into a monster (Client Side). \nDefault: F2");
+			OptionsLink.AOD_KeyUI = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Reconstruction", "UI Keybind", new KeyboardShortcut(KeyCode.F2, Array.Empty<KeyCode>()), "Key to open and close the ui to transform into a monster (Client Side). \nDefault: F2");
 			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyUI));
 
-			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_DamageMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_DamageMultiplier);
 			ModSettingsManager.AddOption(AOM_DamageMultiplier_O);
 
-			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Health Multiplier", "1.0", "Multiplier for the base health of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Health Multiplier", "1.0", "Multiplier for the base health of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_HealthMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_HealthMultiplier);
 			ModSettingsManager.AddOption(AOM_HealthMultiplier_O);
 
-			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of all players \n(Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of all players \n(Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_SpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_SpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_SpeedMultiplier_O);
 
-			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_AttackSpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_AttackSpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_AttackSpeedMultiplier_O);
 
-			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of all players (Server Side). (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of all players (Server Side). (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_CooldownMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_CooldownMultiplier);
 			ModSettingsManager.AddOption(AOM_CooldownMultiplier_O);
 
-			OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Metamorphosis", "Size Multiplier", 1f, "Modifies the base size of all players (Server Side). Values > 3 produce extremely chunky transformations. \nRange: (0.05, 5) \nDefault: 1");
+			OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Reconstruction", "Size Multiplier", 1f, "Modifies the base size of all players (Server Side). Values > 3 produce extremely chunky transformations. \nRange: (0.05, 5) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOM_SizeMultiplier, new SliderConfig
 			{
 				min = 0.05f,
 				max = 5f,
 				formatString = "{0:F2}"
 			}));
-			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Metamorphosis", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.morphBase)));
+			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Reconstruction", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.morphBase)));
 			/*
 			OptionsLink.AOM_MorphSelect = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Morph Select", "Beetle", "The monster that you will transform into upon entering the world. \n For now, this applies to ALL players when the artifact is enabled. (Default: Beetle)");
 			ModSettingsManager.AddOption(new ChoiceOption(Config.Bind("Disable",
@@ -276,6 +310,7 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_EventChanceOffset.Value = 0f;
 			OptionsLink.AOE_SimultaneousOutcomes.Value = false;
 			OptionsLink.AOE_NewEventsPerStage.Value = false;
+			OptionsLink.AOE_OmitMessages.Value = false;
 		}
 
 		private static void warBase()
@@ -283,9 +318,13 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_BaseDropChance.Value = 5f;
 			OptionsLink.AOW_DropChanceExpScaling.Value = 1.4f;
 			OptionsLink.AOW_EvolutionExpScaling.Value = 2.4f;
+			//OptionsLink.AOW_EnemyHealthScaling.Value = 2.0f;
+			//OptionsLink.AOW_PlayerHealthScaling.Value = 2.0f;
+			//OptionsLink.AOW_EnemyDmgScaling.Value = 2.0f;
 			OptionsLink.AOW_EntityCap.Value = "250";
 			OptionsLink.AOW_MaxSwarm.Value = "5";
 			OptionsLink.AOW_SwarmTime.Value = "5";
+			OptionsLink.AOW_OmitMessages.Value = false;
 		}
 
 		private static void titanBase()
@@ -322,9 +361,13 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<float> AOW_BaseDropChance;
 		public static ConfigEntry<float> AOW_DropChanceExpScaling;
 		public static ConfigEntry<float> AOW_EvolutionExpScaling;
+		public static ConfigEntry<float> AOW_EnemyDmgScaling;
+		public static ConfigEntry<float> AOW_PlayerHealthScaling;
+		public static ConfigEntry<float> AOW_EnemyHealthScaling;
 		public static ConfigEntry<string> AOW_SwarmTime;
 		public static ConfigEntry<string> AOW_MaxSwarm;
 		public static ConfigEntry<string> AOW_EntityCap;
+		public static ConfigEntry<bool> AOW_OmitMessages;
 
 		// Token: 0x04000009 RID: 9
 		public static ConfigEntry<string> AOE_Seed;
@@ -333,6 +376,7 @@ namespace ArtifactsOfDoom
 		public static ConfigEntry<float> AOE_EventChanceOffset;
 		public static ConfigEntry<bool> AOE_SimultaneousOutcomes;
 		public static ConfigEntry<bool> AOE_NewEventsPerStage;
+		public static ConfigEntry<bool> AOE_OmitMessages;
 
 		public static ConfigEntry<bool> AOU_ShareLunarItems;
 		public static ConfigEntry<bool> AOU_ShareVoidItems;

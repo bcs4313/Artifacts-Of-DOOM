@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace ArtifactsOfDoom
 {
-	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.5.3")]
+	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.6.0")]
 	[BepInDependency("com.bepis.r2api", "4.0.11")]
 	[BepInDependency("com.rune580.riskofoptions")]
 	[R2APISubmoduleDependency(new string[]
@@ -34,7 +34,7 @@ namespace ArtifactsOfDoom
 
 		public const string PluginName = "Artifacts of Doom";
 
-		public const string PluginVersion = "1.5.3";
+		public const string PluginVersion = "1.6.0";
 
 
 
@@ -87,18 +87,13 @@ namespace ArtifactsOfDoom
 			OptionsLink.constructSettings();
 		}
 
-		// Token: 0x0400002A RID: 42
+		// this section is strictly to increase compatibility with other mods
 		public const string ModGuid = "com.Dragonov7733.ArtifactsOfDoom";
-		
-		// Token: 0x0400002B RID: 43
 		public const string ModName = "Artifacts of Doom";
-
-		public const string GUID = "????";
-
-		public const string Name = "Among Us";
-
-		// Token: 0x0400002C RID: 44
-		public const string ModVer = "1.5.3";
+		public const string ModAutho = "bcs4313";
+		public const string GUID = "com.Dragonov7733.ArtifactsOfDoom";
+		public const string Name = "Artifacts of Doom";
+		public const string ModVer = "1.6.0";
 
 		// Token: 0x0400002D RID: 45
 		public static AssetBundle MainAssets;

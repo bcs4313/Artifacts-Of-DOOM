@@ -86,7 +86,7 @@ namespace ArtifactGroup
 				component.sizeDelta = Vector2.zero;
 				component.anchoredPosition = Vector2.zero;
 				Debug.Log("Artifacts Of Doom (L4D): Loaded Hud");
-                RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount++;
+                //RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount++;
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace ArtifactGroup
 					bool flag3 = TransformSpace.keyReact;
 					if (flag3)
 					{
-                        RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
+                        //RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
 						TransformSpace.keyReact = false;
 					}
 				}
@@ -137,7 +137,7 @@ namespace ArtifactGroup
 					bool flag5 = TransformSpace.keyReact;
 					if (flag5)
 					{
-                        RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
+                        //RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
 						TransformSpace.keyReact = false;
 					}
 				}

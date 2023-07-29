@@ -75,7 +75,7 @@ namespace ArtifactGroup
                             if (modelTransform)
                             {
                                 modelLocator._modelTransform.localScale = size;
-                                MessageHandler.globalMessage("Is this hell?");
+                                msg("Is this hell?");
                                 // trigger size change for client
                                 // generate a raw client package
                                 uint idTarget = c.networkIdentity.netId.Value;
@@ -83,12 +83,12 @@ namespace ArtifactGroup
                             }
                             else
                             {
-                                MessageHandler.globalMessage("??");
+                                msg("??");
                             }
                         }
                         else
                         {
-                            MessageHandler.globalMessage("?");
+                            msg("?");
                         }
                     }
                 }
@@ -119,14 +119,14 @@ namespace ArtifactGroup
                         return;
                     }
 
-                    MessageHandler.globalMessage("\"ooga I shit pant\"");
+                    msg("\"ooga I shit pant\"");
                     Transform modelTransform = modelLocator.modelBaseTransform;
                     //Mesh m = c.gameObject.GetComponent<MeshFilter>().sharedMesh;
                     if (modelTransform)
                     {
                         modelLocator._modelTransform.localScale = size;
 
-                        MessageHandler.globalMessage(c.GetUserName() + " needs to lay off the food...");
+                        msg(c.GetUserName() + " needs to lay off the food...");
                         
                         // reduce firerate by 35%, Increase Dmg by 35%, 
                         // Reduce speed by 25%, increase health by 25%
@@ -148,12 +148,12 @@ namespace ArtifactGroup
                     }
                     else
                     {
-                        MessageHandler.globalMessage("??");
+                        msg("??");
                     }
                 }
                 else
                 {
-                    MessageHandler.globalMessage("?");
+                    msg("?");
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace ArtifactGroup
                         c.baseMoveSpeed *= (float)1.25;
                         c.baseMaxHealth *= (float)0.65;
 
-                        MessageHandler.globalMessage(c.GetUserName() + " lost some weight. Anorexia?");
+                        msg(c.GetUserName() + " lost some weight. Anorexia?");
 
                         // trigger size change for client
                         // generate a raw client package
@@ -204,12 +204,12 @@ namespace ArtifactGroup
                     }
                     else
                     {
-                        MessageHandler.globalMessage("??");
+                        msg("??");
                     }
                 }
                 else
                 {
-                    MessageHandler.globalMessage("?");
+                    msg("?");
                 }
             }
         }
@@ -224,7 +224,7 @@ namespace ArtifactGroup
                 double y = r.NextDouble() * 40 + 12;
                 double z = r.NextDouble() * 40;
 
-                MessageHandler.globalMessage("Oopsies! Poor " + c.GetUserName() + " is stupid and yeeted himself!");
+                msg("Oopsies! Poor " + c.GetUserName() + " is stupid and yeeted himself!");
                 Vector3 size = new Vector3();
                 size.x = (float)x * c.characterMotor.mass;
                 size.y = (float)y * c.characterMotor.mass;
@@ -240,7 +240,7 @@ namespace ArtifactGroup
         static public void BlackHoleOfDoom()
         {
             int spawnCount = r.Next(1, 8);
-            MessageHandler.globalMessage("BLACK HOLES! Danger Level: " + spawnCount);
+            msg("BLACK HOLES! Danger Level: " + spawnCount);
             for (int i = 0; i < spawnCount; i++)
             {
                 Vector3 position = findRandomPosGround();
@@ -289,7 +289,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " is super high bruh...");
+                msg(c.GetUserName() + " is super high bruh...");
                 c.AddTimedBuff(RoR2.RoR2Content.Buffs.TonicBuff, 20, 1);
                 AkSoundEngine.PostEvent(3190451810, c.gameObject);
 
@@ -312,7 +312,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " Received the buff of the gods!");
+                msg(c.GetUserName() + " Received the buff of the gods!");
                 c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixBlue, 22, 1);
                 c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixRed, 22, 1);
                 c.AddTimedBuff(RoR2.RoR2Content.Buffs.AffixWhite, 22, 1);
@@ -336,7 +336,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " just got a freebie!");
+                msg(c.GetUserName() + " just got a freebie!");
                 new ArtifactOfWar().giveItem(Vector3.zero, c);
             }
         }
@@ -352,11 +352,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Boss Shrines have spawned on the map!");
+                msg(spawnCount + " Boss Shrines have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Boss Shrine has spawned on the map!");
+                msg("A Boss Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -379,7 +379,7 @@ namespace ArtifactGroup
         {
             int spawnCount = r.Next(10, 500);
 
-            MessageHandler.globalMessage("AIR STRIKE IMMINENT! Danger level: " + spawnCount);
+            msg("AIR STRIKE IMMINENT! Danger level: " + spawnCount);
 
             entropyBlaster.airstrikeQueue += spawnCount;
         }
@@ -399,7 +399,7 @@ namespace ArtifactGroup
                         new NetworkBehavior.Playsound(1288205242, c.networkIdentity.netId.Value).Send(R2API.Networking.NetworkDestination.Clients);
                     }
                 }
-                MessageHandler.globalMessage("Free Money!");
+                msg("Free Money!");
                 TeamManager.instance.GiveTeamMoney(TeamIndex.Player, (uint)(25 * Math.Pow(RoR2.Run.instance.difficultyCoefficient, 1.25)));
             }
             catch { }
@@ -416,11 +416,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Crates have spawned on the map!");
+                msg(spawnCount + " Crates have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Crate has spawned on the map!");
+                msg("A Crate has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -441,7 +441,7 @@ namespace ArtifactGroup
 
         static public void amogus(uint targetID)
         {
-            MessageHandler.globalMessage("A M O G U S");
+            msg("A M O G U S");
             try
             {
 
@@ -464,7 +464,7 @@ namespace ArtifactGroup
             
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " has been SMITED!");
+                msg(c.GetUserName() + " has been SMITED!");
                 if (c.mainHurtBox)
                 {
                     RoR2.Orbs.OrbManager.instance.AddOrb(new LightningStrikeOrb
@@ -508,7 +508,7 @@ namespace ArtifactGroup
 
                 m.AddTimedBuff(RoR2.RoR2Content.Buffs.Entangle, 0.3f, 999);
                 await Task.Delay(500);
-                MessageHandler.globalMessage("The power of Zeus, in your hands!");
+                msg("The power of Zeus, in your hands!");
                 //c.AddTimedBuff(RoR2.RoR2Content.Buffs.OnFire, 10, 999);
                 //c.AddTimedBuff(RoR2.RoR2Content.Buffs.Overheat, 10, 999);
             }
@@ -523,7 +523,7 @@ namespace ArtifactGroup
             //    pastRUNID = RoR2.Run.instance.GetUniqueId();
             //}
 
-            MessageHandler.globalMessage("The Meteors come... In increasing numbers...");
+            msg("The Meteors come... In increasing numbers...");
             CharacterBody[] targets = new CharacterBody[RoR2.CharacterMaster._readOnlyInstancesList.Count];
             for(int i = 0; i < RoR2.CharacterMaster._readOnlyInstancesList.Count; i++)
             {
@@ -600,7 +600,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("Free stuff!!! I guess?");
+                msg("Free stuff!!! I guess?");
                 ItemIndex dex;
                 Debug.Log("Spawning Lunar...");
                 int len = lunars.Count;
@@ -611,10 +611,13 @@ namespace ArtifactGroup
                 String itemName = PickupCatalog.FindPickupIndex(dex).pickupDef.nameToken;
 
                 c.inventory.GiveItem(dex);
-                MessageHandler.globalItemGetMessage(c, dex, 3);
+                if (!OptionsLink.AOE_OmitMessages.Value)
+                {
+                    MessageHandler.globalItemGetMessage(c, dex, 3);
+                }
             }
 
-        }
+            }
 
         // Fire a BFG projectile in front of the player, dealing massive DMG
         static public void BFGFriendly(uint targetID)
@@ -622,7 +625,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("A Big Fuckin Blast to kill a Big Monster's ASS");
+                msg("A Big Fuckin Blast to kill a Big Monster's ASS");
                 c.equipmentSlot.bfgChargeTimer = 0.01f;
                 c.equipmentSlot.subcooldownTimer = 0.01f;
             }
@@ -656,7 +659,7 @@ namespace ArtifactGroup
                     aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction), monsterShooter.gameObject,
                     monsterShooter.damage * 0.1f + (float)(c.healthComponent.fullCombinedHealth * 0.03), 4f, Util.CheckRoll(monsterShooter.crit, monsterShooter.master),
                     DamageColorIndex.Item, null, -1f);
-                MessageHandler.globalMessage("Looks like DoomGuy's a little pissed at you...");
+                msg("Looks like DoomGuy's a little pissed at you...");
             }
         }
 
@@ -665,7 +668,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("IT BUUUURNS! BUT IT BURNS GOOOOOD!");
+                msg("IT BUUUURNS! BUT IT BURNS GOOOOOD!");
                 c.AddHelfireDuration(12f);
 
                 AkSoundEngine.PostEvent(333560252, c.gameObject);
@@ -681,7 +684,7 @@ namespace ArtifactGroup
             CharacterBody monsterShooter = findRandomMonster();
             if (monsterShooter != null)
             {
-                MessageHandler.globalMessage("YOU DO NOT GRASP THE FLAME! THE FLAME... GRASPS YOU!");
+                msg("YOU DO NOT GRASP THE FLAME! THE FLAME... GRASPS YOU!");
                 monsterShooter.AddHelfireDuration(12f);
 
                 AkSoundEngine.PostEvent(61879681, monsterShooter.gameObject);
@@ -696,7 +699,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("I have CrIpPlInG dEpReSsIoN");
+                msg("I have CrIpPlInG dEpReSsIoN");
                 Vector3 pos = findRandomPosAir();
                 Vector3 pos2 = findRandomPosAir();
                 Vector3 pos3 = findRandomPosAir();
@@ -736,7 +739,7 @@ namespace ArtifactGroup
                         transformedPlayers.Add(tp);
                         Random r = new Random();
                         var n = r.Next(3, 60);
-                        MessageHandler.globalMessage(c.GetUserName() + " become a gang member for " + n + " seconds!");
+                        msg(c.GetUserName() + " become a gang member for " + n + " seconds!");
 
                         user.SetBodyPreference(BodyCatalog.FindBodyIndex(randoMob));
                         c.master.Respawn(c.footPosition, c.transform.rotation);
@@ -779,7 +782,7 @@ namespace ArtifactGroup
                 directorSpawnRequest.ignoreTeamMemberLimit = true;
                 Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
                 DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
-                MessageHandler.globalMessage("A gang member has appeared!");
+                msg("A gang member has appeared!");
             }
             catch
             {
@@ -799,13 +802,13 @@ namespace ArtifactGroup
 
                 c.inventory.GiveItem(randoItem);
 
-                MessageHandler.globalMessage("You have received a gang item!");
+                msg("You have received a gang item!");
             }
         }
 
         static public void quantumTunnel()
         {
-            MessageHandler.globalMessage("This is obviously possible... It aint rocket scien-wait...");
+            msg("This is obviously possible... It aint rocket scien-wait...");
             GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(Resources.Load<GameObject>("Prefabs/NetworkedObjects/Zipline"));
             ZiplineController component2 = gameObject.GetComponent<ZiplineController>();
             component2.SetPointAPosition(findRandomPosGround());
@@ -818,7 +821,7 @@ namespace ArtifactGroup
 
         static public void nukeFriendly(uint targetID)
         {
-            MessageHandler.globalMessage("The Sentient Pink Goo Follows your calling, for now...");
+            msg("The Sentient Pink Goo Follows your calling, for now...");
 
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
@@ -842,7 +845,7 @@ namespace ArtifactGroup
             CharacterBody monsterOwner = findRandomMonster();
             if (monsterOwner != null)
             {
-                MessageHandler.globalMessage("R U N!!! THE SENTIENT PINK GOO COMES FOR CONSUMPTION!!!");
+                msg("R U N!!! THE SENTIENT PINK GOO COMES FOR CONSUMPTION!!!");
                 Vector3 position = findRandomPosGround();
                 GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(Resources.Load("Prefabs/NetworkedObjects/OrbitalLaser"), position, Quaternion.identity);
                 gameObject.GetComponent<OrbitalLaserController>().ownerBody = monsterOwner;
@@ -858,7 +861,7 @@ namespace ArtifactGroup
         // add a new random outcome to a random hook in the event pool. heheheheheh
         static public void newOutcome()
         {
-            MessageHandler.globalMessage("A new outcome was added to the action pool. Good luck...");
+            msg("A new outcome was added to the action pool. Good luck...");
             ArtifactOfEntropy.entropyHost.addRandomOutcome();
         }
 
@@ -871,7 +874,7 @@ namespace ArtifactGroup
             {
                 try
                 {
-                    MessageHandler.globalMessage("KOBE");
+                    msg("KOBE");
                     for (int i = 0; i < 5; i++)
                     {
                         CharacterBody monsterShooter = findRandomMonster();
@@ -910,7 +913,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("Mr. " + c.GetUserName() + ", I aint feelin so good...");
+                msg("Mr. " + c.GetUserName() + ", I aint feelin so good...");
                 if (c.healthComponent.health > 0)
                 {
                     var oldHealth = c.healthComponent.health;
@@ -931,7 +934,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("fren");
+                msg("fren");
                 CharacterMaster characterMaster = (c != null) ? c.master : null;
 
                 GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/GummyCloneProjectile");
@@ -956,7 +959,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("LooK! I SaWeD thIS MONSTER iN hAlF!!1!11");
+                msg("LooK! I SaWeD thIS MONSTER iN hAlF!!1!11");
                 c.equipmentSlot.FireSaw();
             }
         }
@@ -967,7 +970,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("hehe thicc boi");
+                msg("hehe thicc boi");
                 c.equipmentSlot.FireGainArmor();
             }
         }
@@ -978,7 +981,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("drink up ur sprote ya goatt");
+                msg("drink up ur sprote ya goatt");
                 Ray ray = new Ray(c.equipmentSlot.GetAimRay().origin, Vector3.down);
                 RaycastHit raycastHit;
                 GameObject prefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/VendingMachineProjectile");
@@ -991,7 +994,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("S U C C");
+                msg("S U C C");
                 c.equipmentSlot.FireBlackhole();
             }
         }
@@ -1001,7 +1004,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("Diplomatic Missiles Imbound!");
+                msg("Diplomatic Missiles Inbound!");
                 for (int i = 0; i < 10; i++)
                 {
                     c.equipmentSlot.FireMissile();
@@ -1015,7 +1018,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage("ZZZZZZZZZ SCANNNING ZZZZZZ CONTROLSZZZZZZZZZZZZZZZZZZ MANIPULATING SCIENTIFIC DATA SHWOWAHEUAHS TAKE OVER BLAST CONTROLLLLLLLLLLLLLL WORLD GOVMENT SHOWUAHSOUDSHEWWWW SHUT DOWN INFASTRUCTURE HWOUDHSO SSHASI HSHIP EVERUHTN TO CHINA SOHWSUHAWYUH ITS JUST BERUUUUUUUMPHHHHMMMMMMMMMMMMM LOOK AT THIS PERSON *HHIZZZ STATIC NOISES*");
+                msg("ZZZZZZZZZ SCANNNING ZZZZZZ CONTROLSZZZZZZZZZZZZZZZZZZ MANIPULATING SCIENTIFIC DATA SHWOWAHEUAHS TAKE OVER BLAST CONTROLLLLLLLLLLLLLL WORLD GOVMENT SHOWUAHSOUDSHEWWWW SHUT DOWN INFASTRUCTURE HWOUDHSO SSHASI HSHIP EVERUHTN TO CHINA SOHWSUHAWYUH ITS JUST BERUUUUUUUMPHHHHMMMMMMMMMMMMM LOOK AT THIS PERSON *HHIZZZ STATIC NOISES*");
                 c.equipmentSlot.FireScanner();
             }
         }
@@ -1026,7 +1029,7 @@ namespace ArtifactGroup
             if (c != null)
             {
                 c.equipmentSlot.FireFireBallDash();
-                MessageHandler.globalMessage("You got dat fire burnin on the dannceee flowW");
+                msg("You got dat fire burnin on the dannceee flowW");
             }
         }
 
@@ -1036,7 +1039,7 @@ namespace ArtifactGroup
             if (c != null)
             {
                 c.equipmentSlot.FireMolotov();
-                MessageHandler.globalMessage("I SAY YOU GOT DAT FIYAH BURNIN ON DUH DANCE FLOWWWWWWW");
+                msg("I SAY YOU GOT DAT FIYAH BURNIN ON DUH DANCE FLOWWWWWWW");
             }
         }
 
@@ -1046,7 +1049,7 @@ namespace ArtifactGroup
             CharacterBody c = findRandomMonster();
             if (c != null)
             {
-                MessageHandler.globalMessage("Rebellion blood fuels the great enemy horde...");
+                msg("Rebellion blood fuels the great enemy horde...");
                 c.equipmentSlot.FireTeamWarCry();
             }
         }
@@ -1056,7 +1059,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("How dO i FlY thIS tHIngnNGNGNGNGNGnng???!");
+                msg("How dO i FlY thIS tHIngnNGNGNGNGNGnng???!");
                 for (int i = 0; i < 1; i++)
                 {
                     CharacterBody c = findRandomMonster();
@@ -1070,7 +1073,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("You should've 'saw' that coming...");
+                msg("You should've 'saw' that coming...");
                 for (int i = 0; i < 3; i++)
                 {
                     CharacterBody c = findRandomMonster();
@@ -1084,7 +1087,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("Burn in hell. Just like the monster you a--wait a minute");
+                msg("Burn in hell. Just like the monster you a--wait a minute");
                 for (int i = 0; i < 3; i++)
                 {
                     CharacterBody c = findRandomMonster();
@@ -1098,7 +1101,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("He's a big chungusssssssss big chungusssssssss");
+                msg("He's a big chungusssssssss big chungusssssssss");
                 for (int i = 0; i < 5; i++)
                 {
                     CharacterBody c = findRandomMonster();
@@ -1109,7 +1112,7 @@ namespace ArtifactGroup
         // spawn a legendary chest in a random location on the map
         static public void legendaryChest()
         {
-            MessageHandler.globalMessage("A Legendary Chest has spawned on the map!");
+            msg("A Legendary Chest has spawned on the map!");
             SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscGoldChest");
             card.directorCreditCost = 0;
             DirectorCore.spawnedObjects.Capacity = 99999;
@@ -1127,7 +1130,7 @@ namespace ArtifactGroup
         // spawn a void chest in a random location on the map
         static public void voidChest()
         {
-            MessageHandler.globalMessage("A Void Chest has spawned on the map!");
+            msg("A Void Chest has spawned on the map!");
             SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscVoidChest");
             card.directorCreditCost = 0;
             DirectorCore.spawnedObjects.Capacity = 99999;
@@ -1147,7 +1150,7 @@ namespace ArtifactGroup
             CharacterBody c = grabUser(targetID); // get user body to affect using UID
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " is feeling a bit dizzy...");
+                msg(c.GetUserName() + " is feeling a bit dizzy...");
 
                 var rnd = new Random();
 
@@ -1173,7 +1176,7 @@ namespace ArtifactGroup
             var owner = findRandomMonster();
             if (owner != null)
             {
-                MessageHandler.globalMessage("The volleys tear at your flesh and bone!");
+                msg("The volleys tear at your flesh and bone!");
                 // 30 random spots
                 for (int i = 0; i < 30; i++)
                 {
@@ -1189,7 +1192,7 @@ namespace ArtifactGroup
             var owner = grabUser(targetID);
             if (owner != null)
             {
-                MessageHandler.globalMessage("May the spectral arrows guide your killing...");
+                msg("May the spectral arrows guide your killing...");
                 Ray aimRay = owner.equipmentSlot.GetAimRay();
                 float maxDistance = 1000f;
                 RaycastHit raycastHit;
@@ -1206,7 +1209,7 @@ namespace ArtifactGroup
         // fire an engineer mine from your aimray
         static public void crabRaid()
         {
-            MessageHandler.globalMessage("AHOY SPONGEBOB! I HAVE BEEN PLACED IN ROR2 TO GET SLAUGHTERED BY A BLOODTHIRSY GOBLIN ARGARGARGARG!!!");
+            msg("AHOY SPONGEBOB! I HAVE BEEN PLACED IN ROR2 TO GET SLAUGHTERED BY A BLOODTHIRSY GOBLIN ARGARGARGARG!!!");
             for (int i = 0; i < 3; i++)
             {
                 SpawnCard card = Resources.Load<SpawnCard>("spawncards/characterspawncards/cscHermitCrab");  
@@ -1232,7 +1235,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " believes he can flyyyyyyyyyyy");
+                msg(c.GetUserName() + " believes he can flyyyyyyyyyyy");
                 c.equipmentSlot.FireJetpack();
 
                 AkSoundEngine.PostEvent(3706064369, c.gameObject);
@@ -1247,7 +1250,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("Look at the little demons go!");
+                msg("Look at the little demons go!");
                 for (int i = 0; i < 10; i++)
                 {
                     CharacterBody c = findRandomMonster();
@@ -1261,7 +1264,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage("aaah spicy crit");
+                msg("aaah spicy crit");
                 c.AddTimedBuff(RoR2Content.Buffs.FullCrit, 8f);
             }
         }
@@ -1287,7 +1290,7 @@ namespace ArtifactGroup
                 var c = grabUser(targetID);
                 if (c != null)
                 {
-                    MessageHandler.globalMessage("BRO FIST");
+                    msg("BRO FIST");
                     var ray = c.equipmentSlot.GetAimRay();
                     RaycastHit raycastHit;
                     // simulate raycast hitting a surface
@@ -1322,7 +1325,7 @@ namespace ArtifactGroup
                 var c = grabUser(targetID);
                 if (c != null)
                 {
-                    MessageHandler.globalMessage("DONT GET FISTED!!!!?!?");
+                    msg("DONT GET FISTED!!!!?!?");
                     var ray = c.equipmentSlot.GetAimRay();
                     RaycastHit raycastHit;
                     // simulate raycast hitting a surface
@@ -1351,7 +1354,7 @@ namespace ArtifactGroup
         // code is such a strange little thing...
         static public void avengersASSEMBLE()
         {
-            MessageHandler.globalMessage("AVENGERS... ASSEMBLE!!!");
+            msg("AVENGERS... ASSEMBLE!!!");
 
             for (int i = 0; i < 3; i++)
             {
@@ -1402,7 +1405,7 @@ namespace ArtifactGroup
 
         static public void distortScreen()
         {
-            MessageHandler.globalMessage("The squad might be losing their minds...");
+            msg("The squad might be losing their minds...");
             new NetworkBehavior.olbiterateUI().Send(R2API.Networking.NetworkDestination.Clients);
         }
         
@@ -1411,7 +1414,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage("mmmm yummy froot");
+                msg("mmmm yummy froot");
                 c.equipmentSlot.FireFruit();
 
                 // generate a raw client package
@@ -1426,7 +1429,7 @@ namespace ArtifactGroup
         {
             try
             {
-                MessageHandler.globalMessage("DOOM BLAST");
+                msg("DOOM BLAST");
                 var c = grabUser(targetID);
                 var b = new EntityStates.VoidSurvivor.Weapon.FireCorruptDisks();
                 for (int i = 0; i < b.projectileCount; i++)
@@ -1461,7 +1464,7 @@ namespace ArtifactGroup
             var b = new EntityStates.VoidSurvivor.Weapon.FireCorruptDisks();
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("A Group of DOOM BlASTS SEEK YOUR DEATH");
+                msg("A Group of DOOM BlASTS SEEK YOUR DEATH");
                 for (int i = 0; i < 5; i++)
                 {
                     var c = findRandomMonster();
@@ -1491,7 +1494,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if(c != null)
             {
-                MessageHandler.globalMessage("This amount of poo is very unhealthy, you need to stop.");
+                msg("This amount of poo is very unhealthy, you need to stop.");
                 for (int i = 0; i < 10; i++)
                 {
                     c = grabUser(targetID);
@@ -1511,7 +1514,7 @@ namespace ArtifactGroup
         {
             if (findRandomMonster() != null)
             {
-                MessageHandler.globalMessage("Sludge, sludge everywhere.");
+                msg("Sludge, sludge everywhere.");
                 for (int i = 0; i < 10; i++)
                 {
                     var c = findRandomMonster();
@@ -1536,11 +1539,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Blood Shrines have spawned on the map!");
+                msg(spawnCount + " Blood Shrines have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Blood Shrine has spawned on the map!");
+                msg("A Blood Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1570,11 +1573,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Chance Shrines have spawned on the map!");
+                msg(spawnCount + " Chance Shrines have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Chance Shrine has spawned on the map!");
+                msg("A Chance Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1604,11 +1607,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Order Shrines have spawned on the map (dear god).");
+                msg(spawnCount + " Order Shrines have spawned on the map (dear god).");
             }
             else
             {
-                MessageHandler.globalMessage("An Order Shrine has spawned on the map!");
+                msg("An Order Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1638,11 +1641,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Combat Shrines have spawned on the map!");
+                msg(spawnCount + " Combat Shrines have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Combat Shrine has spawned on the map!");
+                msg("A Combat Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1672,11 +1675,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Healing Shrines have spawned on the map!");
+                msg(spawnCount + " Healing Shrines have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Healing Shrine has spawned on the map!");
+                msg("A Healing Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1706,11 +1709,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                MessageHandler.globalMessage(spawnCount + " Cleansing Pools have spawned on the map!");
+                msg(spawnCount + " Cleansing Pools have spawned on the map!");
             }
             else
             {
-                MessageHandler.globalMessage("A Cleansing Pool has spawned on the map!");
+                msg("A Cleansing Pool has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {
@@ -1734,7 +1737,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage("We will build a great great wall.");
+                msg("We will build a great great wall.");
                 var prefab = EntityStates.Mage.Weapon.PrepWall.projectilePrefab;
                 playAll(1161093638);
                 for (int i = 0; i < 20; i++)
@@ -1761,7 +1764,7 @@ namespace ArtifactGroup
                 var c = findRandomMonster();
                 if (c != null)
                 {
-                    MessageHandler.globalMessage("Curse these stupid WALLS.");
+                    msg("Curse these stupid WALLS.");
                     var prefab = EntityStates.Mage.Weapon.PrepWall.projectilePrefab;
                     playAll(1161093638);
                     for (int i = 0; i < 20; i++)
@@ -1818,7 +1821,7 @@ namespace ArtifactGroup
                         transformedPlayers.Add(tp);
                         Random r = new Random();
                         var n = r.Next(3, 60);
-                        MessageHandler.globalMessage(c.GetUserName() + " has undergone a transformation for " + n + " seconds!");
+                        msg(c.GetUserName() + " has undergone a transformation for " + n + " seconds!");
 
                         user.SetBodyPreference(BodyCatalog.FindBodyIndex(randoMob));
                         c.master.Respawn(c.footPosition, c.transform.rotation);
@@ -1845,7 +1848,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " has received a bunch of exp!");
+                msg(c.GetUserName() + " has received a bunch of exp!");
                 ExperienceManager.instance.AwardExperience(c.aimOrigin, c, (ulong)c.experience * (ulong)c.level + 150);
             }
         }
@@ -1855,7 +1858,7 @@ namespace ArtifactGroup
             var c = grabUser(targetID);
             if (c != null)
             {
-                MessageHandler.globalMessage(c.GetUserName() + " has received a void item!");
+                msg(c.GetUserName() + " has received a void item!");
                 Random rnd = new Random();
                 int index = rnd.Next(1, 15);
                 ItemIndex dex = ItemIndex.None;
@@ -1902,7 +1905,10 @@ namespace ArtifactGroup
                         break;
                 }
                 c.inventory.GiveItem(dex);
-                MessageHandler.globalItemGetMessage(c, dex, 4);
+                if (!OptionsLink.AOE_OmitMessages.Value)
+                {
+                    MessageHandler.globalItemGetMessage(c, dex, 4);
+                }
             }
         }
 
@@ -1995,7 +2001,7 @@ namespace ArtifactGroup
             directorSpawnRequest.teamIndexOverride = TeamIndex.Monster;
             directorSpawnRequest.ignoreTeamMemberLimit = true;
             Debug.Log(directorSpawnRequest.teamIndexOverride.ToString());
-            MessageHandler.globalMessage("A random monster has appeared!");
+            msg("A random monster has appeared!");
             return DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
         }
 
@@ -2061,6 +2067,14 @@ namespace ArtifactGroup
                 }
             }
             return Vector3.zero;
+        }
+
+        static private void msg(String message)
+        {
+            if (!OptionsLink.AOE_OmitMessages.Value)
+            {
+                MessageHandler.globalMessage(message);
+            }
         }
 
         private static CharacterBody findRandomMonster()
