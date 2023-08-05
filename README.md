@@ -1,6 +1,6 @@
 # The Artifacts Of Doom
 
-Adds 5 customizable artifacts to traumatize your friends with.
+Adds 6 customizable artifacts to traumatize your friends with.
 
 ![Picture marking your imminent death](https://cdn.discordapp.com/attachments/519358395661156353/1126339595710242816/20221203003816_1.jpg)
 
@@ -38,11 +38,18 @@ Consider rainstorm to be monsoon difficulty, monsoon is just terrifying, drizzle
 * Enemies and Survivors are knocked back in proportion to their remaining health and damage dealt.
 * Impacts on surfaces deal damage to all entities. 
 * Prepare to SMASH, or be SMASHED!
+
+**Artifact of Reconstruction**&nbsp;
+<img src=https://cdn.discordapp.com/attachments/613179339269210149/1133572478518698054/ArtifactOfMetamorphosis.png align="center" width="85px" height="85px"/>
+* Play as any monster in the game, with any base stats of your choosing.
+* You can open the ui for selecting your monster in-game through a keybind (default: F2)
+* Perfect for mithrix gamers like myself.
+
 <br>
-<br>
-New artifacts and updates to current ones are in development. 
+<h4>New artifacts and updates to current ones are in development. 
 I am open to any feedback and/or requests for new features
-on the RoR2 discord @bcs4313, or through my email at bcs4313@g.rit.edu. Also I would love to watch you play it (yes I am a sadist)!
+on the RoR2 discord @bcs4313, or through my email at bcs4313@g.rit.edu. Also I would love to watch you play it (yes I am a sadist)!</h4>
+
 
 ## Changelog
 ```{r, max-height='10px'}
@@ -96,7 +103,7 @@ A metric ton of bugfix/tuning/quality of life updates.
 * Some adjustments to Artifact Of Entropy's code have reduced its lagginess by a large margin.
 
 1.5
-Major overhaul to how Artifact of Smash functions
+* Major overhaul to how Artifact of Smash functions
 * Drastically decreased crashes from the artifact, especially for hitting wisps.
 * Increased Impact Threshold for damaging players
 * Enemy / Survivor health doubled
@@ -106,18 +113,25 @@ Major overhaul to how Artifact of Smash functions
 * Added explosion animation for players dying from impact.
 * Added settings to adjust knockback and damage levels for non-boss enemies, bosses, 
 and players separately.
-- unconfirmed fix: Artifact of War/Unity health bars should be fixed for clients.
 
 1.5.1
-Fixed a sus bug from Artifact of Entropy.
+* Fixed a sus bug from Artifact of Entropy.
 
 1.5.3
-Added a feature that resynchronizes lost items if a player dies with Artifact of Unity on. The setting can be toggled on/off.
+* Added a feature that resynchronizes lost items if a player dies with Artifact of Unity on. The setting can be toggled on/off.
+
+1.6
+* Added a new artifact: Artifact of Reconstruction.
+* Golem bug fixed from Artifact of Titans.
+* Fixed health desynchronization from Artifact of War that would bug out healthbars.
+* Boosted health of bosses in Artifact of War to make them more balanced.
+* Added option to omit messages from Artifact of War and Entropy.
+* Fixed Artifact of Unity item dupe bug.
+* General stability changes / polish.
 ```
 
 Currently Planned Features: 
-* A video demonstrating the 5 artifacts, and what you can do with them.
-* Getting golems to resize without a strange visual bug...
-* Stabilization and bug fixes for all artifacts (we are getting there).
+* A video demonstrating the 6 artifacts, and what you can do with them..
+* Stabilization and bug fixes for all artifacts (very close now).
 * More outcomes for the entropy artifact.
-* Working on a new artifact (4/2/2023)...
+* I need more feature ideas / artifact ideas! See my github to make a request.
