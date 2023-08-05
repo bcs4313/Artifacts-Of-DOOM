@@ -18,7 +18,7 @@ namespace ArtifactGroup
                                            "A", "S", "D", "Ctrl", "CoinBarrel"};
 
         // multipliers that help "balance" out each random hook's chances (0.5 = normal chance, 1.5 = double)
-        public double[] implicitWeights = { 40,            0.4,          0.2,          0.4,    0.3,    2.3,                 3.2,
+        public double[] implicitWeights = { 400,            0.4,          0.2,          0.4,    0.3,    2.3,                 3.2,
                                             2.5,            3.5,          3,               500,              2.5,            3.5,             0.2,               1.9,            2.1,           2.3,           0.1,
                                            0.1, 0.1, 0.1, 0.25,     2.5,           500};
 
