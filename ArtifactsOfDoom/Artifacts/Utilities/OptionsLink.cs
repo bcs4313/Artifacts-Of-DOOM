@@ -49,31 +49,31 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_OmitMessages = OptionsLink.Config.Bind<bool>("Artifact of War", "Omit Messages", false, "Players will not receive item messages if they are given an item by this artifact. \nDefault: false");
 			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOW_OmitMessages));
 
-			/*
-			OptionsLink.AOW_EnemyDmgScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Damage Scaling", 2f, "An exponent for the damage scaling of monsters. Used to counter player health scaling. \nRange: (0.1-5.0) \nDefault: 2");
+			
+			OptionsLink.AOW_EnemyDmgScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Damage Scaling", 1f, "An exponent for the damage scaling of monsters. Used to counter player health scaling. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyDmgScaling, new SliderConfig
 			{
 				min = 0.1f,
-				max = 5f,
+				max = 2f,
 				formatString = "{0:F2}"
 			}));
 
-			OptionsLink.AOW_EnemyHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Health Scaling", 2f, "An exponent for the health scaling of monsters. Increases with difficulty and stage. Used to counter the player's high item count. \nRange: (0.1-5.0) \nDefault: 2");
+			OptionsLink.AOW_EnemyHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Health Scaling", 1f, "An exponent for the health scaling of monsters. Increases with difficulty and stage. Used to counter the player's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyHealthScaling, new SliderConfig
 			{
 				min = 0.1f,
-				max = 5f,
+				max = 2f,
 				formatString = "{0:F2}"
 			}));
 
-			OptionsLink.AOW_PlayerHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Player Health Scaling", 2f, "An exponent for the health scaling of players. Base health increases every stage. \nUsed to counter the monster team's high item count. \nRange: (0.1-5.0) \nDefault: 2");
+			OptionsLink.AOW_PlayerHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Player Health Scaling", 1f, "An exponent for the health scaling of players. Base health increases every stage. \nUsed to counter the monster team's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_PlayerHealthScaling, new SliderConfig
 			{
 				min = 0.1f,
-				max = 5f,
+				max = 2f,
 				formatString = "{0:F2}"
 			}));
-			*/
+			
 
 
 
@@ -196,33 +196,35 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOD_KeyUI = OptionsLink.Config.Bind<KeyboardShortcut>("Artifact of Reconstruction", "UI Keybind", new KeyboardShortcut(KeyCode.F2, Array.Empty<KeyCode>()), "Key to open and close the ui to transform into a monster (Client Side). \nDefault: F2");
 			ModSettingsManager.AddOption(new KeyBindOption(OptionsLink.AOD_KeyUI));
 
-			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Dmg Multiplier", "1.0", "Multiplier for the base damage of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			/*
+			OptionsLink.AOM_DamageMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Default Base Dmg Multiplier", "1.0", "Default Multiplier for the base damage of your morph. \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_DamageMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_DamageMultiplier);
 			ModSettingsManager.AddOption(AOM_DamageMultiplier_O);
 
-			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Health Multiplier", "1.0", "Multiplier for the base health of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_HealthMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Default Base Health Multiplier", "1.0", "Default Multiplier for the base health of your morph. \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_HealthMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_HealthMultiplier);
 			ModSettingsManager.AddOption(AOM_HealthMultiplier_O);
 
-			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Base Speed Multiplier", "1.0", "Multiplier for the base speed of all players \n(Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_SpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Default Base Speed Multiplier", "1.0", "Default Multiplier for the base speed of your morph. \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_SpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_SpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_SpeedMultiplier_O);
 
-			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Attack Speed Multiplier", "1.0", "Multiplier for the attack speed of all players (Server Side). \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_AttackSpeedMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Default Attack Speed Multiplier", "1.0", "Default Multiplier for the attack speed of your morph. \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_AttackSpeedMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_AttackSpeedMultiplier);
 			ModSettingsManager.AddOption(AOM_AttackSpeedMultiplier_O);
 
-			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Cooldown Multiplier", "1.0", "Multiplier for the ability cooldowns of all players (Server Side). (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
+			OptionsLink.AOM_CooldownMultiplier = OptionsLink.Config.Bind<string>("Artifact of Reconstruction", "Default Cooldown Multiplier", "1.0", "Default Multiplier for the ability cooldowns of your morph. (smaller numbers reduce cooldowns) \nRange: (0.0-inf) \nDefault: 1.0");
 			OptionsLink.AOM_CooldownMultiplier_O = new StringInputFieldOption(OptionsLink.AOM_CooldownMultiplier);
 			ModSettingsManager.AddOption(AOM_CooldownMultiplier_O);
 
-			OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Reconstruction", "Size Multiplier", 1f, "Modifies the base size of all players (Server Side). Values > 3 produce extremely chunky transformations. \nRange: (0.05, 5) \nDefault: 1");
+			OptionsLink.AOM_SizeMultiplier = OptionsLink.Config.Bind<float>("Artifact of Reconstruction", "Default Size Multiplier", 1f, "Default for how large your morph is.. Values > 3 produce extremely chunky transformations. \nRange: (0.05, 5) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOM_SizeMultiplier, new SliderConfig
 			{
 				min = 0.05f,
 				max = 5f,
 				formatString = "{0:F2}"
 			}));
+			*/
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Reconstruction", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.morphBase)));
 			/*
 			OptionsLink.AOM_MorphSelect = OptionsLink.Config.Bind<string>("Artifact of Metamorphosis", "Morph Select", "Beetle", "The monster that you will transform into upon entering the world. \n For now, this applies to ALL players when the artifact is enabled. (Default: Beetle)");
@@ -318,9 +320,9 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_BaseDropChance.Value = 5f;
 			OptionsLink.AOW_DropChanceExpScaling.Value = 1.4f;
 			OptionsLink.AOW_EvolutionExpScaling.Value = 2.4f;
-			//OptionsLink.AOW_EnemyHealthScaling.Value = 2.0f;
-			//OptionsLink.AOW_PlayerHealthScaling.Value = 2.0f;
-			//OptionsLink.AOW_EnemyDmgScaling.Value = 2.0f;
+			OptionsLink.AOW_EnemyHealthScaling.Value = 1.0f;
+			OptionsLink.AOW_PlayerHealthScaling.Value = 1.0f;
+			OptionsLink.AOW_EnemyDmgScaling.Value = 1.0f;
 			OptionsLink.AOW_EntityCap.Value = "250";
 			OptionsLink.AOW_MaxSwarm.Value = "5";
 			OptionsLink.AOW_SwarmTime.Value = "5";

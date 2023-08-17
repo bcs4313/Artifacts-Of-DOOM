@@ -59,6 +59,7 @@ namespace ArtifactsOfDoom
 			NetworkingAPI.RegisterMessageType<NetworkBehavior.TransformRequest>();
 			NetworkingAPI.RegisterMessageType<NetworkBehavior.statRequest>();
 			NetworkingAPI.RegisterMessageType<NetworkBehavior.statRequestRebound>();
+			NetworkingAPI.RegisterMessageType<NetworkBehavior.informWarSettings>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.joinDefianceTeam>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.updateTargetMaster>();
 			//NetworkingAPI.RegisterMessageType<DefianceNetBehavior.clientSyncSettings>();

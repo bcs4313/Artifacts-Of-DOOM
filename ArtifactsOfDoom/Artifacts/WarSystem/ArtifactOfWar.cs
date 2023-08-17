@@ -10,11 +10,19 @@ using static On.RoR2.GlobalEventManager;
 using static On.RoR2.CharacterMaster;
 using Messenger;
 using orig_Start = On.RoR2.Run.orig_Start;
+using R2API.Networking;
+using R2API.Networking.Interfaces;
 
 namespace ArtifactGroup
 {
 	public class ArtifactOfWar : ArtifactBase
 	{
+		// scaling parameters
+		public static float enemyDmgScaling = 1.0f;
+		public static float playerHealthScaling = 1.0f;
+		public static float enemyHealthScaling = 1.0f;
+
+
 		///
 		/// List of available item names that will be included in the involve aspect of this artifact.
 		///
@@ -84,8 +92,7 @@ namespace ArtifactGroup
 		public override string ArtifactDescription => "Living is Pain. Life is Chaos.\n" +
 			"Time increase = ++Spawn Rates, +++Difficulty\n" +
 			"Stage increase = ++Evolution, +++Item Droprate\n" +
-			"All increases are exponential.\n" +
-			"BEWARE SPEEDRUNNERS! SIDE EFFECTS OF RUSHING ARE DEATH, DEATH, and MORE DEATH!!!\n";
+			"All increases are exponential.\n";
 		public override Sprite ArtifactEnabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfWar.png");
 		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfWarDisabled.png");
 
@@ -131,8 +138,18 @@ namespace ArtifactGroup
 				orig.Invoke(self);
 				ArtifactOfTitans.desynchronizedMonsters.Clear(); // weird to put it here but C# was really stubborn with this particular hook
 
-				// Define a TeamDef object (from original)
-				TeamDef def = RoR2.TeamCatalog.GetTeamDef(TeamIndex.Monster);
+				// link scaling options
+				if (NetworkServer.active)
+				{
+					Debug.Log("(Artifact of War) Sending scaling settings to clients.");
+					enemyDmgScaling = OptionsLink.AOW_EnemyDmgScaling.Value;
+					playerHealthScaling = OptionsLink.AOW_PlayerHealthScaling.Value;
+					enemyHealthScaling = OptionsLink.AOW_EnemyHealthScaling.Value;
+					new NetworkBehavior.informWarSettings(enemyDmgScaling, playerHealthScaling, enemyHealthScaling).Send(NetworkDestination.Clients);
+				}
+
+		// Define a TeamDef object (from original)
+		TeamDef def = RoR2.TeamCatalog.GetTeamDef(TeamIndex.Monster);
 
 				float spawnCap = 250;
 				try
@@ -163,12 +180,12 @@ namespace ArtifactGroup
 						if (self.isBoss)
 						{
 							body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level) + (1000 * 2.5f);
-							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount * enemyDmgScaling, 4 * enemyDmgScaling) + 1) + 1, 1);
 						}
 						else
 						{
 							body.baseMaxHealth = scaleMonsterHealth(body.levelMaxHealth, body.level);
-							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount, 4) + 1) + 1, 1);
+							body.baseDamage *= Math.Max((float)Math.Pow(RoR2.Run.instance.difficultyCoefficient / 16, Math.Max(RoR2.Run.instance.stageClearCount * enemyDmgScaling, 4 * enemyDmgScaling) + 1) + 1, 1 * enemyDmgScaling);
 						}
 
 						/*
@@ -243,7 +260,7 @@ namespace ArtifactGroup
 		public static float scalePlayerHealth(float levelMaxHealth, float level)
 		{
 			// there is stage scaling since things can get quite violent
-			return (float)((float)Math.Pow((levelMaxHealth * 2) * (((level * 0.1) + 1)) * (Math.Pow(((RoR2.Run.instance.stageClearCount * 0.2 + 1) + 0.8), 2) + 1), 1 + (RoR2.Run.instance.stageClearCount * 0.05)));
+			return (float)((float)Math.Pow((levelMaxHealth * 2 * playerHealthScaling) * (((level * 0.1) + 1)) * (Math.Pow(((RoR2.Run.instance.stageClearCount * 0.2 * playerHealthScaling + 1) + 0.8), 2 * playerHealthScaling) + 1), 1 + (RoR2.Run.instance.stageClearCount * 0.05 * playerHealthScaling)));
 		}
 
 
@@ -255,7 +272,7 @@ namespace ArtifactGroup
 		/// <returns></returns>
 		public static float scaleMonsterHealth(float levelMaxHealth, float level)
 		{
-			return (float)((float)Math.Pow((levelMaxHealth * 1.3 + 140) * ((((level) * 0.17) + 1)), 0.99 + RoR2.Run.instance.difficultyCoefficient * 0.01));
+			return (float)((float)Math.Pow((levelMaxHealth * 1.3 + (140 * enemyHealthScaling)) * ((((level) * 0.17 * enemyHealthScaling) + 1)), 0.99 + RoR2.Run.instance.difficultyCoefficient * 0.01 * enemyHealthScaling));
 		}
 
 		private void overrides(Run run)
