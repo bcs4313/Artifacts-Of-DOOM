@@ -25,14 +25,14 @@ namespace ArtifactsOfDoom
 				max = 100f,
 				formatString = "{0:F1}%"
 			}));
-			OptionsLink.AOW_DropChanceExpScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Droprate Exp. Scaling", 1.4f, "Exponent that increases the base droprate value per stage. \nRange: (0, 4) \nDefault: 1.4");
+			OptionsLink.AOW_DropChanceExpScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Droprate Exp. Scaling", 0.9f, "Exponent that increases the base droprate value per stage. \nRange: (0, 4) \nDefault: 0.9");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_DropChanceExpScaling, new SliderConfig
 			{
 				min = 0f,
 				max = 4f,
 				formatString = "{0:F2}"
 			}));
-			OptionsLink.AOW_EvolutionExpScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Monster Item Scaling", 2.4f, "Exponent that increases the amount of items given to monsters. (Scales with time/stage). \nRange: (0, 4) \nDefault: 2.4");
+			OptionsLink.AOW_EvolutionExpScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Monster Item Scaling", 1.85f, "Exponent that increases the amount of items given to monsters. (Scales with time/stage). \nRange: (0, 4) \nDefault: 1.85");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EvolutionExpScaling, new SliderConfig
 			{
 				min = 0f,
@@ -50,7 +50,7 @@ namespace ArtifactsOfDoom
 			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOW_OmitMessages));
 
 			
-			OptionsLink.AOW_EnemyDmgScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Damage Scaling", 1f, "An exponent for the damage scaling of monsters. Used to counter player health scaling. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
+			OptionsLink.AOW_EnemyDmgScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Damage Scaling", 0.6f, "An exponent for the damage scaling of monsters. Used to counter player health scaling. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 0.6");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyDmgScaling, new SliderConfig
 			{
 				min = 0.1f,
@@ -58,7 +58,7 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			}));
 
-			OptionsLink.AOW_EnemyHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Health Scaling", 1f, "An exponent for the health scaling of monsters. Increases with difficulty and stage. Used to counter the player's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
+			OptionsLink.AOW_EnemyHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Enemy Health Scaling", 0.92f, "An exponent for the health scaling of monsters. Increases with difficulty and stage. Used to counter the player's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_EnemyHealthScaling, new SliderConfig
 			{
 				min = 0.1f,
@@ -66,16 +66,16 @@ namespace ArtifactsOfDoom
 				formatString = "{0:F2}"
 			}));
 
-			OptionsLink.AOW_PlayerHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Player Health Scaling", 1f, "An exponent for the health scaling of players. Base health increases every stage. \nUsed to counter the monster team's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
+			OptionsLink.AOW_PlayerHealthScaling = OptionsLink.Config.Bind<float>("Artifact of War", "Player Health Scaling", 0.64f, "An exponent for the health scaling of players. Base health increases every stage. \nUsed to counter the monster team's high item count. \nChange this setting pre-run \nRange: (0.1-2.0) \nDefault: 1");
 			ModSettingsManager.AddOption(new SliderOption(OptionsLink.AOW_PlayerHealthScaling, new SliderConfig
 			{
 				min = 0.1f,
 				max = 2f,
 				formatString = "{0:F2}"
 			}));
-			
 
 
+			ModSettingsManager.AddOption(new GenericButtonOption("War Legacy Mode", "Artifact of War", "Uses the old parameters of this artifact. \nExpect extremely violent scaling of items, health, and difficulty. \nProne to high lag if looping", "I love chaos", new UnityAction(OptionsLink.warLegacy)));
 
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of War", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.warBase)));
 			
@@ -315,7 +315,7 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_OmitMessages.Value = false;
 		}
 
-		private static void warBase()
+		private static void warLegacy()
 		{
 			OptionsLink.AOW_BaseDropChance.Value = 5f;
 			OptionsLink.AOW_DropChanceExpScaling.Value = 1.4f;
@@ -326,7 +326,21 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOW_EntityCap.Value = "250";
 			OptionsLink.AOW_MaxSwarm.Value = "5";
 			OptionsLink.AOW_SwarmTime.Value = "5";
-			OptionsLink.AOW_OmitMessages.Value = false;
+			//OptionsLink.AOW_OmitMessages.Value = false;
+		}
+
+		private static void warBase()
+		{
+			OptionsLink.AOW_BaseDropChance.Value = 5f;
+			OptionsLink.AOW_DropChanceExpScaling.Value = 0.9f;
+			OptionsLink.AOW_EvolutionExpScaling.Value = 1.85f;
+			OptionsLink.AOW_EnemyHealthScaling.Value = 0.92f;
+			OptionsLink.AOW_PlayerHealthScaling.Value = 0.64f;
+			OptionsLink.AOW_EnemyDmgScaling.Value = 0.6f;
+			OptionsLink.AOW_EntityCap.Value = "250";
+			OptionsLink.AOW_MaxSwarm.Value = "5";
+			OptionsLink.AOW_SwarmTime.Value = "5";
+			//OptionsLink.AOW_OmitMessages.Value = false;
 		}
 
 		private static void titanBase()
