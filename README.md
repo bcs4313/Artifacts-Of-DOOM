@@ -128,10 +128,24 @@ and players separately.
 * Added option to omit messages from Artifact of War and Entropy.
 * Fixed Artifact of Unity item dupe bug.
 * General stability changes / polish.
+
+1.6.2
+* Artifact of Reconstruction:
+* Migrated stat changes to the in-game UI. 
+* Stat changes are now client-side compatible I.E anyone can choose any stats/morph they want.
+* Added elite modifier options to in-game UI. The modifiers can stack.
+* Added drones as options for morph selection.
+* Artifact of War:
+* Completely rebalanced artifact to reduce problems caused by the exponential growth of items for monsters and players.
+* Added health and damage growth parameters in RoROptions to tweak difficulty.
+* Added preset to change Artifact of War to pre-rebalance settings, this is called 'legacy mode.'
+* If any part of Artifact of War still feels unbalanced, feel free to report it to me in Github.
 ```
 
 Currently Planned Features: 
-* A video demonstrating the 6 artifacts, and what you can do with them..
-* Stabilization and bug fixes for all artifacts (very close now).
+* A new artifact (WIP as of 8/23/23)! It will be void themed.
+* Some QOL fixes / tweaks.
+* Debug / Compatibility improvements.
 * More outcomes for the entropy artifact.
 * I need more feature ideas / artifact ideas! See my github to make a request.
+* A video demonstrating the 6 artifacts, and what you can do with them..
