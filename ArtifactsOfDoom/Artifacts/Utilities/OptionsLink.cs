@@ -75,7 +75,7 @@ namespace ArtifactsOfDoom
 			}));
 
 
-			ModSettingsManager.AddOption(new GenericButtonOption("War Legacy Mode", "Artifact of War", "Uses the old parameters of this artifact. \nExpect extremely violent scaling of items, health, and difficulty. \nProne to high lag if looping", "I love chaos", new UnityAction(OptionsLink.warLegacy)));
+			ModSettingsManager.AddOption(new GenericButtonOption("War Legacy Mode", "Artifact of War", "Uses the old parameters of this artifact. \nExpect extremely violent scaling of items, health, and difficulty. \nProne to high lag if looping.", "Legacy Settings", new UnityAction(OptionsLink.warLegacy)));
 
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of War", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.warBase)));
 			

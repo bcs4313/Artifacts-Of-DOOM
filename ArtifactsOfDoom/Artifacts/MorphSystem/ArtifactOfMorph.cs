@@ -96,18 +96,18 @@ namespace ArtifactGroup
 				rectTransform.anchorMax = Vector2.one;
 
 				// scale differently based on screen size
-				Debug.Log("Screen width: " + Screen.width + " width / 1920 = " + (((float)Screen.width) / 1920.0f));
+				//Debug.Log("Screen width: " + Screen.width + " width / 1920 = " + (((float)Screen.width) / 1920.0f));
 				Vector3 scaleVector = new Vector3(rectTransform.localScale.x * (((float)Screen.width) / 1920.0f), rectTransform.localScale.y * (((float)Screen.width) / 1920.0f), rectTransform.localScale.z);
 				rectTransform.localScale = scaleVector;
 
 				// more zeroing out...
 				selectUIOBJ = selectOBJInstance.transform.GetChild(0).gameObject; // SELECTUIOBJ
-				Debug.Log("selectUIOBJ: " + selectUIOBJ.ToString());
+				//Debug.Log("selectUIOBJ: " + selectUIOBJ.ToString());
 				// EVEN MORE ZEROING OUT...
 				
 				statUIOBJ = selectOBJInstance.transform.GetChild(1).gameObject; // STATUIOBJ
 				
-				Debug.Log("statUIOBJ: " + statUIOBJ.ToString());
+				//Debug.Log("statUIOBJ: " + statUIOBJ.ToString());
 				//Debug.Log("4");
 				MorphController.injectButtons();
 
@@ -131,7 +131,7 @@ namespace ArtifactGroup
 			// its respective stat values. Be sure to modify them.
 			if (clientBodies.Contains(self))
 			{
-				Debug.Log("(Artifact of Morph) Recalculating stats. " + self);
+				//Debug.Log("(Artifact of Morph) Recalculating stats. " + self);
 				var modelLocator = self.modelLocator;
 
 				self.attackSpeed *= attackSpeedMultSync;
@@ -167,14 +167,14 @@ namespace ArtifactGroup
 				}
 				else
                 {
-					Debug.Log("(Artifact of Morph) body rejected (SIZE): " + self + " : " + self.GetUserName() + " :: " + init);
+					//Debug.Log("(Artifact of Morph) body rejected (SIZE): " + self + " : " + self.GetUserName() + " :: " + init);
 				}
 			}
 			else
 			{
 				if (self.isPlayerControlled)
 				{
-					Debug.Log("(Artifact of Morph) body rejected: " + self + " : " + self.GetUserName() + " :: " + init);
+					//Debug.Log("(Artifact of Morph) body rejected: " + self + " : " + self.GetUserName() + " :: " + init);
 				}
 			}
 		}
@@ -183,8 +183,8 @@ namespace ArtifactGroup
 		{
 			if (body.isPlayerControlled)
 			{
-				Debug.Log("(morph) BodyStartHook");
-				Debug.Log("(morph) PlayerBody = " + body);
+				//Debug.Log("(morph) BodyStartHook");
+				//Debug.Log("(morph) PlayerBody = " + body);
 				//Debug.Log("Reactive Hook");
 				//Debug.Log("1");
 				Interactor picker = body.gameObject.GetComponent<Interactor>();
@@ -196,10 +196,10 @@ namespace ArtifactGroup
 				}
 				else
 				{
-					Debug.Log("Picker is null. Adding Component to monster.");
+					//Debug.Log("Picker is null. Adding Component to monster.");
 					picker = body.gameObject.AddComponent<Interactor>();
 					InteractionDriver driver = body.gameObject.AddComponent<InteractionDriver>();
-					Debug.Log("Picker now = " + picker);
+					//Debug.Log("Picker now = " + picker);
 					picker.maxInteractionDistance = (body.corePosition - body.footPosition).magnitude * 4.4f;
 					driver.highlightInteractor = true;
 					driver.enabled = true;
@@ -222,25 +222,25 @@ namespace ArtifactGroup
 				}
 				else
 				{
-					Debug.Log("Collider is null. Searching for alternate colliders to monster.");
+					//Debug.Log("Collider is null. Searching for alternate colliders to monster.");
 					SphereCollider s = body.gameObject.GetComponent<SphereCollider>();
 					if (s != null)
 					{
-						Debug.Log("Sphere collider found. Adjusting interactor.");
+						//Debug.Log("Sphere collider found. Adjusting interactor.");
 						picker.maxInteractionDistance = (s.bounds.size.y + s.bounds.size.x + s.bounds.size.z) * 2.5f;
 					}
 					else
 					{
-						Debug.Log("No Sphere Collider found. Attempting to find meshcollider");
+						//Debug.Log("No Sphere Collider found. Attempting to find meshcollider");
 						MeshCollider m = body.gameObject.GetComponent<MeshCollider>();
 						if (m != null)
 						{
-							Debug.Log("Mesh collider found. Adjusting interactor.");
+							//Debug.Log("Mesh collider found. Adjusting interactor.");
 							picker.maxInteractionDistance = (m.bounds.size.y + m.bounds.size.x + m.bounds.size.z) * 2.5f;
 						}
 						else
 						{
-							Debug.Log("No Mesh collider found. Resorting to irregular picker area");
+							//Debug.Log("No Mesh collider found. Resorting to irregular picker area");
 						}
 					}
 				}
@@ -446,7 +446,7 @@ namespace ArtifactGroup
 			On.RoR2.GenericSkill.CalculateFinalRechargeInterval += (On.RoR2.GenericSkill.orig_CalculateFinalRechargeInterval orig, global::RoR2.GenericSkill self) =>
 			{
 				float rechargeInterval = orig.Invoke(self);
-				if (RoR2.Run.instance.isActiveAndEnabled && ArtifactEnabled && self.characterBody.isPlayerControlled)
+				if (RoR2.Run.instance != null && RoR2.Run.instance.isActiveAndEnabled && ArtifactEnabled && self.characterBody.isPlayerControlled)
 				{
 
 					try
@@ -530,7 +530,7 @@ namespace ArtifactGroup
 
 				// we will gather options from the HUD and then send them to the server, which manages player stats
 				// the stat controller will manage the list of players and retrieve information for us at the server
-				if (ArtifactEnabled && statUIOBJ != null)
+				if (RoR2.Run.instance != null && RoR2.Run.instance.isActiveAndEnabled == true && ArtifactEnabled && statUIOBJ != null)
 				{
 					float healthMult = 1;
 					float dmgMult = 1;

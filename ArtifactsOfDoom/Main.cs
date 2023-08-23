@@ -13,8 +13,8 @@ using UnityEngine;
 
 namespace ArtifactsOfDoom
 {
-	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.6.0")]
-	[BepInDependency("com.bepis.r2api", "4.0.11")]
+	[BepInPlugin("com.Dragonov7733.ArtifactsOfDoom", "Artifacts of Doom", "1.6.2")]
+	[BepInDependency("com.bepis.r2api", "5.0.5")]
 	[BepInDependency("com.rune580.riskofoptions")]
 	[R2APISubmoduleDependency(new string[]
 	{
@@ -34,7 +34,7 @@ namespace ArtifactsOfDoom
 
 		public const string PluginName = "Artifacts of Doom";
 
-		public const string PluginVersion = "1.6.0";
+		public const string PluginVersion = "1.6.2";
 
 
 
@@ -94,7 +94,7 @@ namespace ArtifactsOfDoom
 		public const string ModAutho = "bcs4313";
 		public const string GUID = "com.Dragonov7733.ArtifactsOfDoom";
 		public const string Name = "Artifacts of Doom";
-		public const string ModVer = "1.6.0";
+		public const string ModVer = "1.6.2";
 
 		// Token: 0x0400002D RID: 45
 		public static AssetBundle MainAssets;
