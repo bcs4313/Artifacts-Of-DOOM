@@ -26,6 +26,7 @@ namespace ArtifactsOfDoom
 	{
 		"SoundAPI"
 	})]
+
 	public class Main : BaseUnityPlugin
 	{
 		public const string PluginGUID = "com.Dragonov7733.ArtifactsOfDoom";

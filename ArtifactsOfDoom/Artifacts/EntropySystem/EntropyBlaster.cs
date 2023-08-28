@@ -352,11 +352,11 @@ namespace ArtifactGroup
             }
             if (spawnCount > 1)
             {
-                msg(spawnCount + " Boss Shrines have spawned on the map!");
+                msg(spawnCount + " Mountain Shrines have spawned on the map!");
             }
             else
             {
-                msg("A Boss Shrine has spawned on the map!");
+                msg("A Mountain Shrine has spawned on the map!");
             }
             for (int i = 0; i < spawnCount; i++)
             {

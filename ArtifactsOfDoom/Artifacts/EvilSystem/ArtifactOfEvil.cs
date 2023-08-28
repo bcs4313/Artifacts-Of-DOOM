@@ -34,22 +34,25 @@ namespace ArtifactGroup
 		public override Sprite ArtifactDisabledIcon => Main.MainAssets.LoadAsset<Sprite>("Assets/Icons/ArtifactOfMetamorphosisDisabled.png");
 
 		// base parameters
-		public uint totalVoidCoins = 0; // base parameter to indicate corruption level (server side)
-		public int totalVoidItems = 0; // contributes to the rate of void coins earned.
-        public float lastTime = 0; // last time trigger that gave a void coin
-		public float interval = 3; // current time interval to get a void coin + some other updates
+		public static uint totalVoidCoins = 0; // base parameter to indicate corruption level (server side)
+		public static int totalVoidItems = 0; // contributes to the rate of void coins earned.
+        public static float lastTime = 0; // last time trigger that gave a void coin
+		public static float interval = 10; // current time interval to get a void coin + some other updates
 
 		// interactable intervals and times
-		public float lastChestTime = 0; 
-		public float intervalChest = 3600; // interval to spawn a void chest, decreases with more void coins.
-		public float lastBarrelTime = 0; 
-		public float intervalBarrel = 3600; // interval to spawn a void barrel, decreases with more void coins.
-		public float lastTripleTime = 0;
-		public float intervalTriple = 3600; // interval to spawn a void triple choice, decreases with more void coins.
+		public static float lastChestTime = 0; 
+		public static float intervalChest = 3600; // interval to spawn a void chest, decreases with more void coins.
+		public static float lastBarrelTime = 0; 
+		public static float intervalBarrel = 3600; // interval to spawn a void barrel, decreases with more void coins.
+		public static float lastTripleTime = 0;
+		public static float intervalTriple = 3600; // interval to spawn a void triple choice, decreases with more void coins.
 		
-		public int currentStageClearCount = 0;
+		public static int currentStageClearCount = 0;
 
+		public static Random r = new Random();
 
+		public static bool deadlock = false;
+		public static bool loadingStage = false;
 
         public override void Init()
 		{
@@ -70,34 +73,71 @@ namespace ArtifactGroup
 		{
 			Run.onRunStartGlobal += overrides;
 
+			On.RoR2.Run.AdvanceStage += (On.RoR2.Run.orig_AdvanceStage orig, global::RoR2.Run self, global::RoR2.SceneDef nextScene) =>
+			{
+				orig.Invoke(self, nextScene);
+				if (ArtifactEnabled)
+				{
+					loadingStage = true;
+				}
+			};
+
 			On.RoR2.InteractableSpawnCard.Spawn += (On.RoR2.InteractableSpawnCard.orig_Spawn orig, global::RoR2.InteractableSpawnCard self, Vector3 position, Quaternion rotation, global::RoR2.DirectorSpawnRequest directorSpawnRequest, ref global::RoR2.SpawnCard.SpawnResult result) =>
 			{
+				orig.Invoke(self, position, rotation, directorSpawnRequest, ref result);
 				var resources = Resources.LoadAll("spawncards/");
 				for(int i = 0; i < resources.Length; i++)
                 {
 					Debug.Log(resources[i].name);
 				}
-				orig.Invoke(self, position, rotation, directorSpawnRequest, ref result);
 			};
-			/*
-			RoR2.SpawnCard.onSpawnedServerGlobal += (SpawnCard.SpawnResult spawn) =>
+
+			// change stats / name of Umbra character I.E shadow clone on spawn
+			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
-				if (ArtifactEnabled && NetworkServer.active && stageActive())
+				orig.Invoke(self, body);
+				if (ArtifactEnabled)
 				{
-					PackSpawner.spawnPack();
-					double outcome = new Random().NextDouble();
-					double chanceToSpawnPack = Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0);
-					Debug.Log("Mob Group spawn chance:: " + chanceToSpawnPack);
-					if (outcome < chanceToSpawnPack)
+					if (body.teamComponent.teamIndex == TeamIndex.Monster && body.master.name.Contains("Umbra"))
 					{
-						PackSpawner.spawnPack();
+						body.baseNameToken = PackSpawner.nextPackName;
+						body.master.name = PackSpawner.nextPackName;
+						body.subtitleNameToken = PackSpawner.nextPackName;
 					}
+
+					if(body.isPlayerControlled && loadingStage)
+                    {
+                        SinSystem.progressStage();
+						loadingStage = false;
+					}
+                } 
+			};
+
+			// greed sin hook
+			On.RoR2.ShrineBossBehavior.AddShrineStack += (On.RoR2.ShrineBossBehavior.orig_AddShrineStack orig, ShrineBossBehavior self, Interactor activator) =>
+			{
+				orig.Invoke(self, activator);
+				if (ArtifactEnabled && NetworkServer.active && activator != null)
+				{
+					SinSystem.greedProc();
 				}
 			};
-			*/
+			
+
 			On.RoR2.Run.Update += (On.RoR2.Run.orig_Update orig, global::RoR2.Run self) =>
 			{
 				orig.Invoke(self);
+
+				// test hook
+				if (ArtifactEnabled && Input.GetKeyDown(KeyCode.Alpha0))
+				{
+					totalVoidCoins = ((uint)(totalVoidCoins * 1.1f)) + 10;
+				}
+
+				if (ArtifactEnabled && Input.GetKeyDown(KeyCode.Alpha9))
+				{
+					totalVoidCoins += 10;
+				}
 
 				if (ArtifactEnabled && NetworkServer.active && stageActive())
 				{
@@ -111,7 +151,7 @@ namespace ArtifactGroup
 					if (ArtifactEnabled && NetworkServer.active && RoR2.Run.instance.fixedTime > (lastChestTime + intervalChest))
 					{
 						spawnVoidChest();
-						Debug.Log(" lastChestTime = " + lastChestTime);
+						Debug.Log("lastChestTime = " + lastChestTime);
 						lastChestTime = RoR2.Run.instance.fixedTime;
 						Debug.Log("Interval Chest = " + intervalChest + " lastChestTime Now = " + lastChestTime);
 					}
@@ -134,22 +174,23 @@ namespace ArtifactGroup
 					// Time interval will be somewhat random to make the void feel a bit more chaotic.
 					if (ArtifactEnabled && NetworkServer.active && RoR2.Run.instance.fixedTime > (lastTime + interval))
 					{
+						// get void item count for all players
+						setTotalVoidItems();
+
+						interval = (float)(10 / Math.Pow(0.4 * totalVoidItems + 1, 0.7));
+
+						Debug.Log("Current VC interval:: " + interval);
+
 						lastTime = RoR2.Run.instance.fixedTime; // update prev time
 																//interval /= 1.1f; // for fun only 
 																//PackSpawner.spawnPack();
 						double outcome = new Random().NextDouble();
-						double chanceToSpawnPack = Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0);
+						double chanceToSpawnPack = Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0) * 0.05;
 						Debug.Log("Mob Group spawn chance:: " + chanceToSpawnPack);
 						if (outcome < chanceToSpawnPack)
 						{
 							PackSpawner.randomPack();
 						}
-						//RoR2.Artifacts.DoppelgangerInvasionManager.PerformInvasion(new Xoroshiro128Plus(0));
-						// adjusting interactable spawn intervals::
-						// max = 1 hour. Gets lower with void coin total (logarithmic)
-						//intervalChest = (float)(3600 / (Math.Log(totalVoidCoins, 3f) * Math.Log(totalVoidCoins, 3f) + (0.1f * totalVoidCoins + 1f)));
-						//intervalBarrel = (float)(3600 / (Math.Log(totalVoidCoins, 2f) * Math.Log(totalVoidCoins, 1.4f) + (0.1f * totalVoidCoins + 1f)));
-						//intervalTriple = (float)(3600 / (Math.Log(totalVoidCoins, 4f) * Math.Log(totalVoidCoins, 4f) + (0.08f * totalVoidCoins + 1f)));
 
 						// void seed spawns
 						if (RoR2.Run.instance.stageClearCount > currentStageClearCount)
@@ -198,6 +239,23 @@ namespace ArtifactGroup
 			}; 
 
 		}
+
+		public void setTotalVoidItems()
+        {
+			totalVoidItems = 0;
+			foreach (NetworkUser u in NetworkUser.readOnlyInstancesList)
+			{
+				for (int i = 0; i < u.master.inventory.itemAcquisitionOrder.Count; i++)
+				{
+					ItemIndex item = u.master.inventory.itemAcquisitionOrder[i];
+					if(VoidItemMatcher.isVoidItem(item))
+                    {
+						totalVoidItems += u.master.inventory.itemStacks[i];
+                    }
+				}
+			}
+			Debug.Log("Current Void Item Count: " + totalVoidItems);
+        }
 
 		public void spawnVoidSeed()
         {
@@ -303,7 +361,7 @@ namespace ArtifactGroup
 				totalVoidCoins = 0; // base parameter to indicate corruption level (server side)
 				totalVoidItems = 0; // contributes to the rate of void coins earned.
 				lastTime = 0; // last time trigger that gave a void coin
-				interval = 3; // current time interval to get a void coin
+				interval = 10; // current time interval to get a void coin
 				lastChestTime = 0;
 				lastBarrelTime = 0;
 				lastTripleTime = 0;
@@ -311,6 +369,8 @@ namespace ArtifactGroup
 				intervalChest = 3600;
 				intervalTriple = 3600;
 				currentStageClearCount = 0;
+				loadingStage = true;
+				r = new Random();
 		}
 
 		}
