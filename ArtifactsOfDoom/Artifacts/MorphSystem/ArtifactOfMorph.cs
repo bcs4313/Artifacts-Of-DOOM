@@ -488,8 +488,8 @@ namespace ArtifactGroup
 					// lock mouse
 					//Debug.Log("Cursor4 " + RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount);
 					RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
-					selectUIOBJ.SetActive(false);
-					selectUIOBJ.active = false;
+					selectOBJInstance.SetActive(false);
+					selectOBJInstance.active = false;
 					orig.Invoke(self);
 				}
 				else
@@ -502,12 +502,6 @@ namespace ArtifactGroup
 			{
 				orig.Invoke(self);
 				Debug.Log("RunDisable");
-				// more rough fixes for this cursor stuff
-				while (RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount > 1)
-                {
-					//Debug.Log("Cursor8");
-					RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
-				}
 			};
 			
 
@@ -647,36 +641,39 @@ namespace ArtifactGroup
 				}
 			};
 
+			On.RoR2.PauseManager.CCTogglePause += (On.RoR2.PauseManager.orig_CCTogglePause orig, global::RoR2.ConCommandArgs args) =>
+			{
+				orig.Invoke(args);
+				if (ArtifactEnabled && selectUIOBJ != null && selectUIOBJ.activeInHierarchy)
+				{
+					Debug.Log("Game Paused: Closed Morph UI");
+					RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
+					selectOBJInstance.SetActive(false);
+					selectOBJInstance.active = false;
+				}
+			};
+
 			On.RoR2.Run.Update += (On.RoR2.Run.orig_Update orig, global::RoR2.Run self) =>
 			{
 				orig.Invoke(self);
 
 				// dirty fix for cursor bug
-				if(ArtifactEnabled && RoR2.Run.instance.isGameOverServer)
+				if(RoR2.Run.instance == null || RoR2.Run.instance.isActiveAndEnabled == false)
                 {
-					while (RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount >= 2 && RoR2.PauseManager.isPaused == false)
+					if (selectUIOBJ != null && selectUIOBJ.activeInHierarchy == true)
 					{
-						//Debug.Log("Cursor1 " + RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount);
 						RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;
+						selectOBJInstance.SetActive(false);
+						selectOBJInstance.active = false;
 					}
 				}
 
 				if (ArtifactEnabled && !RoR2.Run.instance.isGameOverServer)
 				{
-					bool flag = Input.GetKeyDown(OptionsLink.AOD_KeyUI.Value.MainKey) && !PauseManager.isPaused;
+					bool flag = Input.GetKeyDown(OptionsLink.AOD_KeyUI.Value.MainKey) && !PauseManager.isPaused && (LocalUserManager.GetFirstLocalUser() != null) && (LocalUserManager.GetFirstLocalUser().currentNetworkUser != null) && (LocalUserManager.GetFirstLocalUser().currentNetworkUser.GetCurrentBody() != null && (RoR2.Run.instance.isActiveAndEnabled == true));
 					if (flag)
 					{
-						bool act = false;
-						if (selectUIOBJ != null && selectUIOBJ.activeInHierarchy)
-						{
-							act = false;
-						}
-						if (selectUIOBJ != null && !selectUIOBJ.activeInHierarchy)
-						{
-							act = true;
-						}
-
-						if(!act)
+						if(selectUIOBJ != null && selectUIOBJ.activeInHierarchy)
                         {
 							//Debug.Log("SETACTIVEFALSE");
 							selectOBJInstance.SetActive(false);

@@ -88,7 +88,7 @@ namespace csProj.Artifacts.MorphSystem
         // add hook to transform and remove the UI on click
         public static void hookButton(Button b, String target)
         {
-            Debug.Log("Hooking: " + target);
+            //Debug.Log("Hooking: " + target);
             b.onClick.AddListener(() => bTrigger(target));
         }
 

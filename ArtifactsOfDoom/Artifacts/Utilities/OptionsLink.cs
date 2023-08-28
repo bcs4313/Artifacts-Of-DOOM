@@ -107,7 +107,7 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_NewEventsPerStage = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "New Events Per Stage", false, "A new set of outcomes will be generated and linked to actions each time a stage is completed. \nDefault: False");
 			OptionsLink.AOE_NewEventsPerStage_O = new CheckBoxOption(OptionsLink.AOE_NewEventsPerStage);
 			ModSettingsManager.AddOption(OptionsLink.AOE_NewEventsPerStage_O);
-			OptionsLink.AOE_OmitMessages = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "Omit Messages", false, "Players will not receive messages from the effects triggered by this artifact. \nDefault: false");
+			OptionsLink.AOE_OmitMessages = OptionsLink.Config.Bind<bool>("Artifact of Entropy", "Omit Messages", true, "Players will not receive messages from the effects triggered by this artifact. \nDefault: true");
 			ModSettingsManager.AddOption(new CheckBoxOption(OptionsLink.AOE_OmitMessages));
 			ModSettingsManager.AddOption(new GenericButtonOption("Return to Default Settings", "Artifact of Entropy", "Return to the base settings of this artifact.", "Default Settings", new UnityAction(OptionsLink.voidBase)));
 			OptionsLink.AOT_CreditScalingMultiplier = OptionsLink.Config.Bind<float>("Artifact of The Titans", "Credit Scaling", 0.15f, "How much monsters scale to credit cost (linear). Doesn't apply to teleporter bosses. \nRange: (0, 4) \nDefault: 0.15");
@@ -312,7 +312,7 @@ namespace ArtifactsOfDoom
 			OptionsLink.AOE_EventChanceOffset.Value = 0f;
 			OptionsLink.AOE_SimultaneousOutcomes.Value = false;
 			OptionsLink.AOE_NewEventsPerStage.Value = false;
-			OptionsLink.AOE_OmitMessages.Value = false;
+			//OptionsLink.AOE_OmitMessages.Value = false;
 		}
 
 		private static void warLegacy()
