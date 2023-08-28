@@ -33,7 +33,6 @@ namespace ArtifactGroup
 
 		public EntropyHost()
         {
-			Debug.Log("Created Entropy Host");
 			events = new List<Event>();
 			for(int i = 0; i < eventTotal; i++)
             {

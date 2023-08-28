@@ -652,9 +652,9 @@ namespace ArtifactGroup
 				orig.Invoke(self);
 
 				// dirty fix for cursor bug
-				if(RoR2.Run.instance.isGameOverServer)
+				if(ArtifactEnabled && RoR2.Run.instance.isGameOverServer)
                 {
-					while (RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount >= 2)
+					while (RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount >= 2 && RoR2.PauseManager.isPaused == false)
 					{
 						//Debug.Log("Cursor1 " + RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount);
 						RoR2.MPEventSystemManager.primaryEventSystem.cursorOpenerCount--;

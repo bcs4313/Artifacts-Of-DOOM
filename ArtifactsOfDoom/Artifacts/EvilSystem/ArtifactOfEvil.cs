@@ -98,12 +98,10 @@ namespace ArtifactGroup
 				orig.Invoke(self, body);
 				if (ArtifactEnabled)
 				{
-					if (body.teamComponent.teamIndex == TeamIndex.Monster && body.master.name.Contains("Umbra"))
-					{
-						body.baseNameToken = PackSpawner.nextPackName;
-						body.master.name = PackSpawner.nextPackName;
-						body.subtitleNameToken = PackSpawner.nextPackName;
-					}
+					if(body.isBoss)
+                    {
+						VoidBuffer.BuffBoss(body);
+                    }
 
 					if(body.isPlayerControlled && loadingStage)
                     {
@@ -113,16 +111,41 @@ namespace ArtifactGroup
                 } 
 			};
 
+			On.RoR2.CharacterBody.OnModelChanged += (On.RoR2.CharacterBody.orig_OnModelChanged orig, global::RoR2.CharacterBody body, Transform modelTransform) =>
+			{
+				orig.Invoke(body, modelTransform);
+				if (ArtifactEnabled)
+				{
+					Debug.Log("monster -> " + body.name + " body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger == " + body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger);
+					if (body.teamComponent.teamIndex == TeamIndex.Monster /*&& body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger == true */)
+					{
+						Debug.Log("IsDoppleGanger - Init");
+						body.baseNameToken = PackSpawner.nextPackName;
+						body.master.name = PackSpawner.nextPackName;
+						body.subtitleNameToken = PackSpawner.nextPackName;
+					}
+				}
+			};
+
+
 			// greed sin hook
 			On.RoR2.ShrineBossBehavior.AddShrineStack += (On.RoR2.ShrineBossBehavior.orig_AddShrineStack orig, ShrineBossBehavior self, Interactor activator) =>
 			{
 				orig.Invoke(self, activator);
 				if (ArtifactEnabled && NetworkServer.active && activator != null)
 				{
-					SinSystem.greedProc();
+					SinSystem.greedProc(true);
 				}
-			};
-			
+			};			
+
+			/*
+			On.RoR2.CharacterBody.OnClientBuffsChanged += (On.RoR2.CharacterBody.orig_OnClientBuffsChanged orig, global::RoR2.CharacterBody self) =>
+            {
+				orig.Invoke(self);
+				RoR2.DLC1Content.Buffs.Fracture.
+				self.activeBuffsList[0] = RoR2.DLC1Content.Buffs.Fracture.
+            }
+		*/
 
 			On.RoR2.Run.Update += (On.RoR2.Run.orig_Update orig, global::RoR2.Run self) =>
 			{
@@ -185,7 +208,7 @@ namespace ArtifactGroup
 																//interval /= 1.1f; // for fun only 
 																//PackSpawner.spawnPack();
 						double outcome = new Random().NextDouble();
-						double chanceToSpawnPack = Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0) * 0.05;
+						double chanceToSpawnPack = Math.Min(Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0) * 0.002, 0.5) * interval;
 						Debug.Log("Mob Group spawn chance:: " + chanceToSpawnPack);
 						if (outcome < chanceToSpawnPack)
 						{
