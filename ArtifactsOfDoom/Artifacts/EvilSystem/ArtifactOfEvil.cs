@@ -20,6 +20,7 @@ using R2API.Networking.Interfaces;
 using csProj.Artifacts.Utilities;
 using static RoR2.SpawnCard;
 using csProj.Artifacts.EvilSystem;
+using static csProj.Artifacts.EvilSystem.SinSystem;
 
 namespace ArtifactGroup
 {
@@ -36,17 +37,17 @@ namespace ArtifactGroup
 		// base parameters
 		public static uint totalVoidCoins = 0; // base parameter to indicate corruption level (server side)
 		public static int totalVoidItems = 0; // contributes to the rate of void coins earned.
-        public static float lastTime = 0; // last time trigger that gave a void coin
+		public static float lastTime = 0; // last time trigger that gave a void coin
 		public static float interval = 10; // current time interval to get a void coin + some other updates
 
 		// interactable intervals and times
-		public static float lastChestTime = 0; 
+		public static float lastChestTime = 0;
 		public static float intervalChest = 3600; // interval to spawn a void chest, decreases with more void coins.
-		public static float lastBarrelTime = 0; 
+		public static float lastBarrelTime = 0;
 		public static float intervalBarrel = 3600; // interval to spawn a void barrel, decreases with more void coins.
 		public static float lastTripleTime = 0;
 		public static float intervalTriple = 3600; // interval to spawn a void triple choice, decreases with more void coins.
-		
+
 		public static int currentStageClearCount = 0;
 
 		public static Random r = new Random();
@@ -54,7 +55,7 @@ namespace ArtifactGroup
 		public static bool deadlock = false;
 		public static bool loadingStage = false;
 
-        public override void Init()
+		public override void Init()
 		{
 			//CreateConfig(config);
 			CreateLang();
@@ -63,9 +64,9 @@ namespace ArtifactGroup
 			Debug.Log("EVIL INVOKED");
 		}
 
-		
+
 		public bool stageActive()
-        {
+		{
 			return LocalUserManager.GetFirstLocalUser().currentNetworkUser.GetCurrentBody() != null;
 		}
 
@@ -86,8 +87,8 @@ namespace ArtifactGroup
 			{
 				orig.Invoke(self, position, rotation, directorSpawnRequest, ref result);
 				var resources = Resources.LoadAll("spawncards/");
-				for(int i = 0; i < resources.Length; i++)
-                {
+				for (int i = 0; i < resources.Length; i++)
+				{
 					Debug.Log(resources[i].name);
 				}
 			};
@@ -96,28 +97,34 @@ namespace ArtifactGroup
 			On.RoR2.CharacterMaster.OnBodyStart += (orig_OnBodyStart orig, global::RoR2.CharacterMaster self, global::RoR2.CharacterBody body) =>
 			{
 				orig.Invoke(self, body);
-				if (ArtifactEnabled)
+				if (ArtifactEnabled && NetworkServer.active)
 				{
-					if(body.isBoss)
-                    {
+					if (body.isBoss)
+					{
 						VoidBuffer.BuffBoss(body);
-                    }
+					}
 
-					if(body.isPlayerControlled && loadingStage)
-                    {
-                        SinSystem.progressStage();
+					if (body.isPlayerControlled && loadingStage)
+					{
+						SinSystem.progressStage();
 						loadingStage = false;
 					}
-                } 
+				}
+
+				if (ArtifactEnabled && body.isPlayerControlled)
+				{
+					body.baseMaxHealth *= SinSystem.healthMult;
+					body.levelMaxHealth *= SinSystem.healthMult;
+				}
 			};
 
 			On.RoR2.CharacterBody.OnModelChanged += (On.RoR2.CharacterBody.orig_OnModelChanged orig, global::RoR2.CharacterBody body, Transform modelTransform) =>
 			{
 				orig.Invoke(body, modelTransform);
-				if (ArtifactEnabled)
+				if (ArtifactEnabled && NetworkServer.active)
 				{
 					Debug.Log("monster -> " + body.name + " body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger == " + body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger);
-					if (body.teamComponent.teamIndex == TeamIndex.Monster /*&& body.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().isDoppelganger == true */)
+					if (body.teamComponent.teamIndex == TeamIndex.Monster && body.name.Contains("Commando"))
 					{
 						Debug.Log("IsDoppleGanger - Init");
 						body.baseNameToken = PackSpawner.nextPackName;
@@ -127,16 +134,149 @@ namespace ArtifactGroup
 				}
 			};
 
+			On.EntityStates.Duplicator.Duplicating.OnEnter += (On.EntityStates.Duplicator.Duplicating.orig_OnEnter orig, global::EntityStates.Duplicator.Duplicating self) =>
+			{
+				orig.Invoke(self);
+				if (ArtifactEnabled && NetworkServer.active)
+				{
+					SinSystem.lustProc(true);
+				}
+			};
 
-			// greed sin hook
+			// pride sin hook
 			On.RoR2.ShrineBossBehavior.AddShrineStack += (On.RoR2.ShrineBossBehavior.orig_AddShrineStack orig, ShrineBossBehavior self, Interactor activator) =>
 			{
 				orig.Invoke(self, activator);
 				if (ArtifactEnabled && NetworkServer.active && activator != null)
 				{
-					SinSystem.greedProc(true);
+					SinSystem.prideProc(true);
 				}
-			};			
+			};
+
+			// stat recalulation based on sin accumulation
+			On.RoR2.CharacterBody.RecalculateStats += (On.RoR2.CharacterBody.orig_RecalculateStats orig, global::RoR2.CharacterBody self) =>
+			{
+				orig.Invoke(self);
+				if (ArtifactEnabled)
+				{
+					self.attackSpeed *= SinSystem.attackSpeedMult;
+					self.moveSpeed *= SinSystem.speedMult;
+					self.damage *= SinSystem.damageMult;
+				}
+			};
+
+			On.RoR2.CharacterBody.OnTakeDamageServer += (On.RoR2.CharacterBody.orig_OnTakeDamageServer orig, global::RoR2.CharacterBody self, global::RoR2.DamageReport damageReport) =>
+			{
+				orig.Invoke(self, damageReport);
+				// envy code
+				if (ArtifactEnabled && NetworkServer.active && damageReport.victimBody.isPlayerControlled && !damageReport.attackerBody.isPlayerControlled)
+				{
+					// add hit data
+					dmgHitTake hit = new dmgHitTake();
+					hit.dmgPercent = damageReport.damageDealt / self.healthComponent.fullCombinedHealth;
+					hit.hitTime = RoR2.Run.instance.fixedTime;
+					hit.userID = self.netId.Value;
+					SinSystem.hitHistory.Add(hit);
+
+					Debug.Log("Hit DmgPercent : " + hit.dmgPercent);
+					Debug.Log("Hit hitTime : " + RoR2.Run.instance.fixedTime);
+					Debug.Log("Hit userID : " + self.netId.Value);
+
+					// go through hit data and see if it exceeds the percentage needed
+					// delete any out of date times
+					float dmgTotalPercent = 0.0f;
+					List<dmgHitTake> takeList = new List<dmgHitTake>();
+					for (int i = 0; i < SinSystem.hitHistory.Count; i++)
+					{
+						dmgHitTake currentHit = SinSystem.hitHistory[i];
+						if ((RoR2.Run.instance.fixedTime - currentHit.hitTime) <= 2)
+						{
+							if (currentHit.userID == self.netId.Value)
+							{
+								Debug.Log("Hit match percent : " + currentHit.dmgPercent);
+								dmgTotalPercent += currentHit.dmgPercent;
+								takeList.Add(currentHit);
+							}
+							else
+							{
+								Debug.Log("Hit match reject");
+							}
+						}
+						else
+						{
+							Debug.Log("Hit match DESTROY (hitTime > 2)");
+							SinSystem.hitHistory.Remove(currentHit);
+						}
+
+						if (dmgTotalPercent >= 0.7)
+						{
+							SinSystem.envyProc(true);
+							for (int x = 0; x < takeList.Count; x++)
+							{
+								if (SinSystem.hitHistory.Contains(takeList[x]))
+								{
+									SinSystem.hitHistory.Remove(takeList[x]);
+								}
+							}
+							break;
+						}
+					}
+
+					// make monster take damage from hit
+					if (SinSystem.reflectMult > 0)
+					{
+						Debug.Log("Reflecting: " + (SinSystem.reflectMult * 100) + "% of damage to " + damageReport.attackerBody);
+						DamageInfo dmg = new DamageInfo();
+						dmg.damage = SinSystem.reflectMult * damageReport.damageDealt;
+						dmg.attacker = self.gameObject;
+						dmg.damageType = DamageType.BypassArmor;
+						dmg.procCoefficient = 3f;
+						damageReport.attackerBody.healthComponent.TakeDamage(dmg);
+					}
+				}
+			};
+
+			On.RoR2.CharacterBody.OnDeathStart += (On.RoR2.CharacterBody.orig_OnDeathStart orig, global::RoR2.CharacterBody self) =>
+			{
+				orig.Invoke(self);
+				// wrath code
+				if (ArtifactEnabled && NetworkServer.active && self.teamComponent.teamIndex == TeamIndex.Monster)
+				{
+					// add kill data
+					SinSystem.killHistory.Add(RoR2.Run.instance.fixedTime);
+					Debug.Log("killtime : " + RoR2.Run.instance.fixedTime);
+
+					List<float> killList = new List<float>();
+					int kills = 0;
+					for (int i = 0; i < SinSystem.killHistory.Count; i++)
+					{
+						float currentKill = SinSystem.killHistory[i];
+						if ((RoR2.Run.instance.fixedTime - currentKill) <= 1)
+						{
+							kills++;
+							killList.Add(currentKill);
+						}
+						else
+						{
+							Debug.Log("kill match DESTROY (hitTime > 1)");
+							SinSystem.killHistory.Remove(currentKill);
+						}
+					}
+
+					Debug.Log("Kills = " + kills);
+					if (kills >= 5)
+					{
+						SinSystem.wrathProc(true, (uint)kills);
+						for (int x = 0; x < killList.Count; x++)
+						{
+							if (SinSystem.killHistory.Contains(killList[x]))
+							{
+								SinSystem.killHistory.Remove(killList[x]);
+							}
+						}
+					}
+				}
+			};
 
 			/*
 			On.RoR2.CharacterBody.OnClientBuffsChanged += (On.RoR2.CharacterBody.orig_OnClientBuffsChanged orig, global::RoR2.CharacterBody self) =>
@@ -166,9 +306,9 @@ namespace ArtifactGroup
 				{
 					intervalChest = (3600 - Math.Min(totalVoidCoins, 500)) / (1f + 0.2f * totalVoidCoins);
 					intervalBarrel = (3600 - Math.Min(totalVoidCoins, 500)) / (1f + 0.24f * totalVoidCoins);
-					intervalTriple = (3600 - Math.Min(totalVoidCoins,  500)) / (1f + 0.32f * totalVoidCoins);
+					intervalTriple = (3600 - Math.Min(totalVoidCoins, 500)) / (1f + 0.32f * totalVoidCoins);
 
-					//Debug.Log("Interval Chest = " + intervalChest + " NEXT ChestTime Now = " + (lastChestTime + intervalChest));
+					SinSystem.slothProc(true);
 
 					// void barrel logic
 					if (ArtifactEnabled && NetworkServer.active && RoR2.Run.instance.fixedTime > (lastChestTime + intervalChest))
@@ -197,91 +337,75 @@ namespace ArtifactGroup
 					// Time interval will be somewhat random to make the void feel a bit more chaotic.
 					if (ArtifactEnabled && NetworkServer.active && RoR2.Run.instance.fixedTime > (lastTime + interval))
 					{
-						// get void item count for all players
-						setTotalVoidItems();
-
-						interval = (float)(10 / Math.Pow(0.4 * totalVoidItems + 1, 0.7));
-
-						Debug.Log("Current VC interval:: " + interval);
-
-						lastTime = RoR2.Run.instance.fixedTime; // update prev time
-																//interval /= 1.1f; // for fun only 
-																//PackSpawner.spawnPack();
-						double outcome = new Random().NextDouble();
-						double chanceToSpawnPack = Math.Min(Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0) * 0.002, 0.5) * interval;
-						Debug.Log("Mob Group spawn chance:: " + chanceToSpawnPack);
-						if (outcome < chanceToSpawnPack)
-						{
-							PackSpawner.randomPack();
-						}
-
-						// void seed spawns
-						if (RoR2.Run.instance.stageClearCount > currentStageClearCount)
-						{
-							Debug.Log("Running void seed  roll");
-							currentStageClearCount = RoR2.Run.instance.stageClearCount;
-							// chance for void seed each stage = voidCoin total
-							int outcome2 = new Random().Next(0, 100);
-							Debug.Log("Outcome = " + outcome2 + " total coins = " + totalVoidCoins);
-							if (outcome2 < ((int)totalVoidCoins))
-							{
-								Debug.Log("Spawning void seed");
-								spawnVoidSeed();
-							}
-						}
-
-						// update void coin total
-						foreach (NetworkUser u in NetworkUser.readOnlyInstancesList)
-						{
-							int random = new Random().Next(0, 100);
-
-							if (random > 50)
-							{
-								totalVoidCoins += 1;
-							}
-							else if (random > 30)
-							{
-								totalVoidCoins += 2;
-							}
-							else if (random > 15)
-							{
-								totalVoidCoins += 3;
-							}
-							else if (random > 8)
-							{
-								totalVoidCoins += 4;
-							}
-							else
-							{
-								totalVoidCoins += 5;
-							}
-							u.master.voidCoins = totalVoidCoins;
-						}
+						VCUPDATE();
 					}
 				}
-			}; 
+			};
 
 		}
 
-		public void setTotalVoidItems()
-        {
+		public static void VCUPDATE()
+		{
+			// get void item count for all players
+			setTotalVoidItems();
+
+			interval = (float)(10 / Math.Pow(0.4 * totalVoidItems + 1, 0.7));
+
+			Debug.Log("Current VC interval:: " + interval);
+
+			lastTime = RoR2.Run.instance.fixedTime; // update prev time
+													//interval /= 1.1f; // for fun only 
+													//PackSpawner.spawnPack();
+			double outcome = new Random().NextDouble();
+			double chanceToSpawnPack = Math.Min(Math.Min(Math.Pow((totalVoidCoins * 0.004), 2), 3.0) * 0.002, 0.5) * interval;
+			Debug.Log("Mob Group spawn chance:: " + chanceToSpawnPack);
+			if (outcome < chanceToSpawnPack)
+			{
+				PackSpawner.randomPack();
+			}
+
+			// void seed spawns
+			if (RoR2.Run.instance.stageClearCount > currentStageClearCount)
+			{
+				Debug.Log("Running void seed  roll");
+				currentStageClearCount = RoR2.Run.instance.stageClearCount;
+				// chance for void seed each stage = voidCoin total
+				int outcome2 = new Random().Next(0, 100);
+				Debug.Log("Outcome = " + outcome2 + " total coins = " + totalVoidCoins);
+				if (outcome2 < ((int)totalVoidCoins))
+				{
+					Debug.Log("Spawning void seed");
+					spawnVoidSeed();
+				}
+			}
+
+			// update void coin total
+			foreach (NetworkUser u in NetworkUser.readOnlyInstancesList)
+			{
+				totalVoidCoins += 1;
+				u.master.voidCoins = totalVoidCoins;
+			}
+		}
+
+		public static void setTotalVoidItems()
+		{
 			totalVoidItems = 0;
 			foreach (NetworkUser u in NetworkUser.readOnlyInstancesList)
 			{
 				for (int i = 0; i < u.master.inventory.itemAcquisitionOrder.Count; i++)
 				{
 					ItemIndex item = u.master.inventory.itemAcquisitionOrder[i];
-					if(VoidItemMatcher.isVoidItem(item))
-                    {
+					if (VoidItemMatcher.isVoidItem(item))
+					{
 						totalVoidItems += u.master.inventory.itemStacks[i];
-                    }
+					}
 				}
 			}
 			Debug.Log("Current Void Item Count: " + totalVoidItems);
-        }
+		}
 
-		public void spawnVoidSeed()
-        {
+		public static void spawnVoidSeed()
+		{
 			// retrieve the void card using my Card Retrieval Utility, avoiding needing a path altogether:
 			SpawnCard card = CardRetriever.getCard("iscVoidCamp");
 
@@ -299,7 +423,7 @@ namespace ArtifactGroup
 		}
 
 		public void spawnVoidChest()
-        {
+		{
 			MessageHandler.globalMessage("A Void Chest has spawned on the map!");
 			SpawnCard card = Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscVoidChest");
 			card.directorCreditCost = 0;
@@ -394,7 +518,17 @@ namespace ArtifactGroup
 				currentStageClearCount = 0;
 				loadingStage = true;
 				r = new Random();
-		}
+				SinSystem.selectSin();
+
+				// sin system vars
+				SinSystem.slothStartTime = 0;
+				SinSystem.healthMult = 1;
+				SinSystem.damageMult = 1;
+				SinSystem.speedMult = 1;
+				SinSystem.attackSpeedMult = 1;
+				SinSystem.hitHistory.Clear();
+				SinSystem.reflectMult = 0;
+			}
 
 		}
 	}

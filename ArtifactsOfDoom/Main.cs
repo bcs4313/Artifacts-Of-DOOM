@@ -47,6 +47,7 @@ namespace ArtifactsOfDoom
 
 			Main.MainAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/artifacticons");
 			Main.MorphAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/transformui");
+			Main.GOAssets = AssetBundle.LoadFromFile(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/gameobjects");
 			Debug.Log("Artifacts Of Doom: Loaded Assets");
 			Debug.Log("Artifacts of Doom: Loading L4D UI Layout...");
 			Debug.Log("Artifacts Of Doom: Registering Net Messages");
@@ -97,10 +98,9 @@ namespace ArtifactsOfDoom
 		public const string Name = "Artifacts of Doom";
 		public const string ModVer = "1.6.3";
 
-		// Token: 0x0400002D RID: 45
-		public static AssetBundle MainAssets;
 
-		// Token: 0x0400002E RID: 46
+		public static AssetBundle MainAssets;
+		public static AssetBundle GOAssets;
 		public List<ArtifactBase> Artifacts = new List<ArtifactBase>();
 	}
 }
